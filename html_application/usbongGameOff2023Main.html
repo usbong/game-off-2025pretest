@@ -589,7 +589,7 @@ var iOffsetHeight=0;
 	iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
 	iVerticalOffsetInnerScreen=0;
 
-
+/*
 	//added by Mike, 20230312
 	//note: press TAB, then ENTER to SET
 	function setAnimImageFrameX() {
@@ -648,6 +648,7 @@ var iOffsetHeight=0;
 		//edited by Mike, 20230314
 		iTotalAnimImageFrameCount=setTotalAnimImageFrameCountText.value;
 	}
+*/
 
 	//added by Mike, 20230410
 	//reference: timeoff.php
@@ -903,6 +904,7 @@ var iOffsetHeight=0;
 		iImageFrameWidth=64;// 32; //0;
 		iImageFrameHeight=64;// 32;
 
+/*
 		var setAnimImageFrameWidthText = document.getElementById("textSetAnimImageFrameWidthId");
 		var setAnimImageFrameHeightText = document.getElementById("textSetAnimImageFrameHeightId");
 
@@ -915,11 +917,13 @@ var iOffsetHeight=0;
 
 		//added by Mike, 20230315
 		var setPanelTable = document.getElementById("tableSetPanelId");
+    */
+
 		var mainImageTile = document.getElementById("mainImageTileImageId");
 
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
-
+/*
 		setAnimImageFrameWidthText.value=iImageFrameWidth;
 		setAnimImageFrameHeightText.value=iImageFrameHeight;
 
@@ -936,6 +940,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		setPanelTable.style.left = (iHorizontalOffset+iStageMaxWidth)+"px";
 		setPanelTable.style.top = (iVerticalOffsetInnerScreen)+"px";
 		setPanelTable.style.visibility = "visible";
+*/
 
 		//removed by Mike, 20230321
 		//mainImageTile.style.visibility = "visible";
@@ -965,6 +970,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//added by Mike, 20230427
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
+/*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
 		var setPanelTable = document.getElementById("tableSetPanelId");
 
@@ -973,7 +979,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		//added by Mike, 20230315
 		var animDirectionSelectedIndex = document.getElementById("selectAnimDirectionId").selectedIndex;
-
+*/
 		//added by Mike, 20230313
 		//reference: https://www.w3schools.com/tags/canvas_fillrect.asp;
 		//last accessed: 2020911
@@ -1114,85 +1120,6 @@ mainImageTileStepX=15; //2;
 			iDelayAnimationCountMovementStep=0;
 
 			//updated: IF using > 2 animating image frames
-/*
-			if (iAnimImageFrameCount<iTotalAnimImageFrameCount) {
-				//alert("iAnimImageFrameCount: "+iAnimImageFrameCount);
-
-				if (iFacingDirection==iFACING_DOWN) {
-					//edited by Mike, 20221117
-					//mainImageTile.style.objectPosition="0px 0px";
-
-					if (bIsWalkingAction) {
-						mainImageTile.style.objectPosition="0px -32px";
-					}
-					else {
-						mainImageTile.style.objectPosition="0px 0px";
-					}
-				}
-				else if (iFacingDirection==iFACING_RIGHT) {
-					if (bIsWalkingAction) {
-						mainImageTile.style.objectPosition="-64px -32px";
-					}
-					else {
-						mainImageTile.style.objectPosition="-64px 0px";
-					}
-				}
-				else if (iFacingDirection==iFACING_LEFT) {
-					if (bIsWalkingAction) {
-						mainImageTile.style.objectPosition="-128px -32px";
-					}
-					else {
-						mainImageTile.style.objectPosition="-128px 0px";
-					}
-				}
-				else if (iFacingDirection==iFACING_UP) {
-					if (bIsWalkingAction) {
-						mainImageTile.style.objectPosition="-32px -32px";
-					}
-					else {
-						mainImageTile.style.objectPosition="-192px 0px";
-					}
-				}
-
-				iAnimImageFrameCount++;
-			}
-			else {
-				if (iFacingDirection==iFACING_DOWN) {
-					if (bIsWalkingAction) {
-						mainImageTile.style.objectPosition="0px -64px";
-					}
-					else {
-						mainImageTile.style.objectPosition="-32px 0px";
-					}
-				}
-				else if (iFacingDirection==iFACING_RIGHT) {
-					if (bIsWalkingAction) {
-						mainImageTile.style.objectPosition="-64px -64px";
-					}
-					else {
-						mainImageTile.style.objectPosition="-96px 0px";
-					}
-				}
-				else if (iFacingDirection==iFACING_LEFT) {
-					if (bIsWalkingAction) {
-						mainImageTile.style.objectPosition="-128px -64px";
-					}
-					else {
-						mainImageTile.style.objectPosition="-160px 0px";
-					}
-				}
-				else if (iFacingDirection==iFACING_UP) {
-					if (bIsWalkingAction) {
-						mainImageTile.style.objectPosition="-32px -64px";
-					}
-					else {
-						mainImageTile.style.objectPosition="-224px 0px";
-					}
-				}
-
-				iAnimImageFrameCount=0;
-			}
-*/
 
 
 			if (animDirectionSelectedIndex==AnimImageDirection_VERTICAL) {
@@ -1211,6 +1138,7 @@ mainImageTileStepX=15; //2;
 				iAnimImageFrameCount=0;
 			}
 		}
+
 
 /*	//removed by Mike, 20230425
 		mainImageTile.style.left = (iHorizontalOffset)+mainImageTilePosX+"px";
@@ -1348,9 +1276,10 @@ mainImageTileProjectile.style.visibility = "visible";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 
 
-
+/*
 		setPanelTable.style.left = (iHorizontalOffset+iStageMaxWidth)+"px";
 		setPanelTable.style.top = (iVerticalOffsetInnerScreen)+"px"; //+iStageMaxHeight
+*/
 
     //added by Mike, 20231105
     //-----------------
@@ -2362,91 +2291,6 @@ edited by: Huy Nguyen, 20170124T0455
 
 
 
-<!-- right panel -->
-
-	<table class="TableSetPanel" id="tableSetPanelId">
-	<tr>
-		<td>
-			<label class="LabelSet">Set Image Frame W:</label>
-			<br/>
-			<input type="number" class="TextInputSet" id="textSetAnimImageFrameWidthId">
-			<button class="ButtonSet" id="buttonSetAnimImageFrameWidthId" onclick="setAnimImageFrameWidth()">SET</button>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<label class="LabelSet">Set Image Frame H:</label>
-			<br/>
-			<input type="number" class="TextInputSet" id="textSetAnimImageFrameHeightId">
-			<button class="ButtonSet" id="buttonSetAnimImageFrameHeightId" onclick="setAnimImageFrameHeight()">SET</button>
-		</td>
-	</tr>
-
-	<tr>
-		<td>
-			<br/>
-		</td>
-	</tr>
-
-
-	<tr>
-		<td>
-			<label class="LabelSet">Set Image Frame X:</label>
-			<br/>
-			<input type="number" class="TextInputSet" id="textSetAnimImageFrameXId">
-			<button class="ButtonSet" id="buttonSetAnimImageFrameXId" onclick="setAnimImageFrameX()">SET</button>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<label class="LabelSet">Set Image Frame Y:</label>
-			<br/>
-			<input type="number" class="TextInputSet" id="textSetAnimImageFrameYId">
-			<button class="ButtonSet" id="buttonSetAnimImageFrameYId" onclick="setAnimImageFrameY()">SET</button>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<br/>
-		</td>
-	</tr>
-
-
-	<tr>
-		<td>
-			<label class="LabelSet">Set TOTAL Frame Count:</label>
-			<br/>
-			<input type="number" class="TextInputSet" id="textSetTotalAnimImageFrameCountId">
-			<button class="ButtonSet" id="buttonSetTotalAnimImageFrameCountId" onclick="setTotalAnimImageFrameCount()">SET</button>
-		</td>
-	</tr>
-
-	<tr>
-		<td>
-			<label class="LabelSet">Set DELAY Frame Count:</label>
-			<br/>
-			<input type="number" class="TextInputSet" id="textSetAnimDelayId">
-			<button class="ButtonSet" id="buttonSetAnimDelayId" onclick="setAnimDelay()">SET</button>
-		</td>
-	</tr>
-
-	<tr>
-		<td>
-			<br/>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<label class="LabelSet">Animation Frame Direction:</label>
-			<br/>
-			<select id="selectAnimDirectionId" class="SelectAnimDirection">
-  				<option value="VERTICAL">VERTICAL</option>
-  				<option value="HORIZONTAL">HORIZONTAL</option>
-			</select>
-		</td>
-	</tr>
-
-	</table>
 
   </body>
 </html>
