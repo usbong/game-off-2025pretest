@@ -112,22 +112,11 @@
 			z-index: -1;
 		}
 
-/*
-		.Image32x32TileFrame1 {
-			position: absolute;
-  			clip: rect(0px,32px,32px,0px);
-
-			visibility: hidden;
-		}
-		.ImageTextInputSet32x32TileFrame2 {
-			position: absolute;
-  			clip: rect(0px,32px,32px,0px);
-		}
-*/
 		.ImageTileFrame1 {
 			position: absolute;
 
-  			/*clip: rect(0px,32px,32px,0px);*/
+      /*added by Mike, 20231105*/
+  		clip: rect(0px,32px,32px,0px);
 
 			visibility: hidden;
 		}
@@ -192,196 +181,197 @@
 
 		}
 
-		/* noted by Mike, 20221105 */
-		.Image32x32TileTarget {
-			position: absolute;
 
-/* //added by Mike, 20221113; edited by Mike, 20230111*/
-/*
-			width: 128px;
-			height: 128px;
-*/
-			width: 256px;
-			height: 256px;
+    		/* noted by Mike, 20221105 */
+    		.Image32x32TileTarget {
+    			position: absolute;
 
-			object-fit: contain;
+    /* //added by Mike, 20221113; edited by Mike, 20230111*/
+    /*
+    			width: 128px;
+    			height: 128px;
+    */
+    			width: 256px;
+    			height: 256px;
 
-
-			/* //added by Mike, 20221112; edited by Mike, 20230111 */
-/*
-			clip: rect(0px,32px,32px,0px);
-*/
-			clip: rect(0px,64px,64px,0px);
-
-/* //removed by Mike, 20221112
-			width: 32px;
-			height: 32px;
-*/
-
-/* //edited by Mike, 20221112 */
-/*
-			background-color: #ffffff;
-*/
-background-color: transparent;
-border: none;
-			color: #222222;
-
-			/* //added by Mike, 20221111
-			   //TO-DO: -update: this
-			*/
-			opacity: 0.5;
-
-			font-weight: bold;
-			font-size: 146%; /*18px;*/
-
-			text-align: center;
-			line-height: 32px;
-
-			/*padding-top: 0.1875%;*/ /*6px;*/
-
-/* //note: with clip rect border is put on entire sprite image */
-/* //removed by Mike, 20221112
-			border: 3px solid #ff0000;
-			border-radius: 3px;
-*/
-			margin: 0px; /*1px;*/
-			padding: 0px;
-			z-index: 4;
-		}
-
-		.Image32x32TileTargetBorder {
-			position: absolute;
-/*
-edited by Mike, 20230111
-			width: 27px;
-			height: 27px;
-*/
-			width: 58px;
-			height: 58px;
-
-			background-color: transparent;
-			color: #222222;
-
-			font-weight: bold;
-			font-size: 146%; /*18px;*/
-
-			text-align: center;
-			line-height: 32px;
-
-			border: 3px solid #ff0000;
-			border-radius: 3px;
-
-			visibility: hidden;
-
-			margin: 0px;
-			padding: 0px;
-			z-index: 4;
-		}
-
-		.Image32x32TileSpaceBorder {
-			position: absolute;
-
-/*
-edited by Mike, 20230111
-			width: 27px;
-			height: 27px;
-*/
-			width: 58px;
-			height: 58px;
-
-			background-color: transparent;
-			color: #222222;
-
-			font-weight: bold;
-			font-size: 146%; /*18px;*/
-
-			text-align: center;
-			line-height: 32px;
-
-			border: 3px solid #ffffff;
-			border-radius: 3px;
-
-			visibility: hidden;
-
-			margin: 0px;
-			padding: 0px;
-			z-index: 4;
-		}
+    			object-fit: contain;
 
 
-		.Image32x32TileSpaceTarget {
-			position: absolute;
+    			/* //added by Mike, 20221112; edited by Mike, 20230111 */
+    /*
+    			clip: rect(0px,32px,32px,0px);
+    */
+    			clip: rect(0px,64px,64px,0px);
 
-/*
-edited by Mike, 20230111
-			width: 27px;
-			height: 27px;
-*/
-			width: 58px;
-			height: 58px;
+    /* //removed by Mike, 20221112
+    			width: 32px;
+    			height: 32px;
+    */
 
-			background-color: #000000; /*#ffffff;*/
-			color: #222222;
+    /* //edited by Mike, 20221112 */
+    /*
+    			background-color: #ffffff;
+    */
+    background-color: transparent;
+    border: none;
+    			color: #222222;
 
-			text-align: center;
-			line-height: 32px;
+    			/* //added by Mike, 20221111
+    			   //TO-DO: -update: this
+    			*/
+    			opacity: 0.5;
 
-			border: 3px solid #ffffff; /*#ff0000;*/
-			border-radius: 3px;
+    			font-weight: bold;
+    			font-size: 146%; /*18px;*/
 
-			margin: 0px;
-			padding: 0px;
-			z-index: 5;
-		}
+    			text-align: center;
+    			line-height: 32px;
 
-		/* added by Mike, 20221105 */
-		.Image32x32TileSpace {
-			position: absolute;
+    			/*padding-top: 0.1875%;*/ /*6px;*/
 
-/* //added by Mike, 20221113; edited by Mike, 20230111*/
-/*
-			width: 128px;
-			height: 128px;
-*/
-			width: 256px;
-			height: 256px;
-			object-fit: contain;
+    /* //note: with clip rect border is put on entire sprite image */
+    /* //removed by Mike, 20221112
+    			border: 3px solid #ff0000;
+    			border-radius: 3px;
+    */
+    			margin: 0px; /*1px;*/
+    			padding: 0px;
+    			z-index: 4;
+    		}
 
-			/* //added by Mike, 20221112; edited by Mike, 20230111 */
-/*
-			clip: rect(0px,32px,32px,0px);
-*/
-			clip: rect(0px,64px,64px,0px);
+    		.Image32x32TileTargetBorder {
+    			position: absolute;
+    /*
+    edited by Mike, 20230111
+    			width: 27px;
+    			height: 27px;
+    */
+    			width: 58px;
+    			height: 58px;
+
+    			background-color: transparent;
+    			color: #222222;
+
+    			font-weight: bold;
+    			font-size: 146%; /*18px;*/
+
+    			text-align: center;
+    			line-height: 32px;
+
+    			border: 3px solid #ff0000;
+    			border-radius: 3px;
+
+    			visibility: hidden;
+
+    			margin: 0px;
+    			padding: 0px;
+    			z-index: 4;
+    		}
+
+    		.Image32x32TileSpaceBorder {
+    			position: absolute;
+
+    /*
+    edited by Mike, 20230111
+    			width: 27px;
+    			height: 27px;
+    */
+    			width: 58px;
+    			height: 58px;
+
+    			background-color: transparent;
+    			color: #222222;
+
+    			font-weight: bold;
+    			font-size: 146%; /*18px;*/
+
+    			text-align: center;
+    			line-height: 32px;
+
+    			border: 3px solid #ffffff;
+    			border-radius: 3px;
+
+    			visibility: hidden;
+
+    			margin: 0px;
+    			padding: 0px;
+    			z-index: 4;
+    		}
 
 
-/* //removed by Mike, 20221112
-			width: 32px;
-			height: 32px;
-*/
+    		.Image32x32TileSpaceTarget {
+    			position: absolute;
 
-/* //edited by Mike, 20221112 */
-/*
-			background-color: #222222;
-*/
-background-color: transparent;
-border: none;
-			color: #222222;
+    /*
+    edited by Mike, 20230111
+    			width: 27px;
+    			height: 27px;
+    */
+    			width: 58px;
+    			height: 58px;
 
-			text-align: center;
-			line-height: 32px;
+    			background-color: #000000; /*#ffffff;*/
+    			color: #222222;
 
-			/*padding-top: 0.1875%;*/ /*6px;*/
+    			text-align: center;
+    			line-height: 32px;
 
-/* //note: with clip rect border is put on entire sprite image */
-/* //removed by Mike, 20221112
-			border: 3px solid #ff0000;
-			border-radius: 3px;
-*/
-			margin: 0px; /*1px;*/
-			padding: 0px;
+    			border: 3px solid #ffffff; /*#ff0000;*/
+    			border-radius: 3px;
 
-			z-index: 3;
-		}
+    			margin: 0px;
+    			padding: 0px;
+    			z-index: 5;
+    		}
+
+    		/* added by Mike, 20221105 */
+    		.Image32x32TileSpace {
+    			position: absolute;
+
+    /* //added by Mike, 20221113; edited by Mike, 20230111*/
+    /*
+    			width: 128px;
+    			height: 128px;
+    */
+    			width: 256px;
+    			height: 256px;
+    			object-fit: contain;
+
+    			/* //added by Mike, 20221112; edited by Mike, 20230111 */
+    /*
+    			clip: rect(0px,32px,32px,0px);
+    */
+    			clip: rect(0px,64px,64px,0px);
+
+
+    /* //removed by Mike, 20221112
+    			width: 32px;
+    			height: 32px;
+    */
+
+    /* //edited by Mike, 20221112 */
+    /*
+    			background-color: #222222;
+    */
+    background-color: transparent;
+    border: none;
+    			color: #222222;
+
+    			text-align: center;
+    			line-height: 32px;
+
+    			/*padding-top: 0.1875%;*/ /*6px;*/
+
+    /* //note: with clip rect border is put on entire sprite image */
+    /* //removed by Mike, 20221112
+    			border: 3px solid #ff0000;
+    			border-radius: 3px;
+    */
+    			margin: 0px; /*1px;*/
+    			padding: 0px;
+
+    			z-index: 3;
+    		}
 
   </style>
 
@@ -1573,7 +1563,9 @@ mainImageTileProjectile.style.visibility = "visible";
 
   	//edited by Mike, 20230524
   		var iTilePosX= iHorizontalOffset+iOffsetWidth+iPuzzleTileWidth*iColumnCount+iBorderOffset*iColumnCount;
+
   		var iTilePosY=0+iOffsetHeight+iPuzzleTileHeight*iRowCount+iBorderOffset*iRowCount;
+
 
   /*
   		var iTilePosX= iHorizontalOffset+iOffsetWidth+iPuzzleTileWidth*(iColumnCount+1)+iBorderOffset*(iColumnCount+1);
@@ -1721,10 +1713,12 @@ mainImageTileProjectile.style.visibility = "visible";
 
           arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].className="Image32x32Tile";
 */
+
 //added by Mike, 20231105
 iTileBgCountOfEmptyTile=iTileBgCount;
 //arrayPuzzleTileCountId[iTileBgCount].alt);
 arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
+
 //-----
 
 
@@ -1782,14 +1776,17 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
           */
           						bHasExecutedTileExchange=true;
           						iStepCountStatus++;
+
           /*
           					}
           */
           				}
 
+/* //removed by Mike, 20231105
           				for (iKeyCount=0; iKeyCount<iDirectionTotalKeyCount; iKeyCount++) {
           					arrayKeyPressed[iKeyCount]=false;
           				}
+*/
           				//-----
 
           				//edited by Mike, 20230522
@@ -2479,6 +2476,8 @@ stepCountGuideImage.style.visibility = "hidden"; //hidden
 
 //alert(bIsUsingAppleMac); //true
 
+/* //removed by Mike 20231105
+
 //reference: https://stackoverflow.com/questions/4917664/detect-viewport-orientation-if-orientation-is-portrait-display-alert-message-ad; last accessed: 20220910
 //answer by: Jatin, 20120731T0711;
 //edited by Tisho, 20120731T0730
@@ -2515,7 +2514,7 @@ window.addEventListener("orientationchange", function() {
 
   //TO-DO: -add: auto-update: object positions after CHANGE in orientation
 }, false);
-
+*/
 
 
 
@@ -2580,39 +2579,43 @@ edited by: Huy Nguyen, 20170124T0455
 
 / means the root of the current drive;
 ./ means the current directory;
-../ means the parent of the current directory.
+/ means the parent of the current directory.
 
+//noted by Mike, 20231105
+incorrect output on Safari; macOS;
+
+opting to put assets folder in "html_application" folder instead
 -->
 
-		<img id="mainImageTileImageId" class="ImageTileFrame1" src="../assets/images/inputImage.png">
+		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
-		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="../assets/images/inputImage.png">
+		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
 		<!-- added by Mike, 20231104;
 		  note: .html; not .php -->
 
 <!-- set 1 -->
-<img id="puzzleTileImageIdBg0" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg1" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg2" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg3" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg4" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg0" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg1" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg2" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg3" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg4" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
 
 <!-- set 2 -->
-<img id="puzzleTileImageIdBg5" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg6" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg7" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg8" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg5" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg6" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg7" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg8" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
 <!-- set 3 -->
-<img id="puzzleTileImageIdBg9" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg10" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg11" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg12" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg9" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg10" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg11" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg12" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
 <!-- set 4 -->
-<img id="puzzleTileImageIdBg13" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg14" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg15" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg16" class="Image32x32Tile" onerror="" src="../assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg13" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg14" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg15" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg16" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
 
 
 
