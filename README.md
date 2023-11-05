@@ -1,5 +1,10 @@
 # Game Off 2023
 
+## Select Software Development Productivity Tools
+
+1) https://notepad-plus-plus.org/downloads/ (Windows)
+ 
+2) https://github.com/atom/atom (Mac)
 
 ## Open Source Software License
 
