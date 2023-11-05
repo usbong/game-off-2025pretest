@@ -1495,9 +1495,23 @@ mainImageTileProjectile.style.visibility = "visible";
 			switch(event.pointerType) {
 				case 'mouse':
 /*
-					if (bIsUsingAppleWebKit) {
-					  bIsUsingAppleMac=true;
-					}
+          //TODO: -add: this
+          if (bIsUsingAppleWebKit) {
+  				  bIsUsingAppleMac=true;
+  				}
+
+  				//added by Mike, 20230710
+  				if (!bHasViewedTitle) {
+  					return;
+  				}
+  				//added by Mike, 20230710
+  				if (bIsInitAutoGeneratePuzzleFromEnd) {
+  					return;
+  				}
+  				//added by Mike, 20230710
+  				if (bIsPuzzleDone) {
+  					return;
+  				}
 */
 					//note: ZOOM function causes position ERROR via screenX
 					var iXPos = event.clientX;//screenX;
@@ -1511,6 +1525,254 @@ mainImageTileProjectile.style.visibility = "visible";
 */
 
 					var mainImageTile = document.getElementById("mainImageTileImageId");
+
+
+          //TO-DO: -add: the following to verify if tile was clicked;
+  	//iTileBgCount=0;
+
+  	//added by Mike, 20230125
+  	//identify blank/empty tile
+  	var iTileBgCountOfEmptyTile=-1;
+
+  	//added by Mike, 20230522
+  	bIsActionKeyPressed=true;
+
+  	//added by Mike, 20230523
+  	bHasExecutedTileExchange=false;
+
+  	for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+  		for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) 		{
+
+  			//edited by Mike, 20230524
+  			iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount];
+  //			iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount]+1;
+
+  			if (arrayPuzzleTileCountId[iTileBgCount].alt=="") {
+  				iTileBgCountOfEmptyTile=iTileBgCount;
+  			}
+  		}
+  	}
+
+
+  	for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+  		for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
+  			//edited by Mike, 20230524
+  			iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount];
+  //			iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount]-1;
+
+  		//alert(iTileBgCount);
+
+  /* //edited by Mike, 20230123
+  		var iTilePosX= arrayPuzzleTileCountId[iTileBgCount].style.left;
+  		var iTilePosY= arrayPuzzleTileCountId[iTileBgCount].style.Top;
+  */
+
+  	//edited by Mike, 20230524
+  		var iTilePosX= iHorizontalOffset+iOffsetWidth+iPuzzleTileWidth*iColumnCount+iBorderOffset*iColumnCount;
+  		var iTilePosY=0+iOffsetHeight+iPuzzleTileHeight*iRowCount+iBorderOffset*iRowCount;
+
+  /*
+  		var iTilePosX= iHorizontalOffset+iOffsetWidth+iPuzzleTileWidth*(iColumnCount+1)+iBorderOffset*(iColumnCount+1);
+  		var iTilePosY=0+iOffsetHeight+iPuzzleTileHeight*(iRowCount+1)+iBorderOffset*(iRowCount+1);
+  */
+  		//added by Mike, 20230524
+  /*
+  		iXPos=iXPos+iPuzzleTileWidth/2;
+  		iYPos=iYPos+iPuzzleTileHeight/2;
+  */
+  		//alert("iXPos: "+iXPos+"; iTilePosX: "+iTilePosX);
+
+  				//iPuzzleTileWidth
+  //alert("iTilePosX: "+iTilePosX);
+
+  		//edited by Mike, 20230524
+  		if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos,iTilePosX,iTilePosY)) {
+        //added by Mike, 20231105
+        //OK
+        alert("HIT!");
+  			//OK; row1; columns; 1 to 4;
+  			//row2; columns 5 to 8;...
+  /*
+  			alert("HIT! TILE COUNT: " + iTileBgCount);
+  			alert("arrayPuzzleTileCountId[iTileBgCount].alt: " + arrayPuzzleTileCountId[iTileBgCount].alt);
+  */
+  			//edited by Mike, 20230524
+  			if (arrayPuzzleTileCountId[iTileBgCount].alt=="") {
+  				return;
+  			}
+  			//OK; number value of Tile
+  			//alert (arrayPuzzleTileCountId[iTileBgCount].alt);
+  			//if NOT blank/empty tile
+  			//edited by Mike, 20230524
+  			//if (arrayPuzzleTileCountId[iTileBgCount].alt!="") {
+  			else if (arrayPuzzleTileCountId[iTileBgCount].alt!="") {
+  /*
+  				alert("HIT! EXCHANGE! " + iTileBgCount);
+  				//exchange
+  				alert("EXCHANGE! EMPTY location: "+iTileBgCountOfEmptyTile);
+  */
+  /*				//edited by Mike, 20230524
+  				//added by Mike, 20230524
+  				//IF @TOP row
+  				if (iTileBgCountOfEmptyTile<4) {
+  				}
+  				//IF NOT @TOP row
+  				else {
+  					//TOP-LEFT; CENTER-5
+  					if (iTileBgCount==iTileBgCountOfEmptyTile-5) {
+  						alert("TOP-LEFT; CENTER-5");
+  						return;
+  					}
+  					//TOP-RIGHT; CENTER-3
+  					else if (iTileBgCount==iTileBgCountOfEmptyTile-3) {
+  						alert("TOP-RIGHT; CENTER-3");
+  						return;
+  					}
+  				}
+  */
+  /*
+  				//move only to TOP, BOTTOM, LEFT, RIGHT
+  				//from CENTER
+  				//IF @TOP row
+  				if (iTileBgCountOfEmptyTile<4) {
+  				alert(iTileBgCountOfEmptyTile);
+  					//TOP; CENTER-4
+  					if (iTileBgCount==iTileBgCountOfEmptyTile-4) {
+  						return;
+  					}
+
+  				}
+  */
+  				//move only to TOP, BOTTOM, LEFT, RIGHT
+  				//from CENTER
+  				//IF intends to move to LEFT
+  				if (iTileBgCount==iTileBgCountOfEmptyTile-1) {
+  					if (iColumnCount>-1) {
+  					}
+  					else {
+  						return;
+  					}
+  				}
+  				//IF intends to move to RIGHT
+  				else if (iTileBgCount==iTileBgCountOfEmptyTile+1) {
+  					if (iColumnCount<iColumnCountMax) {
+  					}
+  					else {
+  						return;
+  					}
+  				}
+  				//IF intends to move to TOP
+  				else if (iTileBgCount==iTileBgCountOfEmptyTile-4) {
+  					if (iRowCount>-1) {
+  					}
+  					else {
+  						return;
+  					}
+  				}
+  				//IF intends to move to BOTTOM
+  				else if (iTileBgCount==iTileBgCountOfEmptyTile+4) {
+  					if (iRowCount<iRowCountMax) {
+  					}
+  					else {
+  						return;
+  					}
+  				}
+  				else {
+  					return;
+  				}
+
+
+
+  				//alert("arrayPuzzleTileCountId[iTileBgCount].alt: " + arrayPuzzleTileCountId[iTileBgCount].alt);
+
+  /*				arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].alt=arrayPuzzleTileCountId[iTileBgCount].alt;
+
+  				arrayPuzzleTileCountId[iTileBgCount].alt="";
+  */
+  				//added by Mike, 20230522
+  				//-----
+  				bIsActionKeyPressed=true;
+          /*
+          arrayPuzzleTileCountId[iTileBgCount].className="Image32x32Tile";
+          				arrayPuzzleTileCountId[iTargetTileBgCount].className="Image32x32TileSpace";
+
+          arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].alt=arrayPuzzleTileCountId[iTileBgCount].alt;
+          */
+          /*
+          arrayPuzzleTileCountId[iTileBgCount].className="Image32x32Tile";
+          arrayPuzzleTileCountId[iTargetTileBgCount].className="Image32x32TileSpace";
+          */
+          //edited by Mike, 20230523
+          arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].className="Image32x32Tile";
+
+          var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
+
+          //puzzleTileImageTargetBorder.style.visibility = "hidden";
+          puzzleTileImageTargetBorder.style.visibility = "visible";
+
+          //reminder: arrayPuzzleTileCountId[iTileBgCount].alt="";
+          					puzzleTileImageTargetBorder.style.left = arrayPuzzleTileCountId[iTileBgCount].style.left;
+
+          					puzzleTileImageTargetBorder.style.top = arrayPuzzleTileCountId[iTileBgCount].style.top;
+
+
+          arrayPuzzleTileCountId[iTargetTileBgCount].className="Image32x32TileSpace";
+
+
+          //arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].alt=arrayPuzzleTileCountId[iTileBgCount].alt;
+
+          arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].alt=arrayPuzzleTileCountId[iTileBgCount].alt;
+
+          //added by Mike, 20230523
+          //TO-DO: -add: NO DIAGONAL exchange;
+          iTargetTileBgCount=iTileBgCountOfEmptyTile;
+
+          				arrayPuzzleTileCountId[iTileBgCount].alt="";
+
+
+          //				alert("dito");
+          /*
+          				arrayPuzzleTileCountId[iTileBgCount].alt="";
+          				arrayPuzzleTileCountId[iTargetTileBgCount].alt="";
+          */
+          	//TO-DO: -verify: "iTargetTileBgCount" to cause incorrect output
+
+          				//arrayPuzzleTileCountId[iTileBgCountOfEmptyTile	].alt="";
+
+          				if (!bIsInitAutoGeneratePuzzleFromEnd) {
+          					//note: iCountMovementStep
+          					//iStepCountStatus++;
+          /*
+          					if (arrayPuzzleTileCountId[iTileBgCount].alt=="") {
+          						bHasExecutedTileExchange=false;
+          						//alert( "FALSE!" );
+          					}
+          					else {
+          */
+          						bHasExecutedTileExchange=true;
+          						iStepCountStatus++;
+          /*
+          					}
+          */
+          				}
+
+          				for (iKeyCount=0; iKeyCount<iDirectionTotalKeyCount; iKeyCount++) {
+          					arrayKeyPressed[iKeyCount]=false;
+          				}
+          				//-----
+
+          				//edited by Mike, 20230522
+          //				break;	//causes multiple entering in the function
+          				return;
+          			}
+              }
+            }
+          }
+
+//---
+
+
+
 
 //iMainImageTileStepAngleTemp+=10;
 //iMainImageTileStepAngleTemp=90;
@@ -1618,6 +1880,7 @@ alert("iXPos: "+iXPos);
 alert("mainImageTilePosX: "+mainImageTilePosX);
 alert("iDeltaX: "+iDeltaX);
 */
+
 
 iDeltaY*=-1;
 
@@ -1952,6 +2215,46 @@ function autoUpdatePuzzleTileImage() {
 		}
 	}
 
+  //added by Mike, 20221123
+  //@return bool
+  function isPointsOfRectIntersectingPointsOfRect(iXPos1, iYPos1, iXPos2, iYPos2) {
+  		//alert("iPuzzleTileWidth: "+iPuzzleTileWidth);
+
+  	let mdo1XPos = iXPos1;
+  	let mdo1YPos = iYPos1;
+
+  	//edited by Mike, 20230524
+  	//set as a point; not a tile
+  	let mdo1Width = 1;//iPuzzleTileWidth;
+  	let mdo1Height = 1;//iPuzzleTileHeight;
+
+  	let mdo2XPos = iXPos2;
+  	let mdo2YPos = iYPos2;
+
+  	let mdo2Width = iPuzzleTileWidth;
+  	let mdo2Height = iPuzzleTileHeight;
+
+  	let iOffsetXPosAsPixel = 0;
+  	let iOffsetYPosAsPixel = 0;
+
+  	//alert("mdo1XPos: "+mdo1XPos);
+
+  /*
+  	alert("mdo1XPos: "+mdo1XPos+"; "+"mdo1Width: "+mdo1Width);
+  	alert("mdo2XPos: "+mdo2XPos+"; "+"mdo2Width: "+mdo2Width);
+  */
+
+  	if ((mdo2YPos+mdo2Height < mdo1YPos+iOffsetYPosAsPixel) || //is the bottom of mdo2 above the top of mdo1?
+  		(mdo2YPos > mdo1YPos+mdo1Height-iOffsetYPosAsPixel) || //is the top of mdo2 below the bottom of mdo1?
+  		(mdo2XPos+mdo2Width < mdo1XPos+iOffsetXPosAsPixel) || //is the right of mdo2 to the left of mdo1?
+  		(mdo2XPos > mdo1XPos+mdo1Width-iOffsetXPosAsPixel)) //is the left of mdo2 to the right of mdo1?
+  	{
+  		//no collision
+  		return false;
+  	}
+
+  	return true;
+  }
 
 
   //reference: https://stackoverflow.com/questions/15466802/how-can-i-auto-hide-alert-box-after-it-showing-it; last accessed: 20220911
