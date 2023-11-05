@@ -1547,11 +1547,15 @@ mainImageTileProjectile.style.visibility = "visible";
   			iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount];
   //			iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount]+1;
 
+//alert(">>>"+iTileBgCount);
+
   			if (arrayPuzzleTileCountId[iTileBgCount].alt=="") {
   				iTileBgCountOfEmptyTile=iTileBgCount;
   			}
   		}
   	}
+
+//alert("dito"+iTileBgCountOfEmptyTile);
 
 
   	for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
@@ -1589,7 +1593,8 @@ mainImageTileProjectile.style.visibility = "visible";
   		if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos,iTilePosX,iTilePosY)) {
         //added by Mike, 20231105
         //OK
-        alert("HIT!");
+//        alert("HIT!");
+
   			//OK; row1; columns; 1 to 4;
   			//row2; columns 5 to 8;...
   /*
@@ -1606,6 +1611,9 @@ mainImageTileProjectile.style.visibility = "visible";
   			//edited by Mike, 20230524
   			//if (arrayPuzzleTileCountId[iTileBgCount].alt!="") {
   			else if (arrayPuzzleTileCountId[iTileBgCount].alt!="") {
+
+//         alert("dito"+arrayPuzzleTileCountId[iTileBgCount].alt);
+
   /*
   				alert("HIT! EXCHANGE! " + iTileBgCount);
   				//exchange
@@ -1643,6 +1651,8 @@ mainImageTileProjectile.style.visibility = "visible";
 
   				}
   */
+
+/* //removed by Mike, 20231105
   				//move only to TOP, BOTTOM, LEFT, RIGHT
   				//from CENTER
   				//IF intends to move to LEFT
@@ -1680,7 +1690,7 @@ mainImageTileProjectile.style.visibility = "visible";
   				else {
   					return;
   				}
-
+*/
 
 
   				//alert("arrayPuzzleTileCountId[iTileBgCount].alt: " + arrayPuzzleTileCountId[iTileBgCount].alt);
@@ -1692,6 +1702,7 @@ mainImageTileProjectile.style.visibility = "visible";
   				//added by Mike, 20230522
   				//-----
   				bIsActionKeyPressed=true;
+
           /*
           arrayPuzzleTileCountId[iTileBgCount].className="Image32x32Tile";
           				arrayPuzzleTileCountId[iTargetTileBgCount].className="Image32x32TileSpace";
@@ -1703,12 +1714,32 @@ mainImageTileProjectile.style.visibility = "visible";
           arrayPuzzleTileCountId[iTargetTileBgCount].className="Image32x32TileSpace";
           */
           //edited by Mike, 20230523
+
+/* //edited by Mike, 20231105; output; puts a red border on target;
+//if has: puzzleTileImageTargetBorder.style.visibility = "visible"
+//alert(iTileBgCountOfEmptyTile);
+
           arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].className="Image32x32Tile";
+*/
+//added by Mike, 20231105
+iTileBgCountOfEmptyTile=iTileBgCount;
+//arrayPuzzleTileCountId[iTileBgCount].alt);
+arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
+//-----
+
+
+                    //alert("dito"+arrayPuzzleTileCountId[iTileBgCount].alt);
+
 
           var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
 
-          //puzzleTileImageTargetBorder.style.visibility = "hidden";
-          puzzleTileImageTargetBorder.style.visibility = "visible";
+          //edited by Mike, 20231105
+          puzzleTileImageTargetBorder.style.visibility = "hidden";
+          //puzzleTileImageTargetBorder.style.visibility = "visible";
+          //-----
+
+//TODO: -add: new rules; delete immediately only if duplicate (with no "foreign key")
+
 
           //reminder: arrayPuzzleTileCountId[iTileBgCount].alt="";
           					puzzleTileImageTargetBorder.style.left = arrayPuzzleTileCountId[iTileBgCount].style.left;
@@ -1872,6 +1903,7 @@ var iDeltaY=(iYPos-iVerticalOffset)-mainImageTilePosY;
 */
 var iDeltaX=(iXPos-iHorizontalOffset)-(mainImageTilePosX+iImageFrameWidth/2);
 var iDeltaY=(iYPos-iVerticalOffset)-(mainImageTilePosY+iImageFrameHeight/2);
+
 
 
 
