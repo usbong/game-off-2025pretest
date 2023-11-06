@@ -1,5 +1,9 @@
 # Game Off 2023
 
+## DEMO (work-in-progress)
+
+http://store.usbong.ph/server/html_application/usbongGameOff2023Main.html
+
 ## Select Software Development Productivity Tools
 
 1) https://notepad-plus-plus.org/downloads/ (Windows)
