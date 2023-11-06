@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231105; from 20231104
+' @date updated: 20231106; from 20231105
 ' @website: www.usbong.ph
 '
 '
@@ -58,7 +58,7 @@
   </head>
 
   <title>
-    Usbong Motion Tween Tool-Part3: MOUSE POSITION
+    Usbong Game Off 2023
   </title>
 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -1473,6 +1473,40 @@ mainImageTileProjectile.style.visibility = "visible";
 
 
 	}
+	
+	//added by Mike, 20231106
+	function isUnique(iTileBgCountInput) {
+		//arrayPuzzleTileCountId[iTileBgCount].alt
+		
+		sInputTileValue=arrayPuzzleTileCountId[iTileBgCountInput].alt;
+		
+		//alert("sInputTileValue: "+sInputTileValue);
+		
+		for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+			for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) 		{
+				iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
+				
+				sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
+				
+				//alert("sOutputTileValue: "+sOutputTileValue);
+				
+				if (arrayPuzzleTileCountId[iTileBgCountTemp].style.visibility== "hidden") {
+					continue;
+				}
+				
+				//if not the same iTileBgCount
+				if (iTileBgCountInput!=iTileBgCountTemp) {
+					//unique?
+					if (sInputTileValue==sOutputTileValue) {
+						return false; //no
+					}			
+				}
+			}
+		}
+		
+		return true;
+	}
+
 
 	//added by Mike, 20230423
 	function processMouseInput() {
@@ -1589,10 +1623,12 @@ mainImageTileProjectile.style.visibility = "visible";
 
   			//OK; row1; columns; 1 to 4;
   			//row2; columns 5 to 8;...
-  /*
+/*  
   			alert("HIT! TILE COUNT: " + iTileBgCount);
   			alert("arrayPuzzleTileCountId[iTileBgCount].alt: " + arrayPuzzleTileCountId[iTileBgCount].alt);
-  */
+*/  
+
+/*//edited by Mike, 20231106
   			//edited by Mike, 20230524
   			if (arrayPuzzleTileCountId[iTileBgCount].alt=="") {
   				return;
@@ -1603,6 +1639,8 @@ mainImageTileProjectile.style.visibility = "visible";
   			//edited by Mike, 20230524
   			//if (arrayPuzzleTileCountId[iTileBgCount].alt!="") {
   			else if (arrayPuzzleTileCountId[iTileBgCount].alt!="") {
+*/
+		  if (1) {
 
 //         alert("dito"+arrayPuzzleTileCountId[iTileBgCount].alt);
 
@@ -1687,6 +1725,18 @@ mainImageTileProjectile.style.visibility = "visible";
 
   				//alert("arrayPuzzleTileCountId[iTileBgCount].alt: " + arrayPuzzleTileCountId[iTileBgCount].alt);
 
+			//added by Mike, 20231106
+			//arrayPuzzleTileCountId[iTileBgCount].alt
+			//alert("!!!");
+
+			if (isUnique(iTileBgCount)) {
+				//alert(">>>");
+			
+				return;
+			}
+			
+				
+				
   /*				arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].alt=arrayPuzzleTileCountId[iTileBgCount].alt;
 
   				arrayPuzzleTileCountId[iTileBgCount].alt="";
@@ -1714,10 +1764,15 @@ mainImageTileProjectile.style.visibility = "visible";
           arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].className="Image32x32Tile";
 */
 
+/* //edited by Mike, 20231106
 //added by Mike, 20231105
 iTileBgCountOfEmptyTile=iTileBgCount;
 //arrayPuzzleTileCountId[iTileBgCount].alt);
 arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
+*/
+//added by Mike, 20231105
+arrayPuzzleTileCountId[iTileBgCount].style.visibility = "hidden";
+
 
 //-----
 
@@ -1744,6 +1799,7 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
           arrayPuzzleTileCountId[iTargetTileBgCount].className="Image32x32TileSpace";
 
 
+/* //removed by Mike, 20231106
           //arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].alt=arrayPuzzleTileCountId[iTileBgCount].alt;
 
           arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].alt=arrayPuzzleTileCountId[iTileBgCount].alt;
@@ -1753,6 +1809,7 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
           iTargetTileBgCount=iTileBgCountOfEmptyTile;
 
           				arrayPuzzleTileCountId[iTileBgCount].alt="";
+*/
 
 
           //				alert("dito");
@@ -2239,6 +2296,8 @@ function autoUpdatePuzzleTileImage() {
 			}
 */
 
+
+
 				iTileBgCount++;
 			}
 		}
@@ -2455,7 +2514,20 @@ for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
       //count
       //edited by Mike, 20221106				//arrayPuzzleTileCountId[iTileBgCount].alt=(iTileBgCount+1)+"";
 
-      arrayPuzzleTileCountId[iTileBgCount].alt=(iTileBgCount+1)+"";
+      
+	  //edited by Mike, 20231106
+	  //put in initPuzzle()? //arrayPuzzleTileCountId[iTileBgCount].alt=(iTileBgCount+1)+"";	  
+      //edited by Mike, 20231106
+//	  arrayPuzzleTileCountId[iTileBgCount].alt=(1)+"";
+
+	  //OK; unique not destroyed
+	  if (iTileBgCount<iRowCountMax) {
+		arrayPuzzleTileCountId[iTileBgCount].alt=(1)+"";
+	  }
+	  else {
+		arrayPuzzleTileCountId[iTileBgCount].alt=(2)+"";
+	  }
+
 
       //added by Mike, 20221106
       arrayPuzzleTileCountId[iTileBgCount].className="Image32x32Tile";
