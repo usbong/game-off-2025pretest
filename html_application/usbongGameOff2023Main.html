@@ -1493,14 +1493,34 @@ mainImageTileProjectile.style.visibility = "visible";
 				if (arrayPuzzleTileCountId[iTileBgCountTemp].style.visibility== "hidden") {
 					continue;
 				}
-				
-				//if not the same iTileBgCount
+
+				/* //edited by Mike, 20231107
 				if (iTileBgCountInput!=iTileBgCountTemp) {
 					//unique?
 					if (sInputTileValue==sOutputTileValue) {
 						return false; //no
 					}			
 				}
+				*/
+				
+				//TODO: -add: if no more copies; update tile
+				
+				//if not the same iTileBgCount
+				if (iTileBgCountInput!=iTileBgCountTemp) {
+					//unique?
+//					if (sInputTileValue==sOutputTileValue) {
+					//if not in the same row in tile.png; iTileBgCount
+					//4*4
+					//note: start from 0; so -1
+					if (Math.floor((sInputTileValue-1)/4)==Math.floor((sOutputTileValue-1)/4)) {			
+					
+						//alert(Math.floor((sOutputTileValue-1)/4));
+					
+						return false; //no
+					}			
+				}
+
+				
 			}
 		}
 		
@@ -2540,6 +2560,16 @@ function autoUpdatePuzzleTileImage() {
 }
 
 
+//added by Mike, 20231107
+var iMaxTileTypeCopyCount=4;
+var iCurrTileTypeCopyCount=0;
+//4*4
+var arrayTileType = [0,0,0,0]; //iCurrTileTypeCount
+
+var iArrayTileTypeLength=4;
+var iCurrArrayTileTypeCount=0;
+
+//alert(arrayTileType[3]);
 
 //added by Mike, 20221106
 iTileBgCount=0;
@@ -2566,13 +2596,38 @@ for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
       //edited by Mike, 20231106
 //	  arrayPuzzleTileCountId[iTileBgCount].alt=(1)+"";
 
-	  //OK; unique not destroyed
+/* //edited by Mike, 20231107
+	  //OK; unique not destroyed	  
 	  if (iTileBgCount<iRowCountMax) {
 		arrayPuzzleTileCountId[iTileBgCount].alt=(1)+"";
 	  }
 	  else {
 		arrayPuzzleTileCountId[iTileBgCount].alt=(2)+"";
 	  }
+*/
+	  //auto-generate board objects	  
+/*	  
+var iMaxTileTypeCopyCount=4;
+var iCurrTileTypeCopyCount=0;
+//4*4
+var arrayTileType = [0,0,0,0]; //iCurrTileTypeCount
+
+var iArrayTileTypeLength=4;
+var iCurrArrayTileTypeCount=0;
+*/	  
+
+//alert (iCurrTileTypeCopyCount);
+
+if (iCurrTileTypeCopyCount<12) {
+	arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+"";
+	iCurrTileTypeCopyCount++;
+}	
+//note: remaining tiles need to be filled
+else {
+	arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+"";
+}
+
+	  //---
 
 
       //added by Mike, 20221106
@@ -2716,27 +2771,27 @@ opting to put assets folder in "html_application" folder instead
 		  note: .html; not .php -->
 
 <!-- set 1 -->
-<img id="puzzleTileImageIdBg0" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg1" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg2" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg3" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg4" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg0" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg1" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg2" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg3" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg4" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
 
 <!-- set 2 -->
-<img id="puzzleTileImageIdBg5" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg6" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg7" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg8" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg5" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg6" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg7" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg8" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
 <!-- set 3 -->
-<img id="puzzleTileImageIdBg9" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg10" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg11" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg12" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg9" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg10" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg11" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg12" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
 <!-- set 4 -->
-<img id="puzzleTileImageIdBg13" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg14" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg15" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
-<img id="puzzleTileImageIdBg16" class="Image32x32Tile" onerror="" src="assets/images/count.png" alt="" title="">
+<img id="puzzleTileImageIdBg13" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg14" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg15" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
+<img id="puzzleTileImageIdBg16" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
 
 
 
