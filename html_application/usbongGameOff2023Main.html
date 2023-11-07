@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231106; from 20231105
+' @date updated: 20231107; from 20231106
 ' @website: www.usbong.ph
 '
 '
@@ -1508,45 +1508,7 @@ mainImageTileProjectile.style.visibility = "visible";
 	}
 
 
-	//added by Mike, 20230423
-	function processMouseInput() {
-		//reference: https://stackoverflow.com/questions/70827887/detect-click-vs-touch-in-javascript;
-		//last accessed: 20221110
-		//answer by:  Jacob, 20220124T0110
-		document.body.addEventListener('pointerdown', (event) => {
-			//reference: https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType;
-			//last accessed: 20221122
-			switch(event.pointerType) {
-				case 'mouse':
-/*
-          //TODO: -add: this
-          if (bIsUsingAppleWebKit) {
-  				  bIsUsingAppleMac=true;
-  				}
-
-  				//added by Mike, 20230710
-  				if (!bHasViewedTitle) {
-  					return;
-  				}
-  				//added by Mike, 20230710
-  				if (bIsInitAutoGeneratePuzzleFromEnd) {
-  					return;
-  				}
-  				//added by Mike, 20230710
-  				if (bIsPuzzleDone) {
-  					return;
-  				}
-*/
-					//note: ZOOM function causes position ERROR via screenX
-					var iXPos = event.clientX;//screenX;
-
-					//note: screenY includes BROWSER address bar, et cetera;
-					var iYPos = event.pageY; //screenY;
-
-/*					//edited by Mike, 20230423
-					alert("iXPos: "+iXPos);
-					alert("iYPos: "+iYPos);
-*/
+	function processResultFromInput(iXPos, iYPos) {
 
 					var mainImageTile = document.getElementById("mainImageTileImageId");
 
@@ -1858,7 +1820,6 @@ arrayPuzzleTileCountId[iTileBgCount].style.visibility = "hidden";
 
 
 
-
 //iMainImageTileStepAngleTemp+=10;
 //iMainImageTileStepAngleTemp=90;
 
@@ -2087,6 +2048,49 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 */
+	}
+	
+	//added by Mike, 20230423
+	function processMouseInput() {
+		//reference: https://stackoverflow.com/questions/70827887/detect-click-vs-touch-in-javascript;
+		//last accessed: 20221110
+		//answer by:  Jacob, 20220124T0110
+		document.body.addEventListener('pointerdown', (event) => {
+			//reference: https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType;
+			//last accessed: 20221122
+			switch(event.pointerType) {
+				case 'mouse':
+/*
+          //TODO: -add: this
+          if (bIsUsingAppleWebKit) {
+  				  bIsUsingAppleMac=true;
+  				}
+
+  				//added by Mike, 20230710
+  				if (!bHasViewedTitle) {
+  					return;
+  				}
+  				//added by Mike, 20230710
+  				if (bIsInitAutoGeneratePuzzleFromEnd) {
+  					return;
+  				}
+  				//added by Mike, 20230710
+  				if (bIsPuzzleDone) {
+  					return;
+  				}
+*/
+					//note: ZOOM function causes position ERROR via screenX
+					var iXPos = event.clientX;//screenX;
+
+					//note: screenY includes BROWSER address bar, et cetera;
+					var iYPos = event.pageY; //screenY;
+
+/*					//edited by Mike, 20230423
+					alert("iXPos: "+iXPos);
+					alert("iYPos: "+iYPos);
+*/
+					//added by Mike, 20231107
+					processResultFromInput(iXPos, iYPos);
 
 					break;
 				case 'touch':
@@ -2112,6 +2116,48 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 	}
 
 
+	//TODO: -fix: touch-and-hold image displayed problem
+function processTouchInput() {	
+	//added by Mike, 20231107
+	//reference: https://stackoverflow.com/questions/62823062/adding-a-simple-left-right-swipe-gesture/62825217#62825217;
+	//answer by: smmehrab, 20200709T2330; edited 20200711T0355
+	document.body.addEventListener('touchstart', function (event) {
+
+		iEventChangedTouchCount = event.changedTouches.length;
+		
+		for (iCount=0; iCount<iEventChangedTouchCount; iCount++) {
+			
+		//added by Mike, 20221121
+//		if (iCurrentMiniGame==MINI_GAME_PUZZLE) {
+/* //removed temporarily by Mike, 20231107
+			if (bHasPressedStart) {
+*/			
+
+/* //removed by Mike, 20230121			
+				var monsterTile = document.getElementById("monsterTileImageId");
+*/				
+				//edited by Mike, 20221121
+				//note: ZOOM function causes position ERROR via screenX
+				var iXPos = event.changedTouches[iCount].clientX;//screenX;
+
+				//note: screenY includes BROWSER address bar, et cetera;
+				var iYPos = event.changedTouches[iCount].pageY; //screenY;
+
+				//alert(iYPos);
+/*
+				alert("iXPos: "+iXPos);
+				alert("iYPos: "+iYPos);
+*/		
+				processResultFromInput(iXPos, iYPos);
+		
+/* //removed temporarily by Mike, 20231107			
+			}
+*/			
+//		}
+		}		
+	});
+}	
+	
 function removeFromPuzzleStageExcessTiles() {
 
 	//iTileBgCountMax = 16
@@ -2609,6 +2655,9 @@ window.addEventListener("orientationchange", function() {
 
 		//added by Mike, 20230423
 		processMouseInput();
+		
+		//added by Mike, 202301107
+		processTouchInput();
 
 		fFramesPerSecond=16.66; //100.00; //16.66;
 		clearInterval(iCurrentIntervalId);
