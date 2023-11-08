@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231107; from 20231106
+' @date updated: 20231108; from 20231107
 ' @website: www.usbong.ph
 '
 '
@@ -1478,7 +1478,14 @@ mainImageTileProjectile.style.visibility = "visible";
 	function isUnique(iTileBgCountInput) {
 		//arrayPuzzleTileCountId[iTileBgCount].alt
 		
-		sInputTileValue=arrayPuzzleTileCountId[iTileBgCountInput].alt;
+		//edited by Mike, 20231108
+		//sInputTileValue=arrayPuzzleTileCountId[iTileBgCountInput].alt;
+		//sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
+			
+		sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountInput].alt;
+
+	    //edited by Mike, 20231108	//sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));		
+		sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK"));
 		
 		//alert("sInputTileValue: "+sInputTileValue);
 		
@@ -1486,7 +1493,14 @@ mainImageTileProjectile.style.visibility = "visible";
 			for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) 		{
 				iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
 				
-				sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
+				//edited by Mike, 20231108
+	//sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
+			
+				sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
+
+			    //edited by Mike, 20231108				//sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));
+				sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK"));
+				
 				
 				//alert("sOutputTileValue: "+sOutputTileValue);
 				
@@ -1527,7 +1541,75 @@ mainImageTileProjectile.style.visibility = "visible";
 		return true;
 	}
 
+	//added by Mike, 20231108
+	//TODO: -update: this
+	function hasForeignKey(iTileBgCountInput) {
+f		//arrayPuzzleTileCountId[iTileBgCount].alt
+		
+		//edited by Mike, 20231108
+		//sInputTileValue=arrayPuzzleTileCountId[iTileBgCountInput].alt;
+		//sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
+			
+		sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountInput].alt;
 
+		//edited by Mike, 20231108		//sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));		
+		sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK"));		
+		
+		
+		//alert("sInputTileValue: "+sInputTileValue);
+		
+		for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+			for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) 		{
+				iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
+				
+				//edited by Mike, 20231108
+	//sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
+			
+				sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
+
+				//edited by Mike, 20231108				//sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));
+				sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK"));
+
+				
+				//alert("sOutputTileValue: "+sOutputTileValue);
+				
+				if (arrayPuzzleTileCountId[iTileBgCountTemp].style.visibility== "hidden") {
+					continue;
+				}
+
+				/* //edited by Mike, 20231107
+				if (iTileBgCountInput!=iTileBgCountTemp) {
+					//unique?
+					if (sInputTileValue==sOutputTileValue) {
+						return false; //no
+					}			
+				}
+				*/
+				
+				//TODO: -add: if no more copies; update tile
+				
+				//if not the same iTileBgCount
+				if (iTileBgCountInput!=iTileBgCountTemp) {
+					//unique?
+//					if (sInputTileValue==sOutputTileValue) {
+					//if not in the same row in tile.png; iTileBgCount
+					//4*4
+					//note: start from 0; so -1
+					if (Math.floor((sInputTileValue-1)/4)==Math.floor((sOutputTileValue-1)/4)) {			
+					
+						//alert(Math.floor((sOutputTileValue-1)/4));
+					
+						return false; //no
+					}			
+				}
+
+				
+			}
+		}
+		
+		return true;
+	}
+	
 	function processResultFromInput(iXPos, iYPos) {
 
 					var mainImageTile = document.getElementById("mainImageTileImageId");
@@ -2259,10 +2341,25 @@ function autoUpdatePuzzleTileImage() {
 			else {
 						//alert(">>>>");
 
-			//added by Mike, 20221113
-			iTileTextCount=parseInt(arrayPuzzleTileCountId[iTileBgCount].alt);
+			//edited by Mike, 20231108; from 20221113
+	//iTileTextCount=parseInt(arrayPuzzleTileCountId[iTileBgCount].alt);
+	
+	//alert(arrayPuzzleTileCountId[iTileBgCount].alt.substring(0,1));
+			sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCount].alt;
+			//iTileTextCount=parseInt(arrayPuzzleTileCountId[iTileBgCount].alt.substring(0,arrayPuzzleTileCountId[iTileBgCount].alt.indexOf(",")));
+						
+		    //edited by Mike, 20231108	//iTileTextCount=parseInt(sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",")));
+			iTileTextCount=parseInt(sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK")));
 
-				iColumnCount = (iTileTextCount-1)%4;
+			//alert(">>>"+iTileTextCount);
+
+/*			
+			if (isNan(iTileTextCount)) {
+				iTileTextCount=0;
+			}
+*/
+			
+			iColumnCount = (iTileTextCount-1)%4;
 				iRowCount = Math.floor((iTileTextCount-1)/4);
 
 /* //edited by Mike, 20230111
@@ -2619,12 +2716,20 @@ var iCurrArrayTileTypeCount=0;
 //alert (iCurrTileTypeCopyCount);
 
 if (iCurrTileTypeCopyCount<12) {
-	arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+"";
+	
+   //edited by Mike, 20231108    //arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+"";
+   //edited by Mike, 20231108 //arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+",1";
+	arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+",FK=1"; //note: semicolon not usable in .alt text
+   
 	iCurrTileTypeCopyCount++;
 }	
 //note: remaining tiles need to be filled
 else {
-	arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+"";
+	//edited by Mike, 20231108
+	//arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+"";
+	//edited by Mike, 20231108
+	//arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",1";
+	arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",FK=1";	
 }
 
 	  //---
