@@ -2,7 +2,7 @@
 
 ## DEMO (work-in-progress)
 
-http://store.usbong.ph/server/html_application/usbongGameOff2023Main.html
+http://store.usbong.ph/server/html_application/index.html
 
 ### ITCH.IO
 
