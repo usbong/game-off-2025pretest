@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231109; from 20231108
+' @date updated: 20231110; from 20231109
 ' @website: www.usbong.ph
 '
 '
@@ -964,8 +964,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 	//added by Mike, 20231109
 	function isAutoVerifiedPuzzleDone() {
 			
-		bIsPuzzleDone=true;
-
+		//bIsPuzzleDone=true;
+		
     	for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
     		for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
 			
@@ -973,19 +973,27 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 				
 				//alert("iTileBgCount: "+iTileBgCount);
 
-/*	//TODO: -update: this				
-				//verify if all tiles are unique;
-				if (!hasNoCopy(iTileBgCount)) {
-					bIsPuzzleDone=false;
+				//verify if all tiles do not have anymore copies;
+				
+				//TODO: -fix: game finished even if only triangle has no copy;
+				if (hasCopy(iTileBgCount)) {
+					//alert("DITO!");
+				
+					//bIsPuzzleDone=false;
 					
-					return bIsPuzzleDone;
-				}				
+					return false; //bIsPuzzleDone;					
+				}
+/*				
+				//verify for all tile types; alt
+				else {
+					bIsPuzzleDone=true;
+				}
 */				
 			}
 		}
 		
 		//TODO: -update: this
-		return false; //bIsPuzzleDone;
+		return true; //bIsPuzzleDone; //false; 
 	}
 	
 	function myUpdateFunction() {
@@ -1498,7 +1506,7 @@ mainImageTileProjectile.style.visibility = "visible";
       }
     }
 
-	
+/* //removed by Mike, 20231110; added to function for click/touch	
 	bIsPuzzleDone = isAutoVerifiedPuzzleDone();
 	
 	//alert(bIsPuzzleDone);
@@ -1506,7 +1514,7 @@ mainImageTileProjectile.style.visibility = "visible";
 	if (bIsPuzzleDone) {
 		alert("CONGRATULATIONS!");
 	}
-				
+*/
 			
 //    alert(iColumnCount);
 
@@ -1519,52 +1527,69 @@ mainImageTileProjectile.style.visibility = "visible";
 	}
 	
 	
-	//added by Mike, 20231109
-	//TODO: -update: this
-	function hasNoCopy(iTileBgCountInput) {
-		sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountInput].alt;
+	//edited by Mike, 20231110; from 20231109
+	function hasCopy(iTileBgCountInput) {	
+		sInputTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountInput].alt;
 
 	    //edited by Mike, 20231108	//sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));		
-		sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK"));
+		sInputTileValue=sInputTileCountIdAltTemp.substring(0,sInputTileCountIdAltTemp.indexOf(",FK"));
 		
 		//alert("sInputTileValue: "+sInputTileValue);
 		
 		for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
-			for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) 		{
+			for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
 				iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
 				
 				//edited by Mike, 20231108
 	//sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
 			
-				sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
+				sOutputTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
 
 			    //edited by Mike, 20231108				//sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));
-				sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK"));
+				sOutputTileValue=sOutputTileCountIdAltTemp.substring(0,sOutputTileCountIdAltTemp.indexOf(",FK"));
 				
 				
 				//alert("sOutputTileValue: "+sOutputTileValue);
-				
+								
 				if (arrayPuzzleTileCountId[iTileBgCountTemp].style.visibility== "hidden") {
+				
 					continue;
 				}
-
 				
-				//if not the same iTileBgCount
-				if (iTileBgCountInput!=iTileBgCountTemp) {
-					
+				//edited by Mike, 20231110
+				//if not the same iTileBgCount				
+				//if (iTileBgCountInput!=iTileBgCountTemp) {
+/*				
+				alert("iTileBgCountInput: "+iTileBgCountInput);
+				alert("iTileBgCountTemp: "+iTileBgCountTemp);
+*/
+				
+				
+				//if not the exact, same alt value;
+				if (sInputTileCountIdAltTemp!=
+				sOutputTileCountIdAltTemp) {
+				
 					//if not in the same row in tile.png; iTileBgCount
 
-					//has no more copy
+					//alert(">>>"+sInputTileValue+"; "+sOutputTileValue);
 
+					//alert(">>>"+Math.floor((sInputTileValue-1)/4)+"; "+Math.floor((sOutputTileValue-1)/4));
+									
 					//4*4
 					//note: start from 0; so -1
-					if (Math.floor((sInputTileValue-1)/4)==Math.floor((sOutputTileValue-1)/4)) {								
-						//return true; 
+					//if in same row; has copy
+					if (Math.floor((sInputTileValue-1)/4)==Math.floor((sOutputTileValue-1)/4)) {
+					
+						//alert("has copy!");
+						
+						//bHasCopy=true;
+						return true; 
 					}			
-				}
-				
+				}				
 			}
 		}
+		
+		//alert("NO MORE COPY FOR THE TILE TYPE!");
 		
 		return false;
 	}
@@ -2358,13 +2383,24 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 					//note: screenY includes BROWSER address bar, et cetera;
 					var iYPos = event.pageY; //screenY;
 
-/*					//edited by Mike, 20230423
+/*
+					//edited by Mike, 20230423
 					alert("iXPos: "+iXPos);
 					alert("iYPos: "+iYPos);
 */
+					
 					//added by Mike, 20231107
 					processResultFromInput(iXPos, iYPos);
+					
+					//added by Mike, 20231110					
+					bIsPuzzleDone = isAutoVerifiedPuzzleDone();
 
+					//alert(bIsPuzzleDone);
+
+					if (bIsPuzzleDone) {
+						alert("CONGRATULATIONS!");
+					}
+					
 					break;
 				case 'touch':
 /*
