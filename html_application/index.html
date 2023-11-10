@@ -966,12 +966,13 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 			
 		//bIsPuzzleDone=true;
 		
-    	for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
-    		for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
+		//note: "var" to create new container inside for loop
+    	for (var iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+    		for (var iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
 			
-				iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount];
+				var iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount];
 				
-				//alert("iTileBgCount: "+iTileBgCount);
+				//alert("!!!! iTileBgCount: "+iTileBgCount);
 
 				//verify if all tiles do not have anymore copies;
 				
@@ -983,6 +984,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 					
 					return false; //bIsPuzzleDone;					
 				}
+				
 /*				
 				//verify for all tile types; alt
 				else {
@@ -994,6 +996,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		
 		//TODO: -update: this
 		return true; //bIsPuzzleDone; //false; 
+
+//		return false;
 	}
 	
 	function myUpdateFunction() {
@@ -1529,63 +1533,67 @@ mainImageTileProjectile.style.visibility = "visible";
 	
 	//edited by Mike, 20231110; from 20231109
 	function hasCopy(iTileBgCountInput) {	
-		sInputTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountInput].alt;
+		var sInputTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountInput].alt;
 
 	    //edited by Mike, 20231108	//sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));		
-		sInputTileValue=sInputTileCountIdAltTemp.substring(0,sInputTileCountIdAltTemp.indexOf(",FK"));
+		var sInputTileValue=sInputTileCountIdAltTemp.substring(0,sInputTileCountIdAltTemp.indexOf(",FK"));
 		
 		//alert("sInputTileValue: "+sInputTileValue);
 		
-		for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
-			for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
-				iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
+		//note: "var" to create new container inside for loop
+		for (var iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+			for (var iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
+				var iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
 				
 				//edited by Mike, 20231108
 	//sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
 			
-				sOutputTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
+				var sOutputTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
 
 			    //edited by Mike, 20231108				//sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));
-				sOutputTileValue=sOutputTileCountIdAltTemp.substring(0,sOutputTileCountIdAltTemp.indexOf(",FK"));
+				var sOutputTileValue=sOutputTileCountIdAltTemp.substring(0,sOutputTileCountIdAltTemp.indexOf(",FK"));
 				
 				
-				//alert("sOutputTileValue: "+sOutputTileValue);
-								
-				if (arrayPuzzleTileCountId[iTileBgCountTemp].style.visibility== "hidden") {
 				
-					continue;
-				}
-				
-				//edited by Mike, 20231110
-				//if not the same iTileBgCount				
-				//if (iTileBgCountInput!=iTileBgCountTemp) {
-/*				
-				alert("iTileBgCountInput: "+iTileBgCountInput);
-				alert("iTileBgCountTemp: "+iTileBgCountTemp);
+				//alert("sOutputTileValue: "+sOutputTileValue);	
+				//alert((Math.floor((sOutputTileValue-1)/4)));
+/*
+				alert("sInputTileValue: "+sInputTileValue);
+				alert((Math.floor((sInputTileValue-1)/4)));
 */
-				
-				
-				//if not the exact, same alt value;
-				if (sInputTileCountIdAltTemp!=
-				sOutputTileCountIdAltTemp) {
-				
-					//if not in the same row in tile.png; iTileBgCount
 
-					//alert(">>>"+sInputTileValue+"; "+sOutputTileValue);
-
-					//alert(">>>"+Math.floor((sInputTileValue-1)/4)+"; "+Math.floor((sOutputTileValue-1)/4));
-									
+//				if (sInputTileValue!==sOutputTileValue) {
 					//4*4
 					//note: start from 0; so -1
-					//if in same row; has copy
-					if (Math.floor((sInputTileValue-1)/4)==Math.floor((sOutputTileValue-1)/4)) {
-					
-						//alert("has copy!");
+					//if in same row of input image file; has copy
+					if (Math.floor((parseInt(sInputTileValue-1))/4)===Math.floor((parseInt(sOutputTileValue-1))/4)) {						
+						//AND not itself
+						//if (sInputTileValue!==sOutputTileValue) {
+						//if (!sInputTileValue.localeCompare(sOutputTileValue)) {
 						
-						//bHasCopy=true;
-						return true; 
-					}			
-				}				
+						//alert (">> DITO");
+						
+						if (parseInt(sInputTileValue)!=parseInt(sOutputTileValue)) {
+
+						//alert (">>>>>>");
+						
+							//alert("has copy!");
+/*						
+						alert("sInputTileValue: "+sInputTileValue);
+						alert("sOutputTileValue: "+sOutputTileValue);	
+*/						
+							//bHasCopy=true;
+							return true; 
+						}
+
+//							return true;
+					}	
+
+//				}
+
+
+
+				
 			}
 		}
 		
@@ -1649,7 +1657,11 @@ mainImageTileProjectile.style.visibility = "visible";
 					//if not in the same row in tile.png; iTileBgCount
 					//4*4
 					//note: start from 0; so -1
-					if (Math.floor((sInputTileValue-1)/4)==Math.floor((sOutputTileValue-1)/4)) {			
+					//edited by Mike, 20231110
+/*
+					if (Math.floor((sInputTileValue-1)/4)==Math.floor((sOutputTileValue-1)/4)) {	
+*/					
+					if (Math.floor((parseInt(sInputTileValue-1)/4))==Math.floor((parseInt(sOutputTileValue-1)/4))) {			
 					
 						//alert(Math.floor((sOutputTileValue-1)/4));
 					
@@ -1954,9 +1966,16 @@ mainImageTileProjectile.style.visibility = "visible";
 */					
 				//4*4
 				//note: start from 0; so -1
+/*
+				//edited by Mike, 20231110
 				sCurrHitTileType=Math.floor((sCurrHitTile-1)/4)	;
 				sPrevHitTileType=Math.floor((sPrevHitTile-1)/4)	;
-/*
+*/
+				sCurrHitTileType=Math.floor(parseInt((sCurrHitTile-1)/4));
+				sPrevHitTileType=Math.floor(parseInt((sPrevHitTile-1)/4));
+
+				
+				/*
 				alert("sCurrHitTileType: "+sCurrHitTileType);
 				alert("sPrevHitTileType: "+sPrevHitTileType);
 */
