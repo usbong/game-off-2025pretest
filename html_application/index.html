@@ -373,6 +373,57 @@
     			z-index: 3;
     		}
 
+			
+			/*added by Mike, 20231111 */
+			div.DivTextStatus
+			{
+				position: absolute;
+/*	//edited by Mike, 20221213							
+				background-color: #000000aa;
+*/							
+				background-color: #00000099;
+				color: #ffffff; /*#ffbd00;*/ /* gold */
+
+				border: 3px solid #ffffff;
+				border-radius: 4px;		
+				
+
+
+				/*opacity: 50%;*/
+
+				font-size: 16px;
+				font-weight: bold;
+
+/* //edited by Mike, 20230130							
+				margin: 10px;
+*/
+				padding: 10px;
+
+				visibility: hidden;	
+				
+				/* added by Mike, 20230128;
+					put above tile images */
+				z-index: 90; /*4;*/													
+			}
+			
+			div.DivTextEnter
+			{
+				position: absolute;
+				/*background-color: #000000aa;*/
+				color: #ffffff;
+
+				/*opacity: 50%;*/
+
+				font-size: 16px;
+				font-weight: bold;
+
+				/* //noted by Mike, 20230130 */
+				padding: 10px;
+
+				visibility: visible;							
+			}	
+						
+						
   </style>
 
   <script>
@@ -979,7 +1030,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 				//verify if all tiles do not have anymore copies;
 				
-				//TODO: -fix: game finished even if only triangle has no copy;
+				//added by Mike, 20231111; hint "var" keyphrase
+				//fixed: game finished even if only triangle has no copy;
 				if (hasCopy(iTileBgCount)) {
 					//alert("DITO!");
 				
@@ -1010,6 +1062,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		//added by Mike, 20231111
 		var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
+		
+		var textStatusDiv = document.getElementById("textStatusDivId");
+		var textEnterDiv = document.getElementById("textEnterDivId");
 		
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
@@ -1149,6 +1204,12 @@ mainImageTileStepX=15; //2;
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 		*/
+		
+
+/*	
+	textStatusDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextStatusDivWidth/2 +"px";
+	textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px"; 		
+*/
 		
 		//added by Mike, 20231111
 		if (bIsActionKeyPressed) {
@@ -1560,7 +1621,52 @@ mainImageTileProjectile.style.visibility = "visible";
 		//edited by Mike, 20221113; 20221112
 		autoUpdatePuzzleTileImage();
 
+		//added by Mike, 20231111
+		if (bIsPuzzleDone) {
+			//removed by Mike, 20231111
+			//alert("CONGRATULATIONS!");
+			
+			//added by Mike, 20231111
+			var sText = "CONGRATULATIONS!";
 
+			//alert(sText.length);
+			var iTextStatusDivWidth = (textStatusDiv.clientWidth);
+			var iTextStatusDivHeight = (textStatusDiv.clientHeight);
+		
+			textStatusDiv.innerHTML = sText;
+
+			textStatusDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextStatusDivWidth/2 +"px";
+			textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px"; 
+			
+			textStatusDiv.style.visibility="visible";
+
+/*			
+			//added by Mike, 20221125
+			if (myAudio.volume>0) {
+				fMyAudioVolume-=0.2;
+
+				if (fMyAudioVolume<0) {
+					fMyAudioVolume=0;
+				}
+					
+				myAudio.volume=fMyAudioVolume; 
+			}
+			else {				
+				myAudio.pause();
+			}
+*/
+			
+			
+			
+			//reset
+			bIsActionKeyPressed=false;
+			iTargetAtSpaceBlinkAnimationCount=0;
+			puzzleTileImageSpaceBorder.style.visibility = "hidden";
+			
+			//next battle?
+			bIsPuzzleDone=false;
+			
+		}
 	}
 	
 	
@@ -2472,6 +2578,7 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 
 					//alert(bIsPuzzleDone);
 
+/* //removed by Mike, 20231111					
 					if (bIsPuzzleDone) {
 						alert("CONGRATULATIONS!");
 						
@@ -2482,7 +2589,7 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 						puzzleTileImageSpaceBorder.style.visibility = "hidden";
 						
 					}
-					
+*/					
 					break;
 				case 'touch':
 /*
@@ -3276,6 +3383,8 @@ opting to put assets folder in "html_application" folder instead
 	<div id="divPuzzleTileImageSpaceBorderId" class="Image32x32TileSpaceBorder"></div>
 
 
+	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
+	<div id="textEnterDivId" class="DivTextEnter">PRESS ENTER</div>
 
 
   </body>
