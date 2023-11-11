@@ -402,6 +402,9 @@ const iTileBgCountMax=iRowCountMax*iColumnCountMax;
 //added by Mike, 20231109
 var bHasHitTileWithForeignKey=false;
 var bIsPuzzleDone=false;
+
+//added by Mike, 20231111
+var bIsActionKeyPressed=false;
 		
 /*
 //added by Mike, 20221108
@@ -1005,6 +1008,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//added by Mike, 20230427
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
+		//added by Mike, 20231111
+		var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
+		
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
 		var setPanelTable = document.getElementById("tableSetPanelId");
@@ -1143,8 +1149,35 @@ mainImageTileStepX=15; //2;
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 		*/
+		
+		//added by Mike, 20231111
+		if (bIsActionKeyPressed) {
+/*		
+			alert ("iTargetAtSpaceBlinkAnimationCount: "+iTargetAtSpaceBlinkAnimationCount);
+			alert ("iTargetAtSpaceBlinkAnimationCountMax: "+iTargetAtSpaceBlinkAnimationCountMax);
+*/		
+			//alert ("modulo: "+iTargetAtSpaceBlinkAnimationCount%iTargetAtSpaceBlinkAnimationCountMax);
 
+			iTargetAtSpaceBlinkAnimationCount++;
+			
+			//if (iTargetAtSpaceBlinkAnimationCount==iTargetAtSpaceBlinkAnimationCountMax) {
+			if ((iTargetAtSpaceBlinkAnimationCount%iTargetAtSpaceBlinkAnimationCountMax)==0) {
 
+				puzzleTileImageSpaceBorder.style.visibility = "visible";	
+								
+				if (iTargetAtSpaceBlinkAnimationCount==iTargetAtSpaceBlinkAnimationCountMax*5) {
+				
+					bIsActionKeyPressed=false;
+					iTargetAtSpaceBlinkAnimationCount=0;
+					puzzleTileImageSpaceBorder.style.visibility = "hidden";
+				}
+			}
+			else {
+				puzzleTileImageSpaceBorder.style.visibility =   "hidden";
+				//iTargetAtSpaceBlinkAnimationCount++;
+			}
+		}
+			
 
 		//notes: delay before CHANGE in frame
 		//adds max (12) frames before frame update
@@ -1946,14 +1979,20 @@ mainImageTileProjectile.style.visibility = "visible";
 
 					//added by Mike, 20231111
 					var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
-
+					
+					var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
 					puzzleTileImageTargetBorder.style.visibility = "visible";
+				
+					puzzleTileImageSpaceBorder.style.visibility = "visible";
 				  
 					//reminder: arrayPuzzleTileCountId[iTileBgCount].alt="";
 					puzzleTileImageTargetBorder.style.left = arrayPuzzleTileCountId[iTileBgCount].style.left;
 
 					puzzleTileImageTargetBorder.style.top = arrayPuzzleTileCountId[iTileBgCount].style.top;
 					
+					puzzleTileImageSpaceBorder.style.left = arrayPuzzleTileCountId[iTileBgCount].style.left;
+
+					puzzleTileImageSpaceBorder.style.top = arrayPuzzleTileCountId[iTileBgCount].style.top;
 
   				//alert("arrayPuzzleTileCountId[iTileBgCount].alt: " + arrayPuzzleTileCountId[iTileBgCount].alt);
 
@@ -2007,6 +2046,7 @@ mainImageTileProjectile.style.visibility = "visible";
 
 					//added by Mike, 20231111
 					puzzleTileImageTargetBorder.style.visibility = "hidden";
+					puzzleTileImageSpaceBorder.style.visibility = "hidden";
 
 					return;
 				}	
@@ -2434,6 +2474,13 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 
 					if (bIsPuzzleDone) {
 						alert("CONGRATULATIONS!");
+						
+						//added by Mike, 20231111
+						//reset
+						bIsActionKeyPressed=false;
+						iTargetAtSpaceBlinkAnimationCount=0;
+						puzzleTileImageSpaceBorder.style.visibility = "hidden";
+						
 					}
 					
 					break;
