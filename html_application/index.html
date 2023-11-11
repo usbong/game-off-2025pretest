@@ -2772,6 +2772,10 @@ function autoUpdatePuzzleTileImage() {
 }
 
 	function initPuzzle() {
+		//added by Mike, 20231111
+		//TODO: -verify: this
+		var myCanvas = document.getElementById("myCanvasId");
+		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px"; 		iHorizontalOffset=myCanvas.getBoundingClientRect().x;	
 
 			//alert(iRowCountMax);
 
@@ -2850,7 +2854,7 @@ function autoUpdatePuzzleTileImage() {
 			//edited by Mike, 20221127	//arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
 /*			if (bHasPressedStart) {
 */
-				arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
+			   arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
 /*
 			}
 */
