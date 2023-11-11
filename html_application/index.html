@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231110; from 20231109
+' @date updated: 20231111; from 20231110
 ' @website: www.usbong.ph
 '
 '
@@ -1783,6 +1783,7 @@ mainImageTileProjectile.style.visibility = "visible";
   	//added by Mike, 20230523
   	bHasExecutedTileExchange=false;
 
+/* //removed by Mike, 20231111
   	for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
   		for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) 		{
 
@@ -1797,6 +1798,7 @@ mainImageTileProjectile.style.visibility = "visible";
   			}
   		}
   	}
+*/
 
 //alert("dito"+iTileBgCountOfEmptyTile);
 
@@ -1942,6 +1944,17 @@ mainImageTileProjectile.style.visibility = "visible";
 */
 
 
+					//added by Mike, 20231111
+					var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
+
+					puzzleTileImageTargetBorder.style.visibility = "visible";
+				  
+					//reminder: arrayPuzzleTileCountId[iTileBgCount].alt="";
+					puzzleTileImageTargetBorder.style.left = arrayPuzzleTileCountId[iTileBgCount].style.left;
+
+					puzzleTileImageTargetBorder.style.top = arrayPuzzleTileCountId[iTileBgCount].style.top;
+					
+
   				//alert("arrayPuzzleTileCountId[iTileBgCount].alt: " + arrayPuzzleTileCountId[iTileBgCount].alt);
 
 			//OK; TODO: -add: tiles connected to target via FK
@@ -1990,7 +2003,10 @@ mainImageTileProjectile.style.visibility = "visible";
 			
 					iPrevHitTileBgCount="";//iTileBgCount;
 
-					bHasHitTileWithForeignKey=false;		
+					bHasHitTileWithForeignKey=false;	
+
+					//added by Mike, 20231111
+					puzzleTileImageTargetBorder.style.visibility = "hidden";
 
 					return;
 				}	
