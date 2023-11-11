@@ -457,6 +457,22 @@ var bIsPuzzleDone=false;
 //added by Mike, 20231111
 var bIsActionKeyPressed=false;
 		
+		
+//added by Mike, 20231111
+//reference: https://github.com/usbong/tugon/blob/main/mainLinux.cpp;
+//last accessed: 20221125
+var bIsExecutingDestroyHuman=false;
+var iDestroyHumanShakeDelayCount=0;
+var iDestroyHumanShakeDelayMax=5;
+
+var iShakeOffsetWidthMax=2;
+var iShakeOffsetHeightMax=2;
+
+var iShakeOffsetWidth=iShakeOffsetWidthMax;
+var iShakeOffsetHeight=iShakeOffsetHeightMax;
+
+		
+		
 /*
 //added by Mike, 20221108
 var iCountMovementStep=0;
@@ -1129,13 +1145,43 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 //alert (iHorizontalOffset);
 
+/* //edited by Mike, 20231111
 		//added by Mike, 20221002; edited by Mike, 20221005
 		//myCanvas.style.top = (0)+"px"; //iVerticalOffset+
 		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px"; //iVerticalOffset+
 
 		//added by Mike, 20221012
 		iHorizontalOffset=myCanvas.getBoundingClientRect().x;
+*/
 
+	if (bIsExecutingDestroyHuman) {	
+		iShakeOffsetWidth=iShakeOffsetWidthMax;
+		iShakeOffsetHeight=iShakeOffsetHeightMax;
+
+		//alert("dito");
+	
+		if (iDestroyHumanShakeDelayCount==iDestroyHumanShakeDelayMax) {		
+			//myKeysDown[KEY_K] = FALSE;
+    		bIsExecutingDestroyHuman = false;					
+    		iDestroyHumanShakeDelayCount=0;
+    	}
+    	else {
+				iDestroyHumanShakeDelayCount+=1;					
+    	}    			
+	}		
+	else {
+  			iShakeOffsetWidth=0;
+			iShakeOffsetHeight=0;				
+	}
+	
+
+	myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+iShakeOffsetHeight+"px";
+	iHorizontalOffset=myCanvas.getBoundingClientRect().x+iShakeOffsetWidth;
+
+	
+	
+		
+		
  //removed by Mike, 20230424
 		//edited by Mike, 20230423; from 20230321
 		mainImageTile.style.clip = "rect(0px "+iImageFrameWidth+"px "+iImageFrameHeight+"px 0px)";
@@ -2156,6 +2202,13 @@ mainImageTileProjectile.style.visibility = "visible";
 
 					return;
 				}	
+				//after already choosing a tile type;
+				else {
+					//alert("DIFFERENT TILE!");
+					//damage!
+					//TODO: -fix: if tile already is unique; not executed;
+					bIsExecutingDestroyHuman=true;							
+				}
 			}
 				
 			//added by Mike, 20231106
@@ -3112,6 +3165,11 @@ var arrayTileType = [0,0,0,0]; //iCurrTileTypeCount
 var iArrayTileTypeLength=4;
 var iCurrArrayTileTypeCount=0;
 */	  
+
+
+//added by Mike, 20231111
+//TODO: -update: to have 1 delete OK tiles; otherwise, auto-generated puzzle can have already solved state
+
 
 //alert (iCurrTileTypeCopyCount);
 
