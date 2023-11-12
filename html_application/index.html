@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231111; from 20231110
+' @date updated: 20231112; from 20231111
 ' @website: www.usbong.ph
 '
 '
@@ -373,20 +373,20 @@
     			z-index: 3;
     		}
 
-			
+
 			/*added by Mike, 20231111 */
 			div.DivTextStatus
 			{
 				position: absolute;
-/*	//edited by Mike, 20221213							
+/*	//edited by Mike, 20221213
 				background-color: #000000aa;
-*/							
+*/
 				background-color: #00000099;
 				color: #ffffff; /*#ffbd00;*/ /* gold */
 
 				border: 3px solid #ffffff;
-				border-radius: 4px;		
-				
+				border-radius: 4px;
+
 
 
 				/*opacity: 50%;*/
@@ -394,18 +394,18 @@
 				font-size: 16px;
 				font-weight: bold;
 
-/* //edited by Mike, 20230130							
+/* //edited by Mike, 20230130
 				margin: 10px;
 */
 				padding: 10px;
 
-				visibility: hidden;	
-				
+				visibility: hidden;
+
 				/* added by Mike, 20230128;
 					put above tile images */
-				z-index: 90; /*4;*/													
+				z-index: 90; /*4;*/
 			}
-			
+
 			div.DivTextEnter
 			{
 				position: absolute;
@@ -420,10 +420,10 @@
 				/* //noted by Mike, 20230130 */
 				padding: 10px;
 
-				visibility: visible;							
-			}	
-						
-						
+				visibility: visible;
+			}
+
+
   </style>
 
   <script>
@@ -456,8 +456,8 @@ var bIsPuzzleDone=false;
 
 //added by Mike, 20231111
 var bIsActionKeyPressed=false;
-		
-		
+
+
 //added by Mike, 20231111
 //reference: https://github.com/usbong/tugon/blob/main/mainLinux.cpp;
 //last accessed: 20221125
@@ -471,8 +471,8 @@ var iShakeOffsetHeightMax=2;
 var iShakeOffsetWidth=iShakeOffsetWidthMax;
 var iShakeOffsetHeight=iShakeOffsetHeightMax;
 
-		
-		
+
+
 /*
 //added by Mike, 20221108
 var iCountMovementStep=0;
@@ -1030,47 +1030,47 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 	}
 
-	
+
 	//added by Mike, 20231109
 	function isAutoVerifiedPuzzleDone() {
-			
+
 		//bIsPuzzleDone=true;
-		
+
 		//note: "var" to create new container inside for loop
     	for (var iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
     		for (var iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
-			
+
 				var iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount];
-				
+
 				//alert("!!!! iTileBgCount: "+iTileBgCount);
 
 				//verify if all tiles do not have anymore copies;
-				
+
 				//added by Mike, 20231111; hint "var" keyphrase
 				//fixed: game finished even if only triangle has no copy;
 				if (hasCopy(iTileBgCount)) {
 					//alert("DITO!");
-				
+
 					//bIsPuzzleDone=false;
-					
-					return false; //bIsPuzzleDone;					
+
+					return false; //bIsPuzzleDone;
 				}
-				
-/*				
+
+/*
 				//verify for all tile types; alt
 				else {
 					bIsPuzzleDone=true;
 				}
-*/				
+*/
 			}
 		}
-		
+
 		//TODO: -update: this
-		return true; //bIsPuzzleDone; //false; 
+		return true; //bIsPuzzleDone; //false;
 
 //		return false;
 	}
-	
+
 	function myUpdateFunction() {
 		var mainImageTile = document.getElementById("mainImageTileImageId");
 		//added by Mike, 20230427
@@ -1078,10 +1078,10 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		//added by Mike, 20231111
 		var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
-		
+
 		var textStatusDiv = document.getElementById("textStatusDivId");
 		var textEnterDiv = document.getElementById("textEnterDivId");
-		
+
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
 		var setPanelTable = document.getElementById("tableSetPanelId");
@@ -1154,34 +1154,34 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		iHorizontalOffset=myCanvas.getBoundingClientRect().x;
 */
 
-	if (bIsExecutingDestroyHuman) {	
+	if (bIsExecutingDestroyHuman) {
 		iShakeOffsetWidth=iShakeOffsetWidthMax;
 		iShakeOffsetHeight=iShakeOffsetHeightMax;
 
 		//alert("dito");
-	
-		if (iDestroyHumanShakeDelayCount==iDestroyHumanShakeDelayMax) {		
+
+		if (iDestroyHumanShakeDelayCount==iDestroyHumanShakeDelayMax) {
 			//myKeysDown[KEY_K] = FALSE;
-    		bIsExecutingDestroyHuman = false;					
+    		bIsExecutingDestroyHuman = false;
     		iDestroyHumanShakeDelayCount=0;
     	}
     	else {
-				iDestroyHumanShakeDelayCount+=1;					
-    	}    			
-	}		
+				iDestroyHumanShakeDelayCount+=1;
+    	}
+	}
 	else {
   			iShakeOffsetWidth=0;
-			iShakeOffsetHeight=0;				
+			iShakeOffsetHeight=0;
 	}
-	
+
 
 	myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+iShakeOffsetHeight+"px";
 	iHorizontalOffset=myCanvas.getBoundingClientRect().x+iShakeOffsetWidth;
 
-	
-	
-		
-		
+
+
+
+
  //removed by Mike, 20230424
 		//edited by Mike, 20230423; from 20230321
 		mainImageTile.style.clip = "rect(0px "+iImageFrameWidth+"px "+iImageFrameHeight+"px 0px)";
@@ -1250,30 +1250,30 @@ mainImageTileStepX=15; //2;
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 		*/
-		
 
-/*	
+
+/*
 	textStatusDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextStatusDivWidth/2 +"px";
-	textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px"; 		
+	textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px";
 */
-		
+
 		//added by Mike, 20231111
 		if (bIsActionKeyPressed) {
-/*		
+/*
 			alert ("iTargetAtSpaceBlinkAnimationCount: "+iTargetAtSpaceBlinkAnimationCount);
 			alert ("iTargetAtSpaceBlinkAnimationCountMax: "+iTargetAtSpaceBlinkAnimationCountMax);
-*/		
+*/
 			//alert ("modulo: "+iTargetAtSpaceBlinkAnimationCount%iTargetAtSpaceBlinkAnimationCountMax);
 
 			iTargetAtSpaceBlinkAnimationCount++;
-			
+
 			//if (iTargetAtSpaceBlinkAnimationCount==iTargetAtSpaceBlinkAnimationCountMax) {
 			if ((iTargetAtSpaceBlinkAnimationCount%iTargetAtSpaceBlinkAnimationCountMax)==0) {
 
-				puzzleTileImageSpaceBorder.style.visibility = "visible";	
-								
+				puzzleTileImageSpaceBorder.style.visibility = "visible";
+
 				if (iTargetAtSpaceBlinkAnimationCount==iTargetAtSpaceBlinkAnimationCountMax*5) {
-				
+
 					bIsActionKeyPressed=false;
 					iTargetAtSpaceBlinkAnimationCount=0;
 					puzzleTileImageSpaceBorder.style.visibility = "hidden";
@@ -1284,7 +1284,7 @@ mainImageTileStepX=15; //2;
 				//iTargetAtSpaceBlinkAnimationCount++;
 			}
 		}
-			
+
 
 		//notes: delay before CHANGE in frame
 		//adds max (12) frames before frame update
@@ -1576,7 +1576,7 @@ mainImageTileProjectile.style.visibility = "visible";
     		//edited by Mike, 20221118
     		//arrayPuzzleTileCountId[iTileBgCount] = document.getElementById("puzzleTileImageIdBg"+iTileBgCount);
 
-    		arrayPuzzleTileCountId[iTileBgCount] = document.getElementById("puzzleTileImageIdBg"+iTileBgCount);			
+    		arrayPuzzleTileCountId[iTileBgCount] = document.getElementById("puzzleTileImageIdBg"+iTileBgCount);
 
     		//added by Mike, 20221118
     		//reference: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_img_create;
@@ -1650,16 +1650,16 @@ mainImageTileProjectile.style.visibility = "visible";
       }
     }
 
-/* //removed by Mike, 20231110; added to function for click/touch	
+/* //removed by Mike, 20231110; added to function for click/touch
 	bIsPuzzleDone = isAutoVerifiedPuzzleDone();
-	
+
 	//alert(bIsPuzzleDone);
 
 	if (bIsPuzzleDone) {
 		alert("CONGRATULATIONS!");
 	}
 */
-			
+
 //    alert(iColumnCount);
 
     //----------
@@ -1671,22 +1671,22 @@ mainImageTileProjectile.style.visibility = "visible";
 		if (bIsPuzzleDone) {
 			//removed by Mike, 20231111
 			//alert("CONGRATULATIONS!");
-			
+
 			//added by Mike, 20231111
 			var sText = "CONGRATULATIONS!";
 
 			//alert(sText.length);
 			var iTextStatusDivWidth = (textStatusDiv.clientWidth);
 			var iTextStatusDivHeight = (textStatusDiv.clientHeight);
-		
+
 			textStatusDiv.innerHTML = sText;
 
 			textStatusDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextStatusDivWidth/2 +"px";
-			textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px"; 
-			
+			textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px";
+
 			textStatusDiv.style.visibility="visible";
 
-/*			
+/*
 			//added by Mike, 20221125
 			if (myAudio.volume>0) {
 				fMyAudioVolume-=0.2;
@@ -1694,53 +1694,53 @@ mainImageTileProjectile.style.visibility = "visible";
 				if (fMyAudioVolume<0) {
 					fMyAudioVolume=0;
 				}
-					
-				myAudio.volume=fMyAudioVolume; 
+
+				myAudio.volume=fMyAudioVolume;
 			}
-			else {				
+			else {
 				myAudio.pause();
 			}
 */
-			
-			
-			
+
+
+
 			//reset
 			bIsActionKeyPressed=false;
 			iTargetAtSpaceBlinkAnimationCount=0;
 			puzzleTileImageSpaceBorder.style.visibility = "hidden";
-			
+
 			//next battle?
 			bIsPuzzleDone=false;
-			
+
 		}
 	}
-	
-	
+
+
 	//edited by Mike, 20231110; from 20231109
-	function hasCopy(iTileBgCountInput) {	
+	function hasCopy(iTileBgCountInput) {
 		var sInputTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountInput].alt;
 
-	    //edited by Mike, 20231108	//sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));		
+	    //edited by Mike, 20231108	//sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));
 		var sInputTileValue=sInputTileCountIdAltTemp.substring(0,sInputTileCountIdAltTemp.indexOf(",FK"));
-		
+
 		//alert("sInputTileValue: "+sInputTileValue);
-		
+
 		//note: "var" to create new container inside for loop
 		for (var iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
 			for (var iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
 				var iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
-				
+
 				//edited by Mike, 20231108
 	//sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
-			
+
 				var sOutputTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
 
 			    //edited by Mike, 20231108				//sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));
 				var sOutputTileValue=sOutputTileCountIdAltTemp.substring(0,sOutputTileCountIdAltTemp.indexOf(",FK"));
-				
-				
-				
-				//alert("sOutputTileValue: "+sOutputTileValue);	
+
+
+
+				//alert("sOutputTileValue: "+sOutputTileValue);
 				//alert((Math.floor((sOutputTileValue-1)/4)));
 /*
 				alert("sInputTileValue: "+sInputTileValue);
@@ -1751,74 +1751,74 @@ mainImageTileProjectile.style.visibility = "visible";
 					//4*4
 					//note: start from 0; so -1
 					//if in same row of input image file; has copy
-					if (Math.floor((parseInt(sInputTileValue-1))/4)===Math.floor((parseInt(sOutputTileValue-1))/4)) {						
+					if (Math.floor((parseInt(sInputTileValue-1))/4)===Math.floor((parseInt(sOutputTileValue-1))/4)) {
 						//AND not itself
 						//if (sInputTileValue!==sOutputTileValue) {
 						//if (!sInputTileValue.localeCompare(sOutputTileValue)) {
-						
+
 						//alert (">> DITO");
-						
+
 						if (parseInt(sInputTileValue)!=parseInt(sOutputTileValue)) {
 
 						//alert (">>>>>>");
-						
+
 							//alert("has copy!");
-/*						
+/*
 						alert("sInputTileValue: "+sInputTileValue);
-						alert("sOutputTileValue: "+sOutputTileValue);	
-*/						
+						alert("sOutputTileValue: "+sOutputTileValue);
+*/
 							//bHasCopy=true;
-							return true; 
+							return true;
 						}
 
 //							return true;
-					}	
+					}
 
 //				}
 
 
 
-				
+
 			}
 		}
-		
+
 		//alert("NO MORE COPY FOR THE TILE TYPE!");
-		
+
 		return false;
 	}
-	
-	
-	
+
+
+
 	//added by Mike, 20231106
 	function isUnique(iTileBgCountInput) {
 		//arrayPuzzleTileCountId[iTileBgCount].alt
-		
+
 		//edited by Mike, 20231108
 		//sInputTileValue=arrayPuzzleTileCountId[iTileBgCountInput].alt;
 		//sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
-			
+
 		sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountInput].alt;
 
-	    //edited by Mike, 20231108	//sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));		
+	    //edited by Mike, 20231108	//sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));
 		sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK"));
-		
+
 		//alert("sInputTileValue: "+sInputTileValue);
-		
+
 		for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
 			for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) 		{
 				iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
-				
+
 				//edited by Mike, 20231108
 	//sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
-			
+
 				sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
 
 			    //edited by Mike, 20231108				//sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));
 				sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK"));
-				
-				
+
+
 				//alert("sOutputTileValue: "+sOutputTileValue);
-				
+
 				if (arrayPuzzleTileCountId[iTileBgCountTemp].style.visibility== "hidden") {
 					continue;
 				}
@@ -1828,36 +1828,36 @@ mainImageTileProjectile.style.visibility = "visible";
 					//unique?
 					if (sInputTileValue==sOutputTileValue) {
 						return false; //no
-					}			
+					}
 				}
 				*/
-				
+
 				//TODO: -add: if no more copies; update tile
-				
+
 				//if not the same iTileBgCount
 				if (iTileBgCountInput!=iTileBgCountTemp) {
 					//unique?
 //					if (sInputTileValue==sOutputTileValue) {
-					
+
 					//if not in the same row in tile.png; iTileBgCount
 					//4*4
 					//note: start from 0; so -1
 					//edited by Mike, 20231110
 /*
-					if (Math.floor((sInputTileValue-1)/4)==Math.floor((sOutputTileValue-1)/4)) {	
-*/					
-					if (Math.floor((parseInt(sInputTileValue-1)/4))==Math.floor((parseInt(sOutputTileValue-1)/4))) {			
-					
+					if (Math.floor((sInputTileValue-1)/4)==Math.floor((sOutputTileValue-1)/4)) {
+*/
+					if (Math.floor((parseInt(sInputTileValue-1)/4))==Math.floor((parseInt(sOutputTileValue-1)/4))) {
+
 						//alert(Math.floor((sOutputTileValue-1)/4));
-					
+
 						return false; //no
-					}			
+					}
 				}
 
-				
+
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -1865,9 +1865,9 @@ mainImageTileProjectile.style.visibility = "visible";
 	//TODO: -update: this
 	function hasForeignKey(iTileBgCountInput) {
 		//alert("dito");
-	
+
 		//arrayPuzzleTileCountId[iTileBgCount].alt
-		
+
 		//edited by Mike, 20231108
 		//sInputTileValue=arrayPuzzleTileCountId[iTileBgCountInput].alt;
 		//sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
@@ -1878,56 +1878,56 @@ mainImageTileProjectile.style.visibility = "visible";
 
 		//edited by Mike, 20231108	//sInputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));
 
-/*		//edited by Mike, 20231109		
+/*		//edited by Mike, 20231109
 		//sInputTileValue: ,FK=1
 		sInputTileValue=sTileCountIdAltTemp.substring(sTileCountIdAltTemp.indexOf(",FK="));
-				
+
 		alert("sInputTileValue: "+sInputTileValue);
 */
 
 		sInputTileValue=sTileCountIdAltTemp.substring(sTileCountIdAltTemp.indexOf(",FK=")+(",FK=").length);
 
 		//alert("sInputTileValue: "+sInputTileValue);
-		
+
 		if (sInputTileValue.length>0) {
 			return true; //has foreign key
 		}
-		
+
 		return false;
-		
-/*	//removed by Mike, 20231109		
+
+/*	//removed by Mike, 20231109
 		for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
 			for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) 		{
 				iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
 */
-				
+
 				//edited by Mike, 20231108
 	//sOutputTileValue=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
 
-	/*	//removed by Mike, 20231108						
+	/*	//removed by Mike, 20231108
 				sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
 
 				//edited by Mike, 20231108				//sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(","));
 				sOutputTileValue=sTileCountIdAltTemp.substring(sTileCountIdAltTemp.indexOf(",FK="));
 
 				//alert("sOutputTileValue: "+sOutputTileValue);
-				
+
 				if (arrayPuzzleTileCountId[iTileBgCountTemp].style.visibility== "hidden") {
 					continue;
 				}
-*/				
+*/
 
 				/* //edited by Mike, 20231107
 				if (iTileBgCountInput!=iTileBgCountTemp) {
 					//unique?
 					if (sInputTileValue==sOutputTileValue) {
 						return false; //no
-					}			
+					}
 				}
 				*/
-				
+
 				//TODO: -add: if no more copies; update tile
-/*	//removed by Mike, 20231108		
+/*	//removed by Mike, 20231108
 				//if not the same iTileBgCount
 				if (iTileBgCountInput!=iTileBgCountTemp) {
 					//unique?
@@ -1935,21 +1935,21 @@ mainImageTileProjectile.style.visibility = "visible";
 					//if not in the same row in tile.png; iTileBgCount
 					//4*4
 					//note: start from 0; so -1
-					if (Math.floor((sInputTileValue-1)/4)==Math.floor((sOutputTileValue-1)/4)) {			
-					
+					if (Math.floor((sInputTileValue-1)/4)==Math.floor((sOutputTileValue-1)/4)) {
+
 						//alert(Math.floor((sOutputTileValue-1)/4));
-					
+
 						return false; //no
-					}			
+					}
 				}
 */
-/*	//removed by Mike, 20231109						
+/*	//removed by Mike, 20231109
 			}
-		}		
-*/		
+		}
+*/
 		return false;
 	}
-	
+
 	function processResultFromInput(iXPos, iYPos) {
 
 					var mainImageTile = document.getElementById("mainImageTileImageId");
@@ -2029,10 +2029,10 @@ mainImageTileProjectile.style.visibility = "visible";
 
   			//OK; row1; columns; 1 to 4;
   			//row2; columns 5 to 8;...
-/*  
+/*
   			alert("HIT! TILE COUNT: " + iTileBgCount);
   			alert("arrayPuzzleTileCountId[iTileBgCount].alt: " + arrayPuzzleTileCountId[iTileBgCount].alt);
-*/  
+*/
 
 /*//edited by Mike, 20231106
   			//edited by Mike, 20230524
@@ -2131,17 +2131,17 @@ mainImageTileProjectile.style.visibility = "visible";
 
 					//added by Mike, 20231111
 					var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
-					
+
 					var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
 					puzzleTileImageTargetBorder.style.visibility = "visible";
-				
+
 					puzzleTileImageSpaceBorder.style.visibility = "visible";
-				  
+
 					//reminder: arrayPuzzleTileCountId[iTileBgCount].alt="";
 					puzzleTileImageTargetBorder.style.left = arrayPuzzleTileCountId[iTileBgCount].style.left;
 
 					puzzleTileImageTargetBorder.style.top = arrayPuzzleTileCountId[iTileBgCount].style.top;
-					
+
 					puzzleTileImageSpaceBorder.style.left = arrayPuzzleTileCountId[iTileBgCount].style.left;
 
 					puzzleTileImageSpaceBorder.style.top = arrayPuzzleTileCountId[iTileBgCount].style.top;
@@ -2152,22 +2152,22 @@ mainImageTileProjectile.style.visibility = "visible";
 			//TODO: -add: more output testings;
 			//added by Mike, 20231109
 			if (bHasHitTileWithForeignKey) {
-/*			
+/*
 				alert("has hit tile with FK!");
-*/			
+*/
 				//exchange with next tile hit if of same type
-				
+
 				sCurrHitTile=arrayPuzzleTileCountId[iTileBgCount].alt;
 				sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
 				sCurrHitTileType="";
-				
+
 				sPrevHitTile=arrayPuzzleTileCountId[iPrevHitTileBgCount].alt;
 				sPrevHitTile=sPrevHitTile.substring(0,sPrevHitTile.indexOf(",FK="));
 				sPrevHitTileType="";
-/*				
+/*
 				alert("sCurrHitTile: "+sCurrHitTile);
 				alert("sPrevHitTile: "+sPrevHitTile);
-*/					
+*/
 				//4*4
 				//note: start from 0; so -1
 /*
@@ -2178,59 +2178,69 @@ mainImageTileProjectile.style.visibility = "visible";
 				sCurrHitTileType=Math.floor(parseInt((sCurrHitTile-1)/4));
 				sPrevHitTileType=Math.floor(parseInt((sPrevHitTile-1)/4));
 
-				
+
 				/*
 				alert("sCurrHitTileType: "+sCurrHitTileType);
 				alert("sPrevHitTileType: "+sPrevHitTileType);
 */
-				
-				//if same type				
+
+				//if same type
 				if (sCurrHitTileType==sPrevHitTileType) {
 /*
 				alert("has hit SAME TILE!");
 */
-				
+
 					arrayPuzzleTileCountId[iTileBgCount].alt = arrayPuzzleTileCountId[iPrevHitTileBgCount].alt;
-			
+
 					iPrevHitTileBgCount="";//iTileBgCount;
 
-					bHasHitTileWithForeignKey=false;	
+					bHasHitTileWithForeignKey=false;
 
 					//added by Mike, 20231111
 					puzzleTileImageTargetBorder.style.visibility = "hidden";
 					puzzleTileImageSpaceBorder.style.visibility = "hidden";
 
+          //added by Mike, 20231112
+          //if also the same tile
+          if (sCurrHitTile==sPrevHitTile) {
+            bIsExecutingDestroyHuman=true;
+          }
+          //changed the target tile; effects; poof?
+          else {
+            //TODO: -update: this
+          }
+
 					return;
-				}	
+				}
 				//after already choosing a tile type;
 				else {
 					//alert("DIFFERENT TILE!");
 					//damage!
 					//TODO: -fix: if tile already is unique; not executed;
-					bIsExecutingDestroyHuman=true;							
+					bIsExecutingDestroyHuman=true;
 				}
 			}
-				
+
 			//added by Mike, 20231106
 			//arrayPuzzleTileCountId[iTileBgCount].alt
 			//alert("!!!");
-			
+
 			if (isUnique(iTileBgCount)) {
 				//alert(">>>");
-			
+
 				return;
 			}
 
-			//edited by Mike, 20231109; from 20231108			
+			//edited by Mike, 20231109; from 20231108
 			if (hasForeignKey(iTileBgCount)) {
 				//alert("has foreign key!");
-				
+
 				bHasHitTileWithForeignKey=true;
 				iPrevHitTileBgCount=iTileBgCount;
-				
+
 				return;
 			}
-				
+
   /*				arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].alt=arrayPuzzleTileCountId[iTileBgCount].alt;
 
   				arrayPuzzleTileCountId[iTileBgCount].alt="";
@@ -2581,7 +2591,7 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 */
 	}
-	
+
 	//added by Mike, 20230423
 	function processMouseInput() {
 		//reference: https://stackoverflow.com/questions/70827887/detect-click-vs-touch-in-javascript;
@@ -2622,27 +2632,27 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 					alert("iXPos: "+iXPos);
 					alert("iYPos: "+iYPos);
 */
-					
+
 					//added by Mike, 20231107
 					processResultFromInput(iXPos, iYPos);
-					
-					//added by Mike, 20231110					
+
+					//added by Mike, 20231110
 					bIsPuzzleDone = isAutoVerifiedPuzzleDone();
 
 					//alert(bIsPuzzleDone);
 
-/* //removed by Mike, 20231111					
+/* //removed by Mike, 20231111
 					if (bIsPuzzleDone) {
 						alert("CONGRATULATIONS!");
-						
+
 						//added by Mike, 20231111
 						//reset
 						bIsActionKeyPressed=false;
 						iTargetAtSpaceBlinkAnimationCount=0;
 						puzzleTileImageSpaceBorder.style.visibility = "hidden";
-						
+
 					}
-*/					
+*/
 					break;
 				case 'touch':
 /*
@@ -2668,25 +2678,25 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 
 
 	//TODO: -fix: touch-and-hold image displayed problem
-function processTouchInput() {	
+function processTouchInput() {
 	//added by Mike, 20231107
 	//reference: https://stackoverflow.com/questions/62823062/adding-a-simple-left-right-swipe-gesture/62825217#62825217;
 	//answer by: smmehrab, 20200709T2330; edited 20200711T0355
 	document.body.addEventListener('touchstart', function (event) {
 
 		iEventChangedTouchCount = event.changedTouches.length;
-		
+
 		for (iCount=0; iCount<iEventChangedTouchCount; iCount++) {
-			
+
 		//added by Mike, 20221121
 //		if (iCurrentMiniGame==MINI_GAME_PUZZLE) {
 /* //removed temporarily by Mike, 20231107
 			if (bHasPressedStart) {
-*/			
+*/
 
-/* //removed by Mike, 20230121			
+/* //removed by Mike, 20230121
 				var monsterTile = document.getElementById("monsterTileImageId");
-*/				
+*/
 				//edited by Mike, 20221121
 				//note: ZOOM function causes position ERROR via screenX
 				var iXPos = event.changedTouches[iCount].clientX;//screenX;
@@ -2698,17 +2708,17 @@ function processTouchInput() {
 /*
 				alert("iXPos: "+iXPos);
 				alert("iYPos: "+iYPos);
-*/		
+*/
 				processResultFromInput(iXPos, iYPos);
-		
-/* //removed temporarily by Mike, 20231107			
+
+/* //removed temporarily by Mike, 20231107
 			}
-*/			
+*/
 //		}
-		}		
+		}
 	});
-}	
-	
+}
+
 function removeFromPuzzleStageExcessTiles() {
 
 	//iTileBgCountMax = 16
@@ -2792,22 +2802,22 @@ function autoUpdatePuzzleTileImage() {
 
 			//edited by Mike, 20231108; from 20221113
 	//iTileTextCount=parseInt(arrayPuzzleTileCountId[iTileBgCount].alt);
-	
+
 	//alert(arrayPuzzleTileCountId[iTileBgCount].alt.substring(0,1));
 			sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCount].alt;
 			//iTileTextCount=parseInt(arrayPuzzleTileCountId[iTileBgCount].alt.substring(0,arrayPuzzleTileCountId[iTileBgCount].alt.indexOf(",")));
-						
+
 		    //edited by Mike, 20231108	//iTileTextCount=parseInt(sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",")));
 			iTileTextCount=parseInt(sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK")));
 
 			//alert(">>>"+iTileTextCount);
 
-/*			
+/*
 			if (isNan(iTileTextCount)) {
 				iTileTextCount=0;
 			}
 */
-			
+
 			iColumnCount = (iTileTextCount-1)%4;
 				iRowCount = Math.floor((iTileTextCount-1)/4);
 
@@ -2828,7 +2838,7 @@ function autoUpdatePuzzleTileImage() {
 		//added by Mike, 20231111
 		//TODO: -verify: this
 		var myCanvas = document.getElementById("myCanvasId");
-		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px"; 		iHorizontalOffset=myCanvas.getBoundingClientRect().x;	
+		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px"; 		iHorizontalOffset=myCanvas.getBoundingClientRect().x;
 
 			//alert(iRowCountMax);
 
@@ -3140,14 +3150,14 @@ for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
       //count
       //edited by Mike, 20221106				//arrayPuzzleTileCountId[iTileBgCount].alt=(iTileBgCount+1)+"";
 
-      
+
 	  //edited by Mike, 20231106
-	  //put in initPuzzle()? //arrayPuzzleTileCountId[iTileBgCount].alt=(iTileBgCount+1)+"";	  
+	  //put in initPuzzle()? //arrayPuzzleTileCountId[iTileBgCount].alt=(iTileBgCount+1)+"";
       //edited by Mike, 20231106
 //	  arrayPuzzleTileCountId[iTileBgCount].alt=(1)+"";
 
 /* //edited by Mike, 20231107
-	  //OK; unique not destroyed	  
+	  //OK; unique not destroyed
 	  if (iTileBgCount<iRowCountMax) {
 		arrayPuzzleTileCountId[iTileBgCount].alt=(1)+"";
 	  }
@@ -3155,8 +3165,8 @@ for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
 		arrayPuzzleTileCountId[iTileBgCount].alt=(2)+"";
 	  }
 */
-	  //auto-generate board objects	  
-/*	  
+	  //auto-generate board objects
+/*
 var iMaxTileTypeCopyCount=4;
 var iCurrTileTypeCopyCount=0;
 //4*4
@@ -3164,7 +3174,7 @@ var arrayTileType = [0,0,0,0]; //iCurrTileTypeCount
 
 var iArrayTileTypeLength=4;
 var iCurrArrayTileTypeCount=0;
-*/	  
+*/
 
 
 //added by Mike, 20231111
@@ -3175,13 +3185,13 @@ var iCurrArrayTileTypeCount=0;
 
  //edited by Mike, 20231109
 if (iCurrTileTypeCopyCount<12) {
-	
+
    //edited by Mike, 20231108    //arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+"";
    //edited by Mike, 20231108 //arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+",1";
 	arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+",FK=1"; //note: semicolon not usable in .alt text
-   
+
 	iCurrTileTypeCopyCount++;
-}	
+}
 //note: remaining tiles need to be filled
 else {
 	//edited by Mike, 20231108
@@ -3189,7 +3199,7 @@ else {
 	//edited by Mike, 20231108
 	//arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",1";
 	//edited by Mike, 20231109
-	//arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",FK=1";	
+	//arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",FK=1";
 	arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",FK=";	//no FK
 }
 	  //---
@@ -3204,75 +3214,75 @@ else {
 
 
 
-//init FK in puzzle; no FK with the same type; 
+//init FK in puzzle; no FK with the same type;
 	//added by Mike, 20231109
 	//jumble the positions of the tiles;
 	//var sRecordedSteps="3121220312133003112111302212133333303312003030030303133122112122121303033033311212002";
-	
+
 for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
   for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
 
 		//alert(iTileBgCount);
 		//alert(arrayPuzzleTileCountId[iRowCount][iColumnCount]);
 		//alert(arrayPuzzleTilePos[iRowCount][iColumnCount]);
-						
+
 		iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
 
 		//alert(">>>>"+iTileBgCountTemp);
 		//sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
 	//sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK"));
-		
+
 		//random
 		let iDirection = window.parseInt(Math.random() * 4);
 
 		//alert(">>>>"+iDirection);
-		
+
 		//iDirection=0;
-		
+
 		//alert("iRowCount: "+iRowCount);
-		
+
 		switch (iDirection) {
-			case iKEY_W: //0			
+			case iKEY_W: //0
 				if ((iRowCount-1)>=0) {
 //					arrayPuzzleTileCountId[iRowCount][iColumnCount].alt=arrayPuzzleTileCountId[iRowCount-1][iColumnCount].alt;
 
 					iTileBgCountNew=arrayPuzzleTilePos[iRowCount-1][iColumnCount];
-										
+
 					sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
-					
+
 					//alert("DITO: "+sTileCountIdAltNew);
 
-					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;				
+					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
 				}
-				break;					
-			case iKEY_S: //1			
+				break;
+			case iKEY_S: //1
 				if ((iRowCount+1)<iRowCountMax) {
 					iTileBgCountNew=arrayPuzzleTilePos[iRowCount+1][iColumnCount];
-										
+
 					sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
 
-					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;					
+					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
 				}
-				break;	
+				break;
 			case iKEY_A: //2
 				if ((iColumnCount-1)>=0) {
 					iTileBgCountNew=arrayPuzzleTilePos[iRowCount][iColumnCount-1];
-										
+
 					sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
 
-					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;			
+					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
 				}
-				break;	
+				break;
 			case iKEY_D: //3
 				if ((iColumnCount+1)<iColumnCountMax) {
 					iTileBgCountNew=arrayPuzzleTilePos[iRowCount][iColumnCount+1];
-										
+
 					sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
 
-					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;				
+					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
 				}
-				break;					
-		}		
+				break;
+		}
 	}
 }
 
@@ -3351,7 +3361,7 @@ window.addEventListener("orientationchange", function() {
 
 		//added by Mike, 20230423
 		processMouseInput();
-		
+
 		//added by Mike, 202301107
 		processTouchInput();
 
