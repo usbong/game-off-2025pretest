@@ -423,6 +423,15 @@
 				visibility: visible;
 			}
 
+      audio.myAudio
+      {
+        width: 416px;
+        height: 312px;
+
+        /* added by Mike, 20230115 */
+        visibility: hidden;
+      }
+
 
   </style>
 
@@ -471,6 +480,8 @@ var iShakeOffsetHeightMax=2;
 var iShakeOffsetWidth=iShakeOffsetWidthMax;
 var iShakeOffsetHeight=iShakeOffsetHeightMax;
 
+//added by Mike, 20231112
+const sAudioEffectActionStart="assets/audio/usbongGameOff2023TapLoudEdited.mp3";
 
 
 /*
@@ -1510,12 +1521,10 @@ mainImageTileProjectile.style.visibility = "visible";
     	miniPuzzleTileImage.style.left = iHorizontalOffset+"px";
     	miniPuzzleTileImage.style.top= (iStageMaxHeight-iMiniPuzzleHeight)+"px";
     */
-
-    	//added by Mike, 20221124
 /*
+    	//added by Mike, 20231112; from 20221124
       var myAudio = document.getElementById("myAudioId");
 */
-
     	//edited by Mike, 20221127
     	//iCurrentPuzzleStage=1;
 
@@ -2055,6 +2064,19 @@ mainImageTileProjectile.style.visibility = "visible";
   				//exchange
   				alert("EXCHANGE! EMPTY location: "+iTileBgCountOfEmptyTile);
   */
+
+        var myAudioEffect = document.getElementById("myAudioEffectId");
+
+        myAudioEffect.setAttribute("src", sAudioEffectActionStart);
+
+        //fMyAudioEffectVolume=0.2;
+        fMyAudioEffectVolume=0.4;
+        myAudioEffect.volume=fMyAudioEffectVolume;
+        myAudioEffect.loop=false;
+        myAudioEffect.play();
+
+
+
   /*				//edited by Mike, 20230524
   				//added by Mike, 20230524
   				//IF @TOP row
@@ -3457,6 +3479,16 @@ opting to put assets folder in "html_application" folder instead
 
 	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
 	<div id="textEnterDivId" class="DivTextEnter">PRESS ENTER</div>
+
+
+  <audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2023TapLoudEdited.mp3" type="audio/x-m4a" controls loop>
+	  Your browser does not support the audio tag.
+	</audio><br/>
+
+	<audio id="myAudioEffectId" class="myAudio" src="assets/audio/usbongGameOff2023TapLoudEdited.mp3" type="audio/x-m4a">
+	  Your browser does not support the audio tag.
+	</audio><br/>
+
 
 
   </body>
