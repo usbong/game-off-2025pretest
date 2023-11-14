@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231113; from 20231112
+' @date updated: 20231114; from 20231113
 ' @website: www.usbong.ph
 '
 '
@@ -482,6 +482,9 @@ var iShakeOffsetHeight=iShakeOffsetHeightMax;
 
 //added by Mike, 20231112
 const sAudioEffectActionStart="assets/audio/usbongGameOff2023TapLoudEdited.mp3";
+
+//added by Mike, 20231114
+const sAudioEffectLowPower="assets/audio/voiceover/lowpower.mp3";
 
 
 /*
@@ -2253,6 +2256,18 @@ mainImageTileProjectile.style.visibility = "visible";
 				else {
 					//alert("DIFFERENT TILE!");
 
+					//added by Mike, 20231114
+					var myAudioEffect = document.getElementById("myAudioEffectId");
+
+					myAudioEffect.setAttribute("src", sAudioEffectLowPower);
+
+					//fMyAudioEffectVolume=0.2;
+					fMyAudioEffectVolume=1.0;
+					myAudioEffect.volume=fMyAudioEffectVolume;
+					myAudioEffect.loop=false;
+					myAudioEffect.play();
+		
+					
 					//edited by Mike, 20231113
 					//note: not an integer; blank
 					//iPrevHitTileBgCount="";//iTileBgCount;
