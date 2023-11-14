@@ -466,6 +466,10 @@ var bIsPuzzleDone=false;
 //added by Mike, 20231111
 var bIsActionKeyPressed=false;
 
+//added by Mike, 20231114
+var iInputDelayCountMax=3;
+var iInputDelayCount=iInputDelayCountMax;
+
 
 //added by Mike, 20231111
 //reference: https://github.com/usbong/tugon/blob/main/mainLinux.cpp;
@@ -2227,6 +2231,7 @@ mainImageTileProjectile.style.visibility = "visible";
 				alert("has hit SAME TILE!");
 */
 
+
 					arrayPuzzleTileCountId[iTileBgCount].alt = arrayPuzzleTileCountId[iPrevHitTileBgCount].alt;
 
 					//edited by Mike, 20231113
@@ -2274,6 +2279,10 @@ mainImageTileProjectile.style.visibility = "visible";
 					iPrevHitTileBgCount=-1;//iTileBgCount;
 
 					bHasHitTileWithForeignKey=false;
+					
+					//added by Mike, 20231114
+					iInputDelayCount=0;
+
 					
 					//damage!
 					//TODO: -fix: if tile already is unique; not executed;
@@ -2676,6 +2685,13 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 		//last accessed: 20221110
 		//answer by:  Jacob, 20220124T0110
 		document.body.addEventListener('pointerdown', (event) => {
+		
+			//added by Mike, 20231114
+			if (iInputDelayCount<iInputDelayCountMax) {
+				iInputDelayCount++;
+				return;
+			}
+		
 			//reference: https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType;
 			//last accessed: 20221122
 			switch(event.pointerType) {
@@ -2717,6 +2733,10 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 					//added by Mike, 20231110
 					bIsPuzzleDone = isAutoVerifiedPuzzleDone();
 
+					//removed by Mike, 20231114
+					//iInputDelayCount=0;
+
+					
 					//alert(bIsPuzzleDone);
 
 /* //removed by Mike, 20231111
@@ -2762,6 +2782,13 @@ function processTouchInput() {
 	//answer by: smmehrab, 20200709T2330; edited 20200711T0355
 	document.body.addEventListener('touchstart', function (event) {
 
+		//added by Mike, 20231114
+		if (iInputDelayCount<iInputDelayCountMax) {
+			iInputDelayCount++;
+			return;
+		}
+
+	
 		iEventChangedTouchCount = event.changedTouches.length;
 
 		for (iCount=0; iCount<iEventChangedTouchCount; iCount++) {
@@ -2789,6 +2816,13 @@ function processTouchInput() {
 */
 				processResultFromInput(iXPos, iYPos);
 
+				
+				//added by Mike, 20231114
+				bIsPuzzleDone = isAutoVerifiedPuzzleDone();
+				//removed by Mike, 20231114
+				//iInputDelayCount=0;
+
+				
 /* //removed temporarily by Mike, 20231107
 			}
 */
