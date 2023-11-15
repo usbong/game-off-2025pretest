@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231114; from 20231113
+' @date updated: 20231115; from 20231114
 ' @website: www.usbong.ph
 '
 '
@@ -378,6 +378,7 @@
 			div.DivTextStatus
 			{
 				position: absolute;
+				
 /*	//edited by Mike, 20221213
 				background-color: #000000aa;
 */
@@ -1690,16 +1691,23 @@ mainImageTileProjectile.style.visibility = "visible";
 
 			//added by Mike, 20231111
 			var sText = "CONGRATULATIONS!";
-
+			
+			textStatusDiv.innerHTML = sText;
+			
 			//alert(sText.length);
 			var iTextStatusDivWidth = (textStatusDiv.clientWidth);
 			var iTextStatusDivHeight = (textStatusDiv.clientHeight);
 
-			textStatusDiv.innerHTML = sText;
 
+			//TODO: -update: this
+			//iOffsetWidth			
 			textStatusDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextStatusDivWidth/2 +"px";
+				
+				//textStatusDiv.style.left = 0+iHorizontalOffset+iOffsetWidth+"px";
+		
+			//iOffsetHeight
 			textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px";
-
+			
 			textStatusDiv.style.visibility="visible";
 
 /*
@@ -1724,10 +1732,13 @@ mainImageTileProjectile.style.visibility = "visible";
 			bIsActionKeyPressed=false;
 			iTargetAtSpaceBlinkAnimationCount=0;
 			puzzleTileImageSpaceBorder.style.visibility = "hidden";
+			puzzleTileImageTargetBorder.style.visibility = "hidden";
 
+			
+/*	//removed by Mike, 20231115; TODO: -add: this			
 			//next battle?
 			bIsPuzzleDone=false;
-
+*/
 		}
 	}
 
@@ -2886,7 +2897,7 @@ function autoUpdatePuzzleTileImage() {
 
 			if (arrayPuzzleTileCountId[iTileBgCount].alt=="") {
 
-				alert(iTileTextCount);
+				//alert(iTileTextCount);
 
 			//notes: noticeable DELAY to fix OUTPUT error;
 			//where: IF SPACE tile (BLINKING) is immediately
