@@ -157,7 +157,10 @@
 
 			clip: rect(0px,64px,64px,0px);
 */
+/*	//edited by Mike, 20231116
 			width: 512px;
+*/			
+			width: 768px;
 			height: 256px;
 
 			object-fit: contain;
@@ -2973,11 +2976,16 @@ function autoUpdatePuzzleTileImage() {
 					if (iAnimationCount==0) { //%2
 						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64) + "px -" + iRowCount*64 + "px";				
 					}			
-					else {
+					else if (iAnimationCount==1) { 
 						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64+256) + "px -" + iRowCount*64 + "px";
 						
 						//alert(">>>>");
 					}
+					else {
+						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64+512) + "px -" + iRowCount*64 + "px";
+						
+						//alert(">>>>");
+					}					
 				}
 				else {
 						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64) + "px -" + iRowCount*64 + "px";
@@ -2990,7 +2998,9 @@ function autoUpdatePuzzleTileImage() {
 	//alert("iAnimationCount: "+iAnimationCount);
 	//added by Mike, 20231115
 	if (iAnimationDelayCount==iAnimationDelayCountMax) {
-		iAnimationCount=(iAnimationCount+1)%2; //iAnimationCountMax
+		//edited by Mike, 20231116
+//		iAnimationCount=(iAnimationCount+1)%2; //iAnimationCountMax
+		iAnimationCount=(iAnimationCount+1)%3; //2; //iAnimationCountMax
 		iAnimationDelayCount=0;
 	}
 	else {
