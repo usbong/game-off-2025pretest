@@ -75,6 +75,11 @@
 			width: 100%; /*90%; 80%;*/
 			height: 100%;
 
+			/*added by Mike, 20231119*/
+			background-color: white; /*black; transparent*/
+			border: none;
+
+
 			padding: 0;
 			margin: 0;
 
@@ -267,7 +272,7 @@
     			text-align: center;
     			line-height: 32px;
 
-    			border: 3px solid #ff0000;
+    			border: 3px dashed #ff0000;
     			border-radius: 3px;
 
     			visibility: hidden;
@@ -288,7 +293,8 @@
     			width: 58px;
     			height: 58px;
 
-    			background-color: transparent;
+    			background-color: #ffffff; /*transparent;*/
+
     			color: #222222;
 
     			font-weight: bold;
@@ -297,7 +303,7 @@
     			text-align: center;
     			line-height: 32px;
 
-    			border: 3px solid #ffffff;
+    			border: 3px dashed #00ff00; /*#ffffff*/
     			border-radius: 3px;
 
     			visibility: hidden;
@@ -420,7 +426,7 @@
 			{
 				position: absolute;
 				/*background-color: #000000aa;*/
-				color: #ffffff;
+				color: #000000; /*#ffffff;*/
 
 				/*opacity: 50%;*/
 
@@ -431,6 +437,26 @@
 				padding: 10px;
 
 				visibility: visible;
+			}
+
+			div.DivTextClickStart
+			{
+				position: absolute;
+				background-color: #4d4d4d;
+				color: #ffffff; /*#ffffff;*/
+
+				/*opacity: 50%;*/
+
+				font-size: 16px;
+				font-weight: bold;
+
+				/* //noted by Mike, 20230130 */
+				padding: 5px;
+
+    			border: 3px solid #4d4d4d;
+    			border-radius: 3px;
+				
+				visibility: hidden;
 			}
 
       audio.myAudio
@@ -475,6 +501,9 @@ var bIsPuzzleDone=false;
 
 //added by Mike, 20231111
 var bIsActionKeyPressed=false;
+
+//added by Mike, 20231119
+var bIsPuzzleTileTargetHit=false;
 
 //added by Mike, 20231114
 var iInputDelayCountMax=3;
@@ -525,13 +554,14 @@ const iDelayAnimationCountMovementStepMax=6;
 
 //added by Mike, 20221129
 var iPrevDirection=0;
-
-//added by Mike, 20221121
-var iDelayAnimationCountEnter=0;
-const iDelayAnimationCountEnterMax=10;
 */
 
-//added by Mike, 20231104
+//added by Mike, 20231119; from 20221121
+var iDelayAnimationCountEnter=0;
+const iDelayAnimationCountEnterMax=10;
+
+var bHasPressedStart=false;
+
 
 //added by Mike, 20230123
 var iPuzzleTileWidth=64;
@@ -1295,6 +1325,50 @@ mainImageTileStepX=15; //2;
 	textStatusDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextStatusDivWidth/2 +"px";
 	textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px";
 */
+		//added by Mike, 20231119
+//		if ((!bHasPressedStart)||(!bHasViewedHowToPlayGuide)) {
+		if (!bHasPressedStart) {
+		
+			var iTextEnterDivWidth = (textEnterDiv.clientWidth);
+			var iTextEnterDivHeight = (textEnterDiv.clientHeight);
+		
+			textEnterDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextEnterDivWidth/2 +"px";
+			
+//			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight+"px"; 
+			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight*2+"px"; 
+
+/*
+			textEnterDiv.style.left = 0+"px";
+			textEnterDiv.style.top = 0+"px"; 
+*/							
+			//alert ("textEnterDiv.style.left: "+textEnterDiv.style.left);
+			//alert ("textEnterDiv.style.top: "+textEnterDiv.style.top);
+
+/*				
+			//reference: https://github.com/masarapmabuhay/tugon/blob/main/mainLinux.cpp; last accessed: 20221121
+			//keyphrase: GAMEOFF 2021, TUGON
+			if (iDelayAnimationCountEnter<iDelayAnimationCountEnterMax) {
+				textEnterDiv.style.visibility="visible";				
+			}
+			else {
+				if (iDelayAnimationCountEnter>20) {
+					iDelayAnimationCountEnter=0;
+				}
+				textEnterDiv.style.visibility="hidden";
+			}		
+
+			iDelayAnimationCountEnter++;
+*/			
+			textEnterDiv.style.visibility="visible";
+
+		}
+		else {
+			textEnterDiv.style.visibility="hidden";
+		}
+
+
+
+
 
 		//added by Mike, 20231111
 		if (bIsActionKeyPressed) {
@@ -1304,23 +1378,26 @@ mainImageTileStepX=15; //2;
 */
 			//alert ("modulo: "+iTargetAtSpaceBlinkAnimationCount%iTargetAtSpaceBlinkAnimationCountMax);
 
-			iTargetAtSpaceBlinkAnimationCount++;
+			//added by Mike, 20231119
+			if (bIsPuzzleTileTargetHit) {
+				iTargetAtSpaceBlinkAnimationCount++;
 
-			//if (iTargetAtSpaceBlinkAnimationCount==iTargetAtSpaceBlinkAnimationCountMax) {
-			if ((iTargetAtSpaceBlinkAnimationCount%iTargetAtSpaceBlinkAnimationCountMax)==0) {
+				//if (iTargetAtSpaceBlinkAnimationCount==iTargetAtSpaceBlinkAnimationCountMax) {
+				if ((iTargetAtSpaceBlinkAnimationCount%iTargetAtSpaceBlinkAnimationCountMax)==0) {
 
-				puzzleTileImageSpaceBorder.style.visibility = "visible";
+					puzzleTileImageSpaceBorder.style.visibility = "visible";
 
-				if (iTargetAtSpaceBlinkAnimationCount==iTargetAtSpaceBlinkAnimationCountMax*5) {
+					if (iTargetAtSpaceBlinkAnimationCount==iTargetAtSpaceBlinkAnimationCountMax*5) {
 
-					bIsActionKeyPressed=false;
-					iTargetAtSpaceBlinkAnimationCount=0;
-					puzzleTileImageSpaceBorder.style.visibility = "hidden";
+						bIsActionKeyPressed=false;
+						iTargetAtSpaceBlinkAnimationCount=0;
+						puzzleTileImageSpaceBorder.style.visibility = "hidden";
+					}
 				}
-			}
-			else {
-				puzzleTileImageSpaceBorder.style.visibility =   "hidden";
-				//iTargetAtSpaceBlinkAnimationCount++;
+				else {
+					puzzleTileImageSpaceBorder.style.visibility =   "hidden";
+					//iTargetAtSpaceBlinkAnimationCount++;
+				}
 			}
 		}
 
@@ -1729,7 +1806,8 @@ mainImageTileProjectile.style.visibility = "visible";
 			textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px";
 			
 			textStatusDiv.style.visibility="visible";
-
+		
+		
 /*
 			//added by Mike, 20221125
 			if (myAudio.volume>0) {
@@ -2019,6 +2097,7 @@ mainImageTileProjectile.style.visibility = "visible";
 	var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
 
 	var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
+
 	
 /* //removed by Mike, 20231111
   	for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
@@ -2078,6 +2157,7 @@ mainImageTileProjectile.style.visibility = "visible";
         //added by Mike, 20231105
         //OK
 //        alert("HIT!");
+			bIsPuzzleTileTargetHit=true;
 
   			//OK; row1; columns; 1 to 4;
   			//row2; columns 5 to 8;...
@@ -2200,9 +2280,12 @@ mainImageTileProjectile.style.visibility = "visible";
 
 					var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
 */					
+					//edited by Mike, 20231119
 					puzzleTileImageTargetBorder.style.visibility = "visible";
+//					puzzleTileImageTargetBorder.style.visibility = "hidden";
 
 					puzzleTileImageSpaceBorder.style.visibility = "visible";
+//					puzzleTileImageSpaceBorder.style.visibility = "hidden";
 					
 					//reminder: arrayPuzzleTileCountId[iTileBgCount].alt="";
 					puzzleTileImageTargetBorder.style.left = arrayPuzzleTileCountId[iTileBgCount].style.left;
@@ -2658,6 +2741,11 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 					bHasFired=true;
 }
 
+//added by Mike, 20231119
+//reached this part
+bIsPuzzleTileTargetHit=false;
+
+
 
 //newMainImageTileProjectilePosX=(iHorizontalOffset+mainImageTilePosX+mainImageTileProjectileStepX)*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
 
@@ -2727,6 +2815,9 @@ newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageT
 			//last accessed: 20221122
 			switch(event.pointerType) {
 				case 'mouse':
+				
+				  //added by Mike, 20231119
+				  bHasPressedStart=true;
 /*
           //TODO: -add: this
           if (bIsUsingAppleWebKit) {
@@ -3639,7 +3730,9 @@ opting to put assets folder in "html_application" folder instead
 
 
 	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
-	<div id="textEnterDivId" class="DivTextEnter">PRESS ENTER</div>
+	
+	<!-- PRESS ENTER; PRESS START -->
+	<div id="textEnterDivId" class="DivTextClickStart">START</div>
 
 
   <audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2023TapLoudEdited.mp3" type="audio/x-m4a" controls loop>
