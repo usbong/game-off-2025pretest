@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231117; from 20231116
+' @date updated: 20231119; from 20231117
 ' @website: www.usbong.ph
 '
 '
@@ -1138,11 +1138,11 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//myCanvasContext.fillStyle = "#000000"; //black; //"#ababab"; //"rgb(128,89,27)"; //"#604122"; //"blue";
 
 		//myCanvasContext.fillStyle = "#c5c5c5"; //gray
-		//edited by Mike, 20231116
-		//myCanvasContext.fillStyle = "#ffffff"; //white background//stage
+		//edited by Mike, 20231119; from 20231116
+		myCanvasContext.fillStyle = "#ffffff"; //white background//stage
 		//myCanvasContext.fillStyle = "#8dff6e"; //light green background//stage
 
-		myCanvasContext.fillStyle = "#1c640b"; //dark green background//stage
+		//myCanvasContext.fillStyle = "#1c640b"; //dark green background//stage
 
 		myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
 
@@ -2975,7 +2975,8 @@ function autoUpdatePuzzleTileImage() {
 				//TODO: -add: rest animation for rest of tiles; over 2 frames?
 				sCurrHitTile=arrayPuzzleTileCountId[iTileBgCount].alt;
 				sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
-				
+
+/* //TODO: -add: animation;				
 				if ((sCurrHitTile=="1") || (sCurrHitTile=="16")) {				
 					if (iAnimationCount==0) { //%2
 						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64) + "px -" + iRowCount*64 + "px";				
@@ -2992,8 +2993,11 @@ function autoUpdatePuzzleTileImage() {
 					}					
 				}
 				else {
+*/				
 						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64) + "px -" + iRowCount*64 + "px";
+/*						
 				}
+*/				
 			}
 
 			iTileBgCount++;
