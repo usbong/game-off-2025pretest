@@ -125,6 +125,14 @@
 
 			visibility: hidden;
 		}
+		
+		.ImageExplosion {
+			position: absolute;
+
+			clip: rect(0px,256px,256px,0px);
+
+			visibility: hidden;
+		}
 
 		.ButtonSet, .TextInputSet {
 			position: relative; /*absolute;*/
@@ -535,6 +543,11 @@ var iAnimationCountMax=5;
 var iAnimationDelayCount=0;
 var iAnimationDelayCountMax=10;
 
+//added by Mike, 20231119
+var iExplosionEffectAnimationCount=0;
+var iExplosionEffectAnimationCountMax=5;
+var iExplosionEffectAnimationDelayCount=0;
+var iExplosionEffectAnimationDelayCountMax=1;
 
 
 /*
@@ -1053,6 +1066,7 @@ var iOffsetHeight=0;
 
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
+
 /*
 		setAnimImageFrameWidthText.value=iImageFrameWidth;
 		setAnimImageFrameHeightText.value=iImageFrameHeight;
@@ -1146,6 +1160,10 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		var textStatusDiv = document.getElementById("textStatusDivId");
 		var textEnterDiv = document.getElementById("textEnterDivId");
+						
+		//added by Mike, 20231119
+		var explosionEffectImage = document.getElementById("explosionEffectImageId");
+
 
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
@@ -1222,6 +1240,64 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//added by Mike, 20221012
 		iHorizontalOffset=myCanvas.getBoundingClientRect().x;
 */
+
+	//added by Mike, 20231119
+	//TODO: -update: this; reduce size of explosion effect image;
+	//explosionEffectImage.style.visibility="visible";
+	
+	explosionEffectImage.style.left = 0+"px";
+	//iHorizontalOffset+iOffsetWidth+iPuzzleTileWidth*iColumnCount+iBorderOffset*iColumnCount+"px";
+	
+	explosionEffectImage.style.top = 0+"px";
+	//0+iOffsetHeight+iPuzzleTileHeight*iRowCount+iBorderOffset*iRowCount+"px";
+		
+	
+	if (iExplosionEffectAnimationDelayCount==iExplosionEffectAnimationDelayCountMax) {
+//	if (iExplosionEffectAnimationDelayCount>=iExplosionEffectAnimationDelayCountMax) {
+		iExplosionEffectAnimationCount=(iExplosionEffectAnimationCount+1)%5; //last hidden 
+
+		iExplosionEffectAnimationDelayCount=0;
+		explosionEffectImage.style.visibility="visible";		
+	}
+	else {
+		iExplosionEffectAnimationDelayCount++;
+		
+//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+
+	}
+		
+	if (iExplosionEffectAnimationCount==0) { //%2
+		explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+	}			
+	else if (iExplosionEffectAnimationCount==1) { 
+		explosionEffectImage.style.objectPosition = "-" + 256 + "px -" + 0 + "px";	
+		//alert(">>>>");
+	}
+	else if (iExplosionEffectAnimationCount==2) { 
+		explosionEffectImage.style.objectPosition = "-" + 256*2 + "px -" + 0 + "px";	
+		//alert(">>>>");
+	}
+	else if (iExplosionEffectAnimationCount==3) { 
+		explosionEffectImage.style.objectPosition = "-" + 256*3 + "px -" + 0 + "px";		
+		//alert(">>>>");
+	}	
+	else {
+		explosionEffectImage.style.visibility="hidden";
+	}
+
+/*
+//alert("iExplosionEffectAnimationDelayCount: "+iExplosionEffectAnimationDelayCount);
+		
+	if (iExplosionEffectAnimationDelayCount==iExplosionEffectAnimationDelayCountMax*20) {		
+	
+//		alert(iExplosionEffectAnimationDelayCount);
+		iExplosionEffectAnimationCount=0;
+		iExplosionEffectAnimationDelayCount=0;
+		
+		explosionEffectImage.style.visibility="visible";
+	}
+*/	
+
 
 	if (bIsExecutingShake) {
 		iShakeOffsetWidth=iShakeOffsetWidthMax;
@@ -3691,6 +3767,8 @@ opting to put assets folder in "html_application" folder instead
 		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
 		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
+		
+		<img id="explosionEffectImageId" class="ImageExplosion" src="assets/images/effects.png">
 
 		<!-- added by Mike, 20231104;
 		  note: .html; not .php -->
