@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231119; from 20231117
+' @date updated: 20231120; from 20231119
 ' @website: www.usbong.ph
 '
 '
@@ -129,9 +129,15 @@
 		.ImageExplosion {
 			position: absolute;
 
-			clip: rect(0px,256px,256px,0px);
+			/*	//edited by Mike, 20231120
+				clip: rect(0px,256px,256px,0px);
+			*/
+						
+			clip: rect(0px,128px,128px,0px);
 
 			visibility: hidden;
+			
+			z-index: 4;
 		}
 
 		.ButtonSet, .TextInputSet {
@@ -301,7 +307,7 @@
     			width: 58px;
     			height: 58px;
 
-    			background-color: #ffffff; /*transparent;*/
+    			background-color: transparent; /*#ffffff;*/
 
     			color: #222222;
 
@@ -544,11 +550,14 @@ var iAnimationDelayCount=0;
 var iAnimationDelayCountMax=10;
 
 //added by Mike, 20231119
-var iExplosionEffectAnimationCount=0;
+var iExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iExplosionEffectAnimationCountMax=5;
 var iExplosionEffectAnimationDelayCount=0;
-var iExplosionEffectAnimationDelayCountMax=1;
+var iExplosionEffectAnimationDelayCountMax=4;//1;
 
+//added by Mike, 20231120
+var iImageExplosionEffectAnimationWidth=64;
+var iImageExplosionEffectAnimationHeight=64;
 
 /*
 //added by Mike, 20221108
@@ -1149,6 +1158,70 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 //		return false;
 	}
+	
+	//added by Mike, 20231120
+	function setExplosionEffectPosition(iTileBgCountInput) {
+		var explosionEffectImage = document.getElementById("explosionEffectImageId");
+		
+		explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+
+		explosionEffectImage.style.visibility="visible";	
+
+		iExplosionEffectAnimationDelayCount=iExplosionEffectAnimationDelayCountMax;
+		
+		iExplosionEffectAnimationCount=-1; //0;
+
+		explosionEffectImage.style.left = parseInt(arrayPuzzleTileCountId[iTileBgCountInput].style.left,10)-iImageExplosionEffectAnimationWidth/2;
+
+		explosionEffectImage.style.top = parseInt(arrayPuzzleTileCountId[iTileBgCountInput].style.top,10)-iImageExplosionEffectAnimationHeight/2;			
+	}
+	
+	function executeExplosionEffect() {
+		var explosionEffectImage = document.getElementById("explosionEffectImageId");
+		
+		if (explosionEffectImage.style.visibility=="hidden") {
+			return;
+		}
+
+		if (iExplosionEffectAnimationDelayCount==iExplosionEffectAnimationDelayCountMax) {
+	//	if (iExplosionEffectAnimationDelayCount>=iExplosionEffectAnimationDelayCountMax) {
+			iExplosionEffectAnimationCount=(iExplosionEffectAnimationCount+1)%5; //last hidden 
+			
+			
+			iExplosionEffectAnimationDelayCount=0;
+			/*
+			explosionEffectImage.style.visibility="visible";		
+			*/
+		}
+		else {
+			iExplosionEffectAnimationDelayCount++;
+			
+	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+
+		}
+			
+		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+			
+		if (iExplosionEffectAnimationCount==0) { //%2
+			explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+		}			
+		else if (iExplosionEffectAnimationCount==1) { 
+			explosionEffectImage.style.objectPosition = "-" + 128 + "px -" + 0 + "px";	
+			//alert(">>>>");
+		}
+		else if (iExplosionEffectAnimationCount==2) { 
+			explosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + 0 + "px";	
+			//alert(">>>>");
+		}
+		else if (iExplosionEffectAnimationCount==3) { 
+			explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 0 + "px";		
+			//alert(">>>>");
+		}	
+		else {
+			explosionEffectImage.style.visibility="hidden";
+		}
+	}
+
 
 	function myUpdateFunction() {
 		var mainImageTile = document.getElementById("mainImageTileImageId");
@@ -1163,7 +1236,6 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 						
 		//added by Mike, 20231119
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
-
 
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
@@ -1241,7 +1313,11 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		iHorizontalOffset=myCanvas.getBoundingClientRect().x;
 */
 
-	//added by Mike, 20231119
+
+	executeExplosionEffect();
+
+/*
+	//removed by Mike, 20231120; from 20231119
 	//TODO: -update: this; reduce size of explosion effect image;
 	//explosionEffectImage.style.visibility="visible";
 	
@@ -1270,21 +1346,22 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
 	}			
 	else if (iExplosionEffectAnimationCount==1) { 
-		explosionEffectImage.style.objectPosition = "-" + 256 + "px -" + 0 + "px";	
+		explosionEffectImage.style.objectPosition = "-" + 128 + "px -" + 0 + "px";	
 		//alert(">>>>");
 	}
 	else if (iExplosionEffectAnimationCount==2) { 
-		explosionEffectImage.style.objectPosition = "-" + 256*2 + "px -" + 0 + "px";	
+		explosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + 0 + "px";	
 		//alert(">>>>");
 	}
 	else if (iExplosionEffectAnimationCount==3) { 
-		explosionEffectImage.style.objectPosition = "-" + 256*3 + "px -" + 0 + "px";		
+		explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 0 + "px";		
 		//alert(">>>>");
 	}	
 	else {
 		explosionEffectImage.style.visibility="hidden";
 	}
-
+*/
+	
 /*
 //alert("iExplosionEffectAnimationDelayCount: "+iExplosionEffectAnimationDelayCount);
 		
@@ -2234,6 +2311,9 @@ mainImageTileProjectile.style.visibility = "visible";
         //OK
 //        alert("HIT!");
 			bIsPuzzleTileTargetHit=true;
+			
+			//removed by Mike, 20231120
+			//setExplosionEffectPosition(iTileBgCount);
 
   			//OK; row1; columns; 1 to 4;
   			//row2; columns 5 to 8;...
@@ -2444,6 +2524,10 @@ mainImageTileProjectile.style.visibility = "visible";
 					else {
 						//TODO: -update: this
 					}
+					
+					//added by Mike, 20231120
+					setExplosionEffectPosition(iTileBgCount);
+
 
 					return;
 				}
@@ -2525,6 +2609,8 @@ mainImageTileProjectile.style.visibility = "visible";
   				//-----
   				bIsActionKeyPressed=true;
 
+
+				
           /*
           arrayPuzzleTileCountId[iTileBgCount].className="Image32x32Tile";
           				arrayPuzzleTileCountId[iTargetTileBgCount].className="Image32x32TileSpace";
@@ -2572,9 +2658,9 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 
 
           //reminder: arrayPuzzleTileCountId[iTileBgCount].alt="";
-          					puzzleTileImageTargetBorder.style.left = arrayPuzzleTileCountId[iTileBgCount].style.left;
+		puzzleTileImageTargetBorder.style.left = arrayPuzzleTileCountId[iTileBgCount].style.left;
 
-          					puzzleTileImageTargetBorder.style.top = arrayPuzzleTileCountId[iTileBgCount].style.top;
+		puzzleTileImageTargetBorder.style.top = arrayPuzzleTileCountId[iTileBgCount].style.top;
 
 
           arrayPuzzleTileCountId[iTargetTileBgCount].className="Image32x32TileSpace";
@@ -3768,7 +3854,9 @@ opting to put assets folder in "html_application" folder instead
 
 		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 		
+<!--		
 		<img id="explosionEffectImageId" class="ImageExplosion" src="assets/images/effects.png">
+-->
 
 		<!-- added by Mike, 20231104;
 		  note: .html; not .php -->
@@ -3796,6 +3884,9 @@ opting to put assets folder in "html_application" folder instead
 <img id="puzzleTileImageIdBg15" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
 <img id="puzzleTileImageIdBg16" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
 
+		
+		
+	<img id="explosionEffectImageId" class="ImageExplosion" src="assets/images/effects.png">
 
 
 
