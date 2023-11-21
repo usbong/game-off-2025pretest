@@ -109,8 +109,11 @@
 			height: 288px;
 */
 
-			width: 448px; /*640px;*/
-			height: 402px; /*576px;*/
+/*			width: 448px; *//*640px;*/
+/*			height: 402px; *//*576px;*/
+
+			width: 640px;
+			height: 480px; 
 
 			border: 1px solid gray;
 
@@ -148,6 +151,24 @@
 			
 			z-index: 4;
 		}
+		
+		.ImageTitle {
+			position: absolute;
+
+			text-align: center;
+			line-height: 32px;
+			
+			visibility: hidden;
+
+			/* //edited by Mike, 20230121
+			//notes: @640px, excess shaking via MS EDGE Browser
+			*/
+			width: 480px; /*640px;*/
+			
+			object-fit: contain;
+
+			z-index: 10;									
+		}		
 
 		.ButtonSet, .TextInputSet {
 			position: relative; /*absolute;*/
@@ -474,8 +495,10 @@
 				font-weight: bold;
 
 				/* //noted by Mike, 20230130 */
-				padding: 5px;
-
+				padding: 10px;
+				padding-right: 40px;
+				padding-left: 40px;
+				
     			border: 3px solid #4d4d4d;
     			border-radius: 3px;
 				
@@ -597,6 +620,9 @@ var iPrevDirection=0;
 //added by Mike, 20231119; from 20221121
 var iDelayAnimationCountEnter=0;
 const iDelayAnimationCountEnterMax=10;
+
+//added by Mike, 20231121
+var bHasViewedTitle=false;
 
 var bHasPressedStart=false;
 
@@ -747,8 +773,12 @@ var iOffsetHeight=0;
 	const iStageMaxHeight=144*2; //144;
 */
 	//TO-DO: -add: auto-update Canvas' width and height to be EXACT
+/*	//edited by Mike, 20231121
 	var iStageMaxWidth=448; //640;
 	var iStageMaxHeight=402; //576;
+*/
+	var iStageMaxWidth=640;
+	var iStageMaxHeight=480;
 
 	var iHorizontalOffset=0;
 	var iVerticalOffset=0;
@@ -1098,7 +1128,17 @@ var iOffsetHeight=0;
 		//added by Mike, 20231121
 		var mouseInputImage = document.getElementById("mouseInputImageId");
 
+		//added by Mike, 20231121
+		var titleImage = document.getElementById("titleImageId");	
+		//titleImage.style.visibility="hidden";
 		
+		var iTitleImageWidth = (titleImage.clientWidth);
+		var iTitleImageHeight = (titleImage.clientHeight);	
+		
+		titleImage.style.top = (iVerticalOffsetInnerScreen+0+iStageMaxHeight/3 -iTitleImageHeight/2)+"px";
+		titleImage.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTitleImageWidth/2 +"px";
+
+	
 /*
 		setAnimImageFrameWidthText.value=iImageFrameWidth;
 		setAnimImageFrameHeightText.value=iImageFrameHeight;
@@ -1140,12 +1180,33 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		mainImageTileProjectile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 		
 		//added by Mike, 20231121
-		var mouseInputImage = document.getElementById("mouseInputImageId");
 		
+		var textEnterDiv = document.getElementById("textEnterDivId");
+
+			var iTextEnterDivWidth = (textEnterDiv.clientWidth);
+			var iTextEnterDivHeight = (textEnterDiv.clientHeight);
+				
+			textEnterDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextEnterDivWidth/2 +"px";
+	
+			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight*2+"px"; 
+			
+			//alert ("textEnterDiv.style.left: "+textEnterDiv.style.left);
+			//alert ("textEnterDiv.style.top: "+textEnterDiv.style.top);
+
+			textEnterDiv.style.visibility="visible";	
+
+			
+		var mouseInputImage = document.getElementById("mouseInputImageId");
+/*		
 		mouseInputImage.style.left = (iHorizontalOffset+iStageMaxWidth/2-iMouseInputImageWidth/2)+"px";
 
 		mouseInputImage.style.top = (iVerticalOffsetInnerScreen+iStageMaxHeight+iMouseInputImageHeight/2)+"px";		
+*/
 
+		mouseInputImage.style.left = (iHorizontalOffset+iStageMaxWidth/2-iTextEnterDivWidth/2+iMouseInputImageWidth/2)+"px";
+
+		mouseInputImage.style.top = (iVerticalOffsetInnerScreen+iStageMaxHeight+iTextEnterDivHeight/2)+"px";		
+		
 		mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";		
 	}
 
@@ -1301,6 +1362,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//added by Mike, 20231121
 		var mouseInputImage = document.getElementById("mouseInputImageId");
 		
+		//added by Mike, 20231121
+		var titleImage = document.getElementById("titleImageId");	
+		//titleImage.style.visibility="hidden";
 
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
@@ -1548,38 +1612,49 @@ mainImageTileStepX=15; //2;
 	textStatusDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextStatusDivWidth/2 +"px";
 	textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px";
 */
-		//added by Mike, 20231119
-//		if ((!bHasPressedStart)||(!bHasViewedHowToPlayGuide)) {
-		if (!bHasPressedStart) {
+
+		//added by Mike, 20231121
+		if (!bHasViewedTitle) {
+			titleImage.style.visibility="visible";
+			
 			//added by Mike, 20231121
 			executeMouseClickAnimation();		
 
+/* //removed by Mike, 20231121			
 //TODO: -update: position; in TITLE SCREEN
 			//edited by Mike, 20231121
 			var iTextEnterDivWidth = (textEnterDiv.clientWidth);
 			
 			var iTextEnterDivHeight = (textEnterDiv.clientHeight);
-		
+				
 			textEnterDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextEnterDivWidth/2 +"px";
-			
+	
+//			textEnterDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth-iTextEnterDivWidth+"px";
+	
 //			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight+"px"; 
 			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight*2+"px"; 
 			
 			//alert ("textEnterDiv.style.left: "+textEnterDiv.style.left);
 			//alert ("textEnterDiv.style.top: "+textEnterDiv.style.top);
 
-			textEnterDiv.style.visibility="visible";
+			textEnterDiv.style.visibility="visible";	
+*/			
 		}
-		else {
+
+		//added by Mike, 20231119
+//		if ((!bHasPressedStart)||(!bHasViewedHowToPlayGuide)) {
+		//added by Mike, 20231121
+//		if (!bHasPressedStart) {
+		if (bHasPressedStart) {
+			titleImage.style.visibility="hidden";
+			bHasViewedTitle=true;
+			
 			textEnterDiv.style.visibility="hidden";
 
 			var mouseInputImage = document.getElementById("mouseInputImageId");
 
 			mouseInputImage.style.visibility="hidden";
-
 		}
-
-
 
 
 
@@ -1970,15 +2045,15 @@ mainImageTileProjectilePosY++;
 
     //		alert (iPuzzleTileWidth*iRowCount);
 
-/*
-//added by Mike, 20231105
-//TODO: -add: bHasPressedStart
+//added by Mike, 20231121; from 20231105
 
     		//edited by Mike, 20221127	//arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
     		if (bHasPressedStart) {
-    			arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
+    			arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";				
     		}
-*/
+			else {
+    			arrayPuzzleTileCountId[iTileBgCount].style.visibility="hidden";				
+			}
 
         iTileBgCount++;
       }
@@ -1997,9 +2072,15 @@ mainImageTileProjectilePosY++;
 //    alert(iColumnCount);
 
     //----------
+	
+		//edited by Mike, 20231121
+		if (bHasPressedStart) {
+		//arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
+		
+			//edited by Mike, 20221113; 20221112
+			autoUpdatePuzzleTileImage();
+		}	
 
-		//edited by Mike, 20221113; 20221112
-		autoUpdatePuzzleTileImage();
 
 		//added by Mike, 20231111
 		if (bIsPuzzleDone) {
@@ -3967,7 +4048,9 @@ opting to put assets folder in "html_application" folder instead
 	<!-- added by Mike, 20221121 -->
 	<div id="divPuzzleTileImageSpaceBorderId" class="Image32x32TileSpaceBorder"></div>
 
-
+	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">	
+	
+	
 	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
 	
 	<!-- PRESS ENTER; PRESS START -->
