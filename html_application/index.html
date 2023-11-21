@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231120; from 20231119
+' @date updated: 20231121; from 20231120
 ' @website: www.usbong.ph
 '
 '
@@ -125,6 +125,15 @@
 
 			visibility: hidden;
 		}
+		
+		.ImageMouseInput {
+			position: absolute;
+
+			clip: rect(0px,64px,64px,0px);
+
+			visibility: visible;
+		}
+		
 		
 		.ImageExplosion {
 			position: absolute;
@@ -558,6 +567,13 @@ var iExplosionEffectAnimationDelayCountMax=4;//1;
 //added by Mike, 20231120
 var iImageExplosionEffectAnimationWidth=64;
 var iImageExplosionEffectAnimationHeight=64;
+
+//added by Mike, 20231121
+var iMouseAnimationCount=-1; //0; //due to immediately +1 in execution;
+var iMouseAnimationCountMax=5;
+var iMouseAnimationDelayCount=0;
+var iMouseAnimationDelayCountMax=4;//1;
+
 
 /*
 //added by Mike, 20221108
@@ -1056,6 +1072,10 @@ var iOffsetHeight=0;
 		iImageFrameWidth=64;// 32; //0;
 		iImageFrameHeight=64;// 32;
 
+		//added by Mike, 20231121
+		iMouseInputImageWidth=64;
+		iMouseInputImageHeight=64;
+		
 /*
 		var setAnimImageFrameWidthText = document.getElementById("textSetAnimImageFrameWidthId");
 		var setAnimImageFrameHeightText = document.getElementById("textSetAnimImageFrameHeightId");
@@ -1075,7 +1095,10 @@ var iOffsetHeight=0;
 
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
+		//added by Mike, 20231121
+		var mouseInputImage = document.getElementById("mouseInputImageId");
 
+		
 /*
 		setAnimImageFrameWidthText.value=iImageFrameWidth;
 		setAnimImageFrameHeightText.value=iImageFrameHeight;
@@ -1115,7 +1138,15 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		mainImageTileProjectile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 
 		mainImageTileProjectile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
+		
+		//added by Mike, 20231121
+		var mouseInputImage = document.getElementById("mouseInputImageId");
+		
+		mouseInputImage.style.left = (iHorizontalOffset+iStageMaxWidth/2-iMouseInputImageWidth/2)+"px";
 
+		mouseInputImage.style.top = (iVerticalOffsetInnerScreen+iStageMaxHeight+iMouseInputImageHeight/2)+"px";		
+
+		mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";		
 	}
 
 
@@ -1174,6 +1205,36 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		explosionEffectImage.style.left = parseInt(arrayPuzzleTileCountId[iTileBgCountInput].style.left,10)-iImageExplosionEffectAnimationWidth/2;
 
 		explosionEffectImage.style.top = parseInt(arrayPuzzleTileCountId[iTileBgCountInput].style.top,10)-iImageExplosionEffectAnimationHeight/2;			
+	}
+	
+	//added by Mike, 20231121
+	function executeMouseClickAnimation() {
+		var mouseInputImage = document.getElementById("mouseInputImageId");
+		
+		if (iMouseAnimationDelayCount==iMouseAnimationDelayCountMax) {
+			iMouseAnimationCount=(iMouseAnimationCount+1)%5; //last hidden 
+			
+			
+			iMouseAnimationDelayCount=0;
+			/*
+			explosionEffectImage.style.visibility="visible";		
+			*/
+		}
+		else {
+			iMouseAnimationDelayCount++;
+			
+	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+
+		}
+			
+		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+			
+		if (iMouseAnimationCount==0) { //%2
+			mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
+		}	
+		else {
+			mouseInputImage.style.objectPosition = "-" + 64 + "px -" + 192 + "px";
+		}		
 	}
 	
 	function executeExplosionEffect() {
@@ -1236,6 +1297,10 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 						
 		//added by Mike, 20231119
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
+		
+		//added by Mike, 20231121
+		var mouseInputImage = document.getElementById("mouseInputImageId");
+		
 
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
@@ -1315,6 +1380,11 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 
 	executeExplosionEffect();
+
+/*	//removed by Mike, 20231121	
+	//added by Mike, 20231121
+	executeMouseClickAnimation();
+*/
 
 /*
 	//removed by Mike, 20231120; from 20231119
@@ -1481,42 +1551,32 @@ mainImageTileStepX=15; //2;
 		//added by Mike, 20231119
 //		if ((!bHasPressedStart)||(!bHasViewedHowToPlayGuide)) {
 		if (!bHasPressedStart) {
-		
+			//added by Mike, 20231121
+			executeMouseClickAnimation();		
+
+//TODO: -update: position; in TITLE SCREEN
+			//edited by Mike, 20231121
 			var iTextEnterDivWidth = (textEnterDiv.clientWidth);
+			
 			var iTextEnterDivHeight = (textEnterDiv.clientHeight);
 		
 			textEnterDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextEnterDivWidth/2 +"px";
 			
 //			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight+"px"; 
 			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight*2+"px"; 
-
-/*
-			textEnterDiv.style.left = 0+"px";
-			textEnterDiv.style.top = 0+"px"; 
-*/							
+			
 			//alert ("textEnterDiv.style.left: "+textEnterDiv.style.left);
 			//alert ("textEnterDiv.style.top: "+textEnterDiv.style.top);
 
-/*				
-			//reference: https://github.com/masarapmabuhay/tugon/blob/main/mainLinux.cpp; last accessed: 20221121
-			//keyphrase: GAMEOFF 2021, TUGON
-			if (iDelayAnimationCountEnter<iDelayAnimationCountEnterMax) {
-				textEnterDiv.style.visibility="visible";				
-			}
-			else {
-				if (iDelayAnimationCountEnter>20) {
-					iDelayAnimationCountEnter=0;
-				}
-				textEnterDiv.style.visibility="hidden";
-			}		
-
-			iDelayAnimationCountEnter++;
-*/			
 			textEnterDiv.style.visibility="visible";
-
 		}
 		else {
 			textEnterDiv.style.visibility="hidden";
+
+			var mouseInputImage = document.getElementById("mouseInputImageId");
+
+			mouseInputImage.style.visibility="hidden";
+
 		}
 
 
@@ -1607,7 +1667,10 @@ mainImageTileProjectilePosY++;
 //alert("newMainImageTileProjectilePosY: "+newMainImageTileProjectilePosY);
 					mainImageTileProjectilePosX++;								*/
 					//alert("mainImageTileStepX: "+mainImageTileStepX);
-mainImageTileProjectile.style.visibility = "visible";
+
+		//edited by Mike, 20231121
+		//TODO: -update: this
+		//mainImageTileProjectile.style.visibility = "visible";
 
 
 		mainImageTileProjectile.style.left = (iHorizontalOffset)+mainImageTileProjectilePosX+"px";
@@ -1698,10 +1761,12 @@ mainImageTileProjectile.style.visibility = "visible";
 		}
 
 
+		/* //removed by Mike, 20231121
 		//edited by Mike, 20230423; from 20230321;
 		mainImageTile.style.visibility = "visible";
+		
 		//mainImageTile.style.visibility = "hidden";
-
+*/
 		//removed by Mike, 20230427
 		//mainImageTileProjectile.style.visibility = "visible";
 
@@ -1719,6 +1784,8 @@ mainImageTileProjectile.style.visibility = "visible";
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 
+		//added by Mike, 20231121
+		mainImageTile.style.visibility = "hidden";//"visible";
 
 /*
 		setPanelTable.style.left = (iHorizontalOffset+iStageMaxWidth)+"px";
@@ -3853,6 +3920,9 @@ opting to put assets folder in "html_application" folder instead
 		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
 		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
+		
+		<!-- added by Mike, 20231121 -->
+		<img id="mouseInputImageId" class="ImageMouseInput" src="assets/images/inputImage.png">		
 		
 <!--		
 		<img id="explosionEffectImageId" class="ImageExplosion" src="assets/images/effects.png">
