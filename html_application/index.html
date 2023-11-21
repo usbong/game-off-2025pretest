@@ -113,9 +113,11 @@
 /*			height: 402px; *//*576px;*/
 
 			width: 640px;
-			height: 480px; 
+			height: 360px; 
 
-			border: 1px solid gray;
+			/*	//removed by Mike, 20231121
+				border: 1px solid gray;
+			*/
 
 			z-index: -1;
 		}
@@ -778,7 +780,7 @@ var iOffsetHeight=0;
 	var iStageMaxHeight=402; //576;
 */
 	var iStageMaxWidth=640;
-	var iStageMaxHeight=480;
+	var iStageMaxHeight=360; //480
 
 	var iHorizontalOffset=0;
 	var iVerticalOffset=0;
@@ -1105,6 +1107,14 @@ var iOffsetHeight=0;
 		//added by Mike, 20231121
 		iMouseInputImageWidth=64;
 		iMouseInputImageHeight=64;
+		
+		//added by Mike, 20231121
+		var myCanvas = document.getElementById("myCanvasId");
+
+		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px"; 		
+		iHorizontalOffset=myCanvas.getBoundingClientRect().x;
+
+		
 		
 /*
 		var setAnimImageFrameWidthText = document.getElementById("textSetAnimImageFrameWidthId");
