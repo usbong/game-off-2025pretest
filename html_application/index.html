@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231121; from 20231120
+' @date updated: 20231122; from 20231121
 ' @website: www.usbong.ph
 '
 '
@@ -118,7 +118,10 @@
 			/*	//removed by Mike, 20231121
 				border: 1px solid gray;
 			*/
-
+		
+			padding: -10px;
+			border: 1px dotted gray;
+			
 			z-index: -1;
 		}
 
@@ -153,6 +156,21 @@
 			
 			z-index: 4;
 		}
+
+		.ImageHowToPlayGuide {
+			position: absolute;
+
+			text-align: center;
+			line-height: 32px;
+			
+			visibility: hidden;
+			
+			width: 640px;
+			height: 360px;	
+				
+			/* //added by Mike, 20221104 */
+			z-index: 10;									
+		}		
 		
 		.ImageTitle {
 			position: absolute;
@@ -218,27 +236,29 @@
 
 			clip: rect(0px,64px,64px,0px);
 
-			background-color: transparent;
+			background-color: #f7f7f7; /*transparent;*/
+/*			
 			border: none;
-
+*/
 			color: #222222;
 
 			/* //removed by Mike, 20221111
 			opacity: 0.5;*/
 
 			font-weight: bold;
-			font-size: 146%; /*20px;*/
-
+			/*font-size: 146%;*/ /*20px;*/
+/*
 			text-align: center;
 			line-height: 32px;
+*/
 
-
+			border: 1px dotted gray;
+	
 			visibility: hidden;
 
 			margin: 0px; /*1px;*/
 			padding: 0px;
 			z-index: 3;
-
 		}
 
 
@@ -556,6 +576,9 @@ var bIsPuzzleTileTargetHit=false;
 //added by Mike, 20231114
 var iInputDelayCountMax=3;
 var iInputDelayCount=iInputDelayCountMax;
+
+//added by Mike, 20231122
+var bHasViewedHowToPlayGuide=false;
 
 
 //added by Mike, 20231111
@@ -1375,6 +1398,10 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//added by Mike, 20231121
 		var titleImage = document.getElementById("titleImageId");	
 		//titleImage.style.visibility="hidden";
+		
+		//added by Mike, 20231122
+		var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
+
 
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
@@ -1651,19 +1678,51 @@ mainImageTileStepX=15; //2;
 */			
 		}
 
-		//added by Mike, 20231119
+		//added by Mike, 20231122; from 20231119
 //		if ((!bHasPressedStart)||(!bHasViewedHowToPlayGuide)) {
 		//added by Mike, 20231121
 //		if (!bHasPressedStart) {
-		if (bHasPressedStart) {
+
+		if (bHasPressedStart) {		
 			titleImage.style.visibility="hidden";
 			bHasViewedTitle=true;
 			
 			textEnterDiv.style.visibility="hidden";
+		
+			if (!bHasViewedHowToPlayGuide) {
+			
+				//added by Mike, 20231122
+				//var mouseInputImage = document.getElementById("mouseInputImageId");
 
-			var mouseInputImage = document.getElementById("mouseInputImageId");
+				mouseInputImage.style.visibility="hidden";
+				
+				howToPlayGuideImage.style.visibility = "visible";
+				
+				var iHowToPlayGuideImageWidth = (howToPlayGuideImage.clientWidth);
+				
+				var iHowToPlayGuideImageHeight = (howToPlayGuideImage.clientHeight);
 
-			mouseInputImage.style.visibility="hidden";
+				howToPlayGuideImage.style.top = (iVerticalOffsetInnerScreen+0+iStageMaxHeight/2 -iHowToPlayGuideImageHeight/2)+"px";
+	
+				howToPlayGuideImage.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iHowToPlayGuideImageWidth/2 +"px";
+
+				return;
+				
+/*				
+				if (howToPlayGuideImage.style.visibility=="hidden") {
+					howToPlayGuideImage.style.visibility = "visible";
+				}
+				else {
+					howToPlayGuideImage.style.visibility = "hidden";
+				}	
+*/				
+			}
+/*			
+			titleImage.style.visibility="hidden";
+			bHasViewedTitle=true;
+			
+			textEnterDiv.style.visibility="hidden";
+*/			
 		}
 
 
@@ -3135,9 +3194,27 @@ bIsPuzzleTileTargetHit=false;
 			//last accessed: 20221122
 			switch(event.pointerType) {
 				case 'mouse':
-				
-				  //added by Mike, 20231119
-				  bHasPressedStart=true;
+				  //added by Mike, 20231122
+				  if (bHasPressedStart) {
+					//alert(">");
+					if (!bHasViewedHowToPlayGuide) {
+						//alert(">>>>>");
+						var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");	
+						
+						howToPlayGuideImage.style.visibility = "hidden"; 
+						
+						bHasViewedHowToPlayGuide=true;
+						
+						return;
+					}
+				  }
+				  else {				
+					  //added by Mike, 20231119
+					  bHasPressedStart=true;
+				  
+					  return;
+				  }
+
 /*
           //TODO: -add: this
           if (bIsUsingAppleWebKit) {
@@ -4058,6 +4135,8 @@ opting to put assets folder in "html_application" folder instead
 	<!-- added by Mike, 20221121 -->
 	<div id="divPuzzleTileImageSpaceBorderId" class="Image32x32TileSpaceBorder"></div>
 
+	<img id="howToPlayGuideImageId" class="ImageHowToPlayGuide" src="assets/images/gameOff2023HowToPlay.png">
+	
 	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">	
 	
 	
