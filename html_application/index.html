@@ -1243,7 +1243,98 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";		
 	}
 
+	//added by Mike, 20231122
+	function isAllObjectsOfTileTypeDone(sCurrHitTileInput, sCurrHitTileTypeInput) {
 
+		//note: "var" to create new container inside for loop
+    	for (var iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+    		for (var iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
+
+				var iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount];
+				
+				sCurrHitTile=arrayPuzzleTileCountId[iTileBgCount].alt;
+					
+				sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
+					
+				sCurrHitTileType="";
+			
+				sCurrHitTileType=Math.floor(parseInt((sCurrHitTile-1)/4));
+								
+				if (sCurrHitTileType==sCurrHitTileTypeInput) {				
+					if (sCurrHitTile==sCurrHitTileInput) {
+						//alert("sCurrHitTile: "+sCurrHitTile);					
+					}
+					else {
+						return false;
+					}
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	//added by Mike, 20231122
+	function verifyIfAllObjectsOfTileTypeDone(iXPos, iYPos) {
+
+		//bIsPuzzleDone=true;
+
+		//note: "var" to create new container inside for loop
+    	for (var iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+    		for (var iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
+
+				var iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount];
+
+				//alert("!!!! iTileBgCount: "+iTileBgCount);
+
+				var iTilePosX= iHorizontalOffset+iOffsetWidth+iPuzzleTileWidth*iColumnCount+iBorderOffset*iColumnCount;
+
+				var iTilePosY=0+iOffsetHeight+iPuzzleTileHeight*iRowCount+iBorderOffset*iRowCount;
+			
+								
+				if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos,iTilePosX,iTilePosY)) {
+					
+					sCurrHitTile=arrayPuzzleTileCountId[iTileBgCount].alt;
+					
+					sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
+					
+					sCurrHitTileType="";
+										
+
+/*				
+					if (iPrevHitTileBgCount!=-1) {				
+						sPrevHitTile=arrayPuzzleTileCountId[iPrevHitTileBgCount].alt;
+						sPrevHitTile=sPrevHitTile.substring(0,sPrevHitTile.indexOf(",FK="));
+					}
+					sPrevHitTileType="";
+*/
+					
+					sCurrHitTileType=Math.floor(parseInt((sCurrHitTile-1)/4));
+					
+					//alert (">> sCurrHitTile: "+sCurrHitTile);
+					
+					//verify all tiles if all objects of same type already use the same tile
+					if (isAllObjectsOfTileTypeDone(sCurrHitTile, sCurrHitTileType)) {
+						
+						alert("HAS NO MORE COPIES!");
+						
+						return true;
+					}	
+					
+					return false;
+				}
+			}
+		}
+
+		//alert("HAS NO MORE COPIES!");
+		
+		//TODO: -update: this
+		return true; //bIsPuzzleDone; //false;
+
+//		return false;
+	}
+	
+	
 	//added by Mike, 20231109
 	function isAutoVerifiedPuzzleDone() {
 
@@ -2671,6 +2762,13 @@ mainImageTileProjectilePosY++;
 
   				//alert("arrayPuzzleTileCountId[iTileBgCount].alt: " + arrayPuzzleTileCountId[iTileBgCount].alt);
 
+			//added by Mike, 20231122
+			
+			
+			
+			
+				
+				
 			//OK; TODO: -add: tiles connected to target via FK
 			//TODO: -add: more output testings;
 			//added by Mike, 20231109
@@ -3249,9 +3347,13 @@ bIsPuzzleTileTargetHit=false;
 					//added by Mike, 20231107
 					processResultFromInput(iXPos, iYPos);
 
+					//added by Mike, 20231122
+					verifyIfAllObjectsOfTileTypeDone(iXPos, iYPos);
+
 					//added by Mike, 20231110
 					bIsPuzzleDone = isAutoVerifiedPuzzleDone();
 
+					
 					//removed by Mike, 20231114
 					//iInputDelayCount=0;
 
