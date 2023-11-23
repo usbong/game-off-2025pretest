@@ -3845,6 +3845,9 @@ function autoUpdatePuzzleTileImage() {
 			//alert(iRowCountMax);
 
 		let iTileBgCount=0;
+		
+		var iCurrTileTypeCopyCount=0;
+		
 
 		for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
 			for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
@@ -3854,54 +3857,13 @@ function autoUpdatePuzzleTileImage() {
 
 			//alert(">>>");
 			//alert(">>>"+iTileBgCount);
+			
+			arrayPuzzleTilePos[iRowCount][iColumnCount]=iTileBgCount;
+	
 
 			arrayPuzzleTileCountId[iTileBgCount] = document.getElementById("puzzleTileImageIdBg"+iTileBgCount);
 
-
-			//added by Mike, 20221118
-			//reference: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_img_create;
-			//last accessed: 20221118
-			//edited by Mike, 20221121
-	//		arrayPuzzleTileCountId[iTileBgCount].setAttribute("src", getBaseURL()+"assets/images/count1024x1024.png");
-
-/*
-			//edited by Mike, 20221122; from 20221121
-			//iCurrentPuzzleStage=1;
-			switch (iCurrentPuzzleStage) {
-				case 0: //starting level; numbers sequence
-					//alert("dito");
-
-					//edited by Mike, 20221124
-				//arrayPuzzleTileCountId[iTileBgCount].setAttribute("src", getBaseURL()+"assets/images/count1024x1024.png");
-
-					if (arrayPuzzleTileCountId[iTileBgCount].src!=getBaseURL()+sImagePuzzleStage0) {
-
-						//edited by Mike, 20221127	//arrayPuzzleTileCountId[iTileBgCount].setAttribute("src", getBaseURL()+"assets/images/count1024x1024.png");
-						arrayPuzzleTileCountId[iTileBgCount].setAttribute("src", getBaseURL()+sImagePuzzleStage0);
-					}
-					break;
-				case 1: //next level; cambodia
-					arrayPuzzleTileCountId[iTileBgCount].setAttribute("src", getBaseURL()+sImagePuzzleStage1);
-					break;
-				case 2: //next level; duck army
-					arrayPuzzleTileCountId[iTileBgCount].setAttribute("src", getBaseURL()+sImagePuzzleStage2);
-					break;
-				default:
-					iCurrentPuzzleStage=0;
-
-					//repeat from starting level
-					//edited by Mike, 20221124
-				//arrayPuzzleTileCountId[iTileBgCount].setAttribute("src", getBaseURL()+"assets/images/count1024x1024.png");
-					if (arrayPuzzleTileCountId[iTileBgCount].src!=getBaseURL()+sImagePuzzleStage0) {
-						//edited by Mike, 20221127
-					//arrayPuzzleTileCountId[iTileBgCount].setAttribute("src", getBaseURL()+"assets/images/count1024x1024.png");
-	arrayPuzzleTileCountId[iTileBgCount].setAttribute("src", getBaseURL()+sImagePuzzleStage0);
-
-					}
-					break;
-			}
-*/
-
+			//arrayPuzzleTileCountId[iTileBgCount].style.visibility="hidden";
 
 			//alert(iTileBgCount);
 
@@ -3910,7 +3872,6 @@ function autoUpdatePuzzleTileImage() {
 						//alert(">>>");
 
 
-	//		arrayPuzzleTileCountId[iTileBgCount].style.top = iVerticalOffset+iPuzzleTileHeight*iColumnCount+"px";
 			arrayPuzzleTileCountId[iTileBgCount].style.top = 0+iOffsetHeight+iPuzzleTileHeight*iRowCount+iBorderOffset*iRowCount+"px";
 
 	//		alert (iPuzzleTileWidth*iRowCount);
@@ -3926,7 +3887,182 @@ function autoUpdatePuzzleTileImage() {
 
 
 
+				//edited by Mike, 20231109
+				if (iCurrTileTypeCopyCount<12) {
+
+				   //edited by Mike, 20231108    //arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+"";
+				   //edited by Mike, 20231108 //arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+",1";
+					arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+",FK=1"; //note: semicolon not usable in .alt text
+
+					iCurrTileTypeCopyCount++;
+				}
+				//note: remaining tiles need to be filled
+				else {
+					//edited by Mike, 20231108
+					//arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+"";
+					//edited by Mike, 20231108
+					//arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",1";
+					//edited by Mike, 20231109
+					//arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",FK=1";
+					arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",FK=";	//no FK
+				}
+
+
+				arrayPuzzleTileCountId[iTileBgCount].className="Image32x32Tile";
+				
 				iTileBgCount++;
+			}
+		}
+		
+
+		for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+		  for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
+
+				//alert(iTileBgCount);
+				//alert(arrayPuzzleTileCountId[iRowCount][iColumnCount]);
+				//alert(arrayPuzzleTilePos[iRowCount][iColumnCount]);
+
+				//iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
+
+	
+				
+//-----
+
+		//alert(iTileBgCount);
+		//alert(arrayPuzzleTileCountId[iRowCount][iColumnCount]);
+		//alert(arrayPuzzleTilePos[iRowCount][iColumnCount]);
+
+		
+
+//init FK in puzzle; no FK with the same type;
+	//added by Mike, 20231109
+	//jumble the positions of the tiles;
+	//var sRecordedSteps="3121220312133003112111302212133333303312003030030303133122112122121303033033311212002";
+	
+			iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
+
+		//alert(">>>>"+iTileBgCountTemp);
+		//sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
+	//sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK"));
+
+			//random
+			let iDirection = window.parseInt(Math.random() * 4);
+
+			//alert(">>>>"+iDirection);
+
+			//iDirection=2; //already done; 
+			//iDirection=3; //pre-set puzzle; simple;
+
+
+			//alert("iRowCount: "+iRowCount);
+
+			switch (iDirection) {
+				case iKEY_W: //0
+					if ((iRowCount-1)>=0) {
+	//					arrayPuzzleTileCountId[iRowCount][iColumnCount].alt=arrayPuzzleTileCountId[iRowCount-1][iColumnCount].alt;
+
+						iTileBgCountNew=arrayPuzzleTilePos[iRowCount-1][iColumnCount];
+
+						sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
+
+						//alert("DITO: "+sTileCountIdAltNew);
+
+						arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
+					}
+					break;
+				case iKEY_S: //1
+					if ((iRowCount+1)<iRowCountMax) {
+						iTileBgCountNew=arrayPuzzleTilePos[iRowCount+1][iColumnCount];
+
+						sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
+
+						arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
+					}
+					break;
+				case iKEY_A: //2
+					if ((iColumnCount-1)>=0) {
+						iTileBgCountNew=arrayPuzzleTilePos[iRowCount][iColumnCount-1];
+
+						sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
+
+						arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
+					}
+					break;
+				case iKEY_D: //3
+					if ((iColumnCount+1)<iColumnCountMax) {
+						iTileBgCountNew=arrayPuzzleTilePos[iRowCount][iColumnCount+1];
+
+						sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
+
+						arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
+					}
+					break;
+			}		
+
+		}
+	}		
+//-----
+
+		if (isAutoVerifiedPuzzleDone()) {
+		
+			var bAutoGenerateSoldierTileTypeDone=false;
+			var bAutoGenerateTankTileTypeDone=false;
+			var bAutoGenerateBuildingTileTypeDone=false;
+			
+		
+			for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+			  for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
+
+					//alert(iTileBgCount);
+					//alert(arrayPuzzleTileCountId[iRowCount][iColumnCount]);
+					//alert(arrayPuzzleTilePos[iRowCount][iColumnCount]);
+
+						iCurrTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount];
+
+						//alert(">>iTileBgCountNew: "+iTileBgCountNew);
+						
+						sCurrHitTile=arrayPuzzleTileCountId[iCurrTileBgCount].alt;
+
+						//alert("DITO: "+sTileCountIdAltNew);
+
+						sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
+							
+						sCurrHitTileType="";
+					
+						sCurrHitTileType=Math.floor(parseInt((sCurrHitTile-1)/4));
+
+				
+				
+					if (parseInt(sCurrHitTileType)==0) {
+						if (!bAutoGenerateSoldierTileTypeDone) {
+							arrayPuzzleTileCountId[iCurrTileBgCount].alt=((parseInt(sCurrHitTile)+1)%4+(0*4))+",FK=1";
+							
+							bAutoGenerateSoldierTileTypeDone=true;
+						}
+					}
+					else if (parseInt(sCurrHitTileType)==1) {
+						if (!bAutoGenerateTankTileTypeDone) {
+							arrayPuzzleTileCountId[iCurrTileBgCount].alt=((parseInt(sCurrHitTile)+1)%4+(1*4))+",FK=1";
+							
+							bAutoGenerateTankTileTypeDone=true;
+						}
+					}
+					else if (parseInt(sCurrHitTileType)==2) {
+						if (!bAutoGenerateBuildingTileTypeDone) {
+							arrayPuzzleTileCountId[iCurrTileBgCount].alt=((parseInt(sCurrHitTile)+1)%4+(2*4))+",FK=1";
+							
+							bAutoGenerateBuildingTileTypeDone=true;
+						}					
+					}
+		
+	
+		
+/*						
+						
+
+						arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
+*/						
+				}
 			}
 		}
 	}
@@ -4133,164 +4269,6 @@ var iCurrArrayTileTypeCount=0;
 
 //alert(arrayTileType[3]);
 */
-
-var iCurrTileTypeCopyCount=0;
-
-//added by Mike, 20221106
-iTileBgCount=0;
-
-for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
-  for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
-
-  //alert(iTileBgCount);
-    arrayPuzzleTilePos[iRowCount][iColumnCount]=iTileBgCount;
-
-    arrayPuzzleTileCountId[iTileBgCount] = document.getElementById("puzzleTileImageIdBg"+iTileBgCount);
-
-    arrayPuzzleTileCountId[iTileBgCount].style.visibility="hidden";
-
-      //added by Mike, 20221106
-      //reference: https://www.w3schools.com/tags/tag_img.asp;
-      //last accessed: 20221105
-      //count
-      //edited by Mike, 20221106				//arrayPuzzleTileCountId[iTileBgCount].alt=(iTileBgCount+1)+"";
-
-
-	  //edited by Mike, 20231106
-	  //put in initPuzzle()? //arrayPuzzleTileCountId[iTileBgCount].alt=(iTileBgCount+1)+"";
-      //edited by Mike, 20231106
-//	  arrayPuzzleTileCountId[iTileBgCount].alt=(1)+"";
-
-/* //edited by Mike, 20231107
-	  //OK; unique not destroyed
-	  if (iTileBgCount<iRowCountMax) {
-		arrayPuzzleTileCountId[iTileBgCount].alt=(1)+"";
-	  }
-	  else {
-		arrayPuzzleTileCountId[iTileBgCount].alt=(2)+"";
-	  }
-*/
-	  //auto-generate board objects
-/*
-var iMaxTileTypeCopyCount=4;
-var iCurrTileTypeCopyCount=0;
-//4*4
-var arrayTileType = [0,0,0,0]; //iCurrTileTypeCount
-
-var iArrayTileTypeLength=4;
-var iCurrArrayTileTypeCount=0;
-*/
-
-
-//added by Mike, 20231111
-//TODO: -update: to have 1 delete OK tiles; otherwise, auto-generated puzzle can have already solved state
-
-
-//alert (iCurrTileTypeCopyCount);
-
- //edited by Mike, 20231109
-if (iCurrTileTypeCopyCount<12) {
-
-   //edited by Mike, 20231108    //arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+"";
-   //edited by Mike, 20231108 //arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+",1";
-	arrayPuzzleTileCountId[iTileBgCount].alt=(iCurrTileTypeCopyCount+1)+",FK=1"; //note: semicolon not usable in .alt text
-
-	iCurrTileTypeCopyCount++;
-}
-//note: remaining tiles need to be filled
-else {
-	//edited by Mike, 20231108
-	//arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+"";
-	//edited by Mike, 20231108
-	//arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",1";
-	//edited by Mike, 20231109
-	//arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",FK=1";
-	arrayPuzzleTileCountId[iTileBgCount].alt=(15+1)+",FK=";	//no FK
-}
-	  //---
-
-
-      //added by Mike, 20221106
-      arrayPuzzleTileCountId[iTileBgCount].className="Image32x32Tile";
-
-    iTileBgCount++;
-  }
-}
-
-
-
-//init FK in puzzle; no FK with the same type;
-	//added by Mike, 20231109
-	//jumble the positions of the tiles;
-	//var sRecordedSteps="3121220312133003112111302212133333303312003030030303133122112122121303033033311212002";
-
-for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
-  for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
-
-		//alert(iTileBgCount);
-		//alert(arrayPuzzleTileCountId[iRowCount][iColumnCount]);
-		//alert(arrayPuzzleTilePos[iRowCount][iColumnCount]);
-
-		iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
-
-		//alert(">>>>"+iTileBgCountTemp);
-		//sTileCountIdAltTemp=arrayPuzzleTileCountId[iTileBgCountTemp].alt;
-	//sOutputTileValue=sTileCountIdAltTemp.substring(0,sTileCountIdAltTemp.indexOf(",FK"));
-
-		//random
-		let iDirection = window.parseInt(Math.random() * 4);
-
-		//alert(">>>>"+iDirection);
-
-		//iDirection=0;
-
-		//alert("iRowCount: "+iRowCount);
-
-		switch (iDirection) {
-			case iKEY_W: //0
-				if ((iRowCount-1)>=0) {
-//					arrayPuzzleTileCountId[iRowCount][iColumnCount].alt=arrayPuzzleTileCountId[iRowCount-1][iColumnCount].alt;
-
-					iTileBgCountNew=arrayPuzzleTilePos[iRowCount-1][iColumnCount];
-
-					sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
-
-					//alert("DITO: "+sTileCountIdAltNew);
-
-					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
-				}
-				break;
-			case iKEY_S: //1
-				if ((iRowCount+1)<iRowCountMax) {
-					iTileBgCountNew=arrayPuzzleTilePos[iRowCount+1][iColumnCount];
-
-					sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
-
-					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
-				}
-				break;
-			case iKEY_A: //2
-				if ((iColumnCount-1)>=0) {
-					iTileBgCountNew=arrayPuzzleTilePos[iRowCount][iColumnCount-1];
-
-					sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
-
-					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
-				}
-				break;
-			case iKEY_D: //3
-				if ((iColumnCount+1)<iColumnCountMax) {
-					iTileBgCountNew=arrayPuzzleTilePos[iRowCount][iColumnCount+1];
-
-					sTileCountIdAltNew=arrayPuzzleTileCountId[iTileBgCountNew].alt;
-
-					arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
-				}
-				break;
-		}
-	}
-}
-
 
 
 /*
