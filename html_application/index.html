@@ -1384,9 +1384,28 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//iScore+=iObjectCountForTileType;
 				
 		//iScore+=iObjectCountForTileType*(sCurrHitTileTypeInput+1)*777;
-				
-		iTargetScore=iScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1)*777;
+		
+		//edited by Mike, 20231123
+		//iTargetScore=iScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1)*777;
 
+		//OK;
+		if (iTargetScore==iScore) {
+			//iTargetScore=iScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1);//*777;
+			iTargetScore=iScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1)*777;
+			
+			//alert("iTargetScore: "+iTargetScore);
+		}
+		else {
+/*		
+			alert("DITO");		
+			alert("iScore: "+iScore);
+			alert("iTargetScore: "+iTargetScore);
+*/
+			iScore=iTargetScore;
+	//		iTargetScore=iTargetScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1);//*777;
+			iTargetScore=iTargetScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1)*777;
+		}
+		
 		
 		return true;
 	}
@@ -1611,8 +1630,12 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
 
 		//added by Mike, 20231123
-		if (iScore<iTargetScore) {
+//		if (iScore<iTargetScore) {
+		if (iScore<(iTargetScore-77)) {
 			iScore+=77;
+		}
+		else {
+			iScore=iTargetScore;
 		}
 		
 		if (iScore>999999) {
@@ -4098,7 +4121,7 @@ function autoUpdatePuzzleTileImage() {
   }
 }
 
-
+/* //removed by Mike, 20231123
 //added by Mike, 20231107
 var iMaxTileTypeCopyCount=4;
 var iCurrTileTypeCopyCount=0;
@@ -4109,6 +4132,9 @@ var iArrayTileTypeLength=4;
 var iCurrArrayTileTypeCount=0;
 
 //alert(arrayTileType[3]);
+*/
+
+var iCurrTileTypeCopyCount=0;
 
 //added by Mike, 20221106
 iTileBgCount=0;
