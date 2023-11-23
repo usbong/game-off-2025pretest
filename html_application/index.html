@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231122; from 20231121
+' @date updated: 20231123; from 20231122
 ' @website: www.usbong.ph
 '
 '
@@ -526,6 +526,41 @@
 				
 				visibility: hidden;
 			}
+			
+			div.DivTextScore
+			{
+				position: absolute;
+/*							
+				background-color: #000000aa;
+*/							
+				color: #6d4e22; /* brown */
+
+				/*color: #ffffff;*/ /* white */
+
+				/*opacity: 50%;*/
+
+				font-size: 32px;/*42px;*/
+				font-weight: bold;
+				
+/* //edited by Mike, 20230130							
+				padding: 10px;
+*/
+				/* //changed from margin */
+				/* //edited by Mike, 20230130 
+				margin: 10px;
+				*/
+				padding: 0px;
+
+				visibility: hidden;							
+				
+				/* put above image tiles;
+					below step count button
+				*/							
+				z-index: 90; /*4;*/
+			}	
+
+
+						
 
       audio.myAudio
       {
@@ -561,6 +596,11 @@ var arrayPuzzleTileCountId = [];
 var arrayPuzzleTilePos = [ [],[],[],[] ];
 
 const iTileBgCountMax=iRowCountMax*iColumnCountMax;
+
+//added by Mike, 20231123
+var bSoldierTileTypeDone=false;
+var bTankTileTypeDone=false;
+var bBuildingTileTypeDone=false;
 
 
 //added by Mike, 20231109
@@ -621,6 +661,10 @@ var iMouseAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iMouseAnimationCountMax=5;
 var iMouseAnimationDelayCount=0;
 var iMouseAnimationDelayCountMax=4;//1;
+
+//added by Mike, 20231123
+var iScore=0;
+var iTargetScore=0;
 
 
 /*
@@ -1170,6 +1214,17 @@ var iOffsetHeight=0;
 		
 		titleImage.style.top = (iVerticalOffsetInnerScreen+0+iStageMaxHeight/3 -iTitleImageHeight/2)+"px";
 		titleImage.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTitleImageWidth/2 +"px";
+		
+		
+		//added by Mike, 20231123
+		var textScoreDiv = document.getElementById("textScoreDivId");
+
+		var iTextScoreDivWidthOffset=5;
+		var iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;	
+		
+		textScoreDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextScoreDivWidth+"px";
+		textScoreDiv.style.top= (0)+"px";
+
 
 	
 /*
@@ -1191,6 +1246,10 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		setPanelTable.style.visibility = "visible";
 */
 
+		mainImageTile.style.visibility = "hidden";
+		mainImageTileProjectile.style.visibility = "hidden";
+		
+/* //removed by Mike, 20231123
 		//removed by Mike, 20230321
 		//mainImageTile.style.visibility = "visible";
 
@@ -1211,6 +1270,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		mainImageTileProjectile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 
 		mainImageTileProjectile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
+*/
+
 		
 		//added by Mike, 20231121
 		
@@ -1244,7 +1305,10 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 	}
 
 	//added by Mike, 20231122
-	function isAllObjectsOfTileTypeDone(sCurrHitTileInput, sCurrHitTileTypeInput) {
+	function isAllMultipleObjectsOfTileTypeDone(sCurrHitTileInput, sCurrHitTileTypeInput) {
+	
+		//added by Mike, 20231123
+		var iObjectCountForTileType=0;
 
 		//note: "var" to create new container inside for loop
     	for (var iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
@@ -1262,7 +1326,10 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 								
 				if (sCurrHitTileType==sCurrHitTileTypeInput) {				
 					if (sCurrHitTile==sCurrHitTileInput) {
-						//alert("sCurrHitTile: "+sCurrHitTile);					
+						//alert("sCurrHitTile: "+sCurrHitTile);	
+						
+						//added by Mike, 20231123
+						iObjectCountForTileType++;
 					}
 					else {
 						return false;
@@ -1270,6 +1337,56 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 				}
 			}
 		}
+		
+		//added by Mike, 20231123
+		//alert("iObjectCountForTileType: "+iObjectCountForTileType);
+		
+		if (iObjectCountForTileType==1) {
+			//bHasOnlyOneObjectCountForTileType=true;
+			return false;
+		}
+		
+		//alert("sCurrHitTileTypeInput: "+sCurrHitTileTypeInput);
+
+		//added by Mike, 20231123
+		//alert("sCurrHitTileTypeInput: "+sCurrHitTileTypeInput);
+		
+		if (parseInt(sCurrHitTileTypeInput)==0) {
+			if (bSoldierTileTypeDone) {
+				return false;
+			}
+			bSoldierTileTypeDone=true;
+		}
+		else if (parseInt(sCurrHitTileTypeInput)==1) {
+			if (bTankTileTypeDone) {
+				return false;
+			}
+
+			bTankTileTypeDone=true;
+		}
+		else if (parseInt(sCurrHitTileTypeInput)==2) {
+		
+			//alert(">>>bBuildingTileTypeDone: "+bBuildingTileTypeDone);
+		
+			if (bBuildingTileTypeDone) {
+				//alert(">>>>>>>>>>>>>>>>>>>>>>>");
+			
+				return false;
+			}
+
+			bBuildingTileTypeDone=true;
+		}
+		
+				
+		//soldier; 1; 0+1
+		//tank; 2; 1+1
+		//building; 3; 2+1		
+		//iScore+=iObjectCountForTileType;
+				
+		//iScore+=iObjectCountForTileType*(sCurrHitTileTypeInput+1)*777;
+				
+		iTargetScore=iScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1)*777;
+
 		
 		return true;
 	}
@@ -1314,9 +1431,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 					//alert (">> sCurrHitTile: "+sCurrHitTile);
 					
 					//verify all tiles if all objects of same type already use the same tile
-					if (isAllObjectsOfTileTypeDone(sCurrHitTile, sCurrHitTileType)) {
+					if (isAllMultipleObjectsOfTileTypeDone(sCurrHitTile, sCurrHitTileType)) {
 						
-						alert("HAS NO MORE COPIES!");
+						//alert("HAS NO MORE COPIES!");
 						
 						return true;
 					}	
@@ -1493,7 +1610,24 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//added by Mike, 20231122
 		var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
 
+		//added by Mike, 20231123
+		if (iScore<iTargetScore) {
+			iScore+=77;
+		}
+		
+		if (iScore>999999) {
+			iScore=999999;
+		}
 
+		var textScoreDiv = document.getElementById("textScoreDivId");
+
+		//note: correct sequence to cause correct OUTPUT
+		textScoreDiv.innerHTML = iScore;
+
+		var iTextScoreDivWidthOffset=5;
+		var iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;	
+
+		
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
 		var setPanelTable = document.getElementById("tableSetPanelId");
@@ -1662,7 +1796,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 	myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+iShakeOffsetHeight+"px";
 	iHorizontalOffset=myCanvas.getBoundingClientRect().x+iShakeOffsetWidth;
 
-
+		//added by Mike, 20231123
+		textScoreDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextScoreDivWidth+"px";
+		textScoreDiv.style.top= (0)+"px";	
 
 
 
@@ -1808,6 +1944,11 @@ mainImageTileStepX=15; //2;
 				}	
 */				
 			}
+			//added by Mike, 20231123
+			else {
+				textScoreDiv.style.visibility = "visible";
+			}
+			
 /*			
 			titleImage.style.visibility="hidden";
 			bHasViewedTitle=true;
@@ -2535,6 +2676,31 @@ mainImageTileProjectilePosY++;
 */
 		return false;
 	}
+	
+	//added by Mike, 20231123
+	function isTileTypeDone(sCurrHitTile) {
+		sCurrHitTileType=Math.floor((parseInt(sCurrHitTile)-1)/4);
+	
+		//alert(">>>>sCurrHitTileType: "+sCurrHitTileType);
+	
+		if (parseInt(sCurrHitTileType)==0) {
+			if (bSoldierTileTypeDone) {
+				return true;
+			}
+		}
+		else if (parseInt(sCurrHitTileType)==1) {
+			if (bTankTileTypeDone) {
+				return true;
+			}
+		}
+		else if (parseInt(sCurrHitTileType)==2) {
+			if (bBuildingTileTypeDone) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 
 	function processResultFromInput(iXPos, iYPos) {
 
@@ -2766,7 +2932,9 @@ mainImageTileProjectilePosY++;
 			
 			
 			
-			
+				sCurrHitTile=arrayPuzzleTileCountId[iTileBgCount].alt;
+				sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
+				sCurrHitTileType="";			
 				
 				
 			//OK; TODO: -add: tiles connected to target via FK
@@ -2778,9 +2946,11 @@ mainImageTileProjectilePosY++;
 */
 				//exchange with next tile hit if of same type
 
+/*	//removed by Mike, 20231123
 				sCurrHitTile=arrayPuzzleTileCountId[iTileBgCount].alt;
 				sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
 				sCurrHitTileType="";
+*/
 
 				//edited by Mike, 20231113
 				//TODO: -verify: this
@@ -2801,10 +2971,15 @@ mainImageTileProjectilePosY++;
 				sCurrHitTileType=Math.floor((sCurrHitTile-1)/4)	;
 				sPrevHitTileType=Math.floor((sPrevHitTile-1)/4)	;
 */
+
+/*	//edited by Mike, 20231123	
 				sCurrHitTileType=Math.floor(parseInt((sCurrHitTile-1)/4));
 				sPrevHitTileType=Math.floor(parseInt((sPrevHitTile-1)/4));
-
-
+*/
+				sCurrHitTileType=Math.floor((parseInt(sCurrHitTile)-1)/4);
+				sPrevHitTileType=Math.floor((parseInt(sPrevHitTile)-1)/4);
+				
+				
 				/*
 				alert("sCurrHitTileType: "+sCurrHitTileType);
 				alert("sPrevHitTileType: "+sPrevHitTileType);
@@ -2815,7 +2990,6 @@ mainImageTileProjectilePosY++;
 /*
 				alert("has hit SAME TILE!");
 */
-
 
 					arrayPuzzleTileCountId[iTileBgCount].alt = arrayPuzzleTileCountId[iPrevHitTileBgCount].alt;
 
@@ -2840,9 +3014,30 @@ mainImageTileProjectilePosY++;
 						//TODO: -update: this
 					}
 					
-					//added by Mike, 20231120
-					setExplosionEffectPosition(iTileBgCount);
+					//edited by Mike, 20231123; from 20231120
+					//setExplosionEffectPosition(iTileBgCount);
+					if (isTileTypeDone(sCurrHitTile)) {
+						return;
+					}
+/*					
+					if (parseInt(sCurrHitTileType)==0) {
+						if (bSoldierTileTypeDone) {
+							return;
+						}
+					}
+					else if (parseInt(sCurrHitTileType)==1) {
+						if (bTankTileTypeDone) {
+							return;
+						}
+					}
+					else if (parseInt(sCurrHitTileType)==2) {
+						if (bBuildingTileTypeDone) {
+							return;
+						}
+					}
+*/					
 
+					setExplosionEffectPosition(iTileBgCount);
 
 					return;
 				}
@@ -2891,6 +3086,17 @@ mainImageTileProjectilePosY++;
 				return;
 */				
 			}
+			
+			
+			//added by Mike, 20231123
+			if (isTileTypeDone(sCurrHitTile)) {
+				//alert("DITO");
+			
+				puzzleTileImageTargetBorder.style.visibility = "hidden";
+				
+				return;
+			}
+
 
 			//added by Mike, 20231106
 			//arrayPuzzleTileCountId[iTileBgCount].alt
@@ -2903,7 +3109,7 @@ mainImageTileProjectilePosY++;
 				
 				return;
 			}
-
+			
 			//added by Mike, 20231113
 			//TODO: -fix: multiple "...hasForeignKey(iTileBgCount)"
 			//edited by Mike, 20231109; from 20231108
@@ -4247,6 +4453,14 @@ opting to put assets folder in "html_application" folder instead
 	<!-- PRESS ENTER; PRESS START -->
 	<div id="textEnterDivId" class="DivTextClickStart">START</div>
 
+	
+	<div id="textScoreDivId" class="DivTextScore">0</div>
+
+<!--	
+	<div id="stepCountStatusShadowDivId" class="DivStepCountStatusShadow">0</div>
+	<div id="stepCountStatusDivId" class="DivStepCountStatus">0</div>
+-->
+	
 
   <audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2023TapLoudEdited.mp3" type="audio/x-m4a" controls loop>
 	  Your browser does not support the audio tag.
