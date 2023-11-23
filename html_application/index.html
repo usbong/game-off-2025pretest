@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231123; from 20231122
+' @date updated: 20231124; from 20231123
 ' @website: www.usbong.ph
 '
 '
@@ -113,15 +113,15 @@
 /*			height: 402px; *//*576px;*/
 
 			width: 640px;
-			height: 360px; 
+			height: 360px;
 
 			/*	//removed by Mike, 20231121
 				border: 1px solid gray;
 			*/
-		
+
 			padding: -10px;
 			border: 1px dotted gray;
-			
+
 			z-index: -1;
 		}
 
@@ -133,7 +133,7 @@
 
 			visibility: hidden;
 		}
-		
+
 		.ImageMouseInput {
 			position: absolute;
 
@@ -141,19 +141,19 @@
 
 			visibility: visible;
 		}
-		
-		
+
+
 		.ImageExplosion {
 			position: absolute;
 
 			/*	//edited by Mike, 20231120
 				clip: rect(0px,256px,256px,0px);
 			*/
-						
+
 			clip: rect(0px,128px,128px,0px);
 
 			visibility: hidden;
-			
+
 			z-index: 4;
 		}
 
@@ -162,33 +162,33 @@
 
 			text-align: center;
 			line-height: 32px;
-			
+
 			visibility: hidden;
-			
+
 			width: 640px;
-			height: 360px;	
-				
+			height: 360px;
+
 			/* //added by Mike, 20221104 */
-			z-index: 10;									
-		}		
-		
+			z-index: 10;
+		}
+
 		.ImageTitle {
 			position: absolute;
 
 			text-align: center;
 			line-height: 32px;
-			
+
 			visibility: hidden;
 
 			/* //edited by Mike, 20230121
 			//notes: @640px, excess shaking via MS EDGE Browser
 			*/
 			width: 480px; /*640px;*/
-			
+
 			object-fit: contain;
 
-			z-index: 10;									
-		}		
+			z-index: 10;
+		}
 
 		.ButtonSet, .TextInputSet {
 			position: relative; /*absolute;*/
@@ -228,7 +228,7 @@
 */
 /*	//edited by Mike, 20231116
 			width: 512px;
-*/			
+*/
 			width: 768px;
 			height: 256px;
 
@@ -237,7 +237,7 @@
 			clip: rect(0px,64px,64px,0px);
 
 			background-color: #f7f7f7; /*transparent;*/
-/*			
+/*
 			border: none;
 */
 			color: #222222;
@@ -253,7 +253,7 @@
 */
 
 			border: 1px dotted gray;
-	
+
 			visibility: hidden;
 
 			margin: 0px; /*1px;*/
@@ -459,7 +459,7 @@
 			div.DivTextStatus
 			{
 				position: absolute;
-				
+
 /*	//edited by Mike, 20221213
 				background-color: #000000aa;
 */
@@ -520,19 +520,19 @@
 				padding: 10px;
 				padding-right: 40px;
 				padding-left: 40px;
-				
+
     			border: 3px solid #4d4d4d;
     			border-radius: 3px;
-				
+
 				visibility: hidden;
 			}
-			
+
 			div.DivTextScore
 			{
 				position: absolute;
-/*							
+/*
 				background-color: #000000aa;
-*/							
+*/
 				color: #6d4e22; /* brown */
 
 				/*color: #ffffff;*/ /* white */
@@ -541,26 +541,26 @@
 
 				font-size: 32px;/*42px;*/
 				font-weight: bold;
-				
-/* //edited by Mike, 20230130							
+
+/* //edited by Mike, 20230130
 				padding: 10px;
 */
 				/* //changed from margin */
-				/* //edited by Mike, 20230130 
+				/* //edited by Mike, 20230130
 				margin: 10px;
 				*/
 				padding: 0px;
 
-				visibility: hidden;							
-				
+				visibility: hidden;
+
 				/* put above image tiles;
 					below step count button
-				*/							
+				*/
 				z-index: 90; /*4;*/
-			}	
+			}
 
 
-						
+
 
       audio.myAudio
       {
@@ -606,6 +606,10 @@ var bBuildingTileTypeDone=false;
 //added by Mike, 20231109
 var bHasHitTileWithForeignKey=false;
 var bIsPuzzleDone=false;
+
+//added by Mike, 20231124
+var bIsBossBattleDone=false;
+
 
 //added by Mike, 20231111
 var bIsActionKeyPressed=false;
@@ -662,9 +666,12 @@ var iMouseAnimationCountMax=5;
 var iMouseAnimationDelayCount=0;
 var iMouseAnimationDelayCountMax=4;//1;
 
-//added by Mike, 20231123
-var iScore=0;
-var iTargetScore=0;
+//edited by Mike, 20231124; from 20231123
+var iScore=10000;//0;
+var iTargetScore=10000;//0;
+
+//added by Mike, 20231124
+var bIsIncreasingScore=true;
 
 
 /*
@@ -1174,15 +1181,15 @@ var iOffsetHeight=0;
 		//added by Mike, 20231121
 		iMouseInputImageWidth=64;
 		iMouseInputImageHeight=64;
-		
+
 		//added by Mike, 20231121
 		var myCanvas = document.getElementById("myCanvasId");
 
-		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px"; 		
+		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px";
 		iHorizontalOffset=myCanvas.getBoundingClientRect().x;
 
-		
-		
+
+
 /*
 		var setAnimImageFrameWidthText = document.getElementById("textSetAnimImageFrameWidthId");
 		var setAnimImageFrameHeightText = document.getElementById("textSetAnimImageFrameHeightId");
@@ -1206,27 +1213,27 @@ var iOffsetHeight=0;
 		var mouseInputImage = document.getElementById("mouseInputImageId");
 
 		//added by Mike, 20231121
-		var titleImage = document.getElementById("titleImageId");	
+		var titleImage = document.getElementById("titleImageId");
 		//titleImage.style.visibility="hidden";
-		
+
 		var iTitleImageWidth = (titleImage.clientWidth);
-		var iTitleImageHeight = (titleImage.clientHeight);	
-		
+		var iTitleImageHeight = (titleImage.clientHeight);
+
 		titleImage.style.top = (iVerticalOffsetInnerScreen+0+iStageMaxHeight/3 -iTitleImageHeight/2)+"px";
 		titleImage.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTitleImageWidth/2 +"px";
-		
-		
+
+
 		//added by Mike, 20231123
 		var textScoreDiv = document.getElementById("textScoreDivId");
 
 		var iTextScoreDivWidthOffset=5;
-		var iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;	
-		
+		var iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;
+
 		textScoreDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextScoreDivWidth+"px";
 		textScoreDiv.style.top= (0)+"px";
 
 
-	
+
 /*
 		setAnimImageFrameWidthText.value=iImageFrameWidth;
 		setAnimImageFrameHeightText.value=iImageFrameHeight;
@@ -1248,7 +1255,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		mainImageTile.style.visibility = "hidden";
 		mainImageTileProjectile.style.visibility = "hidden";
-		
+
 /* //removed by Mike, 20231123
 		//removed by Mike, 20230321
 		//mainImageTile.style.visibility = "visible";
@@ -1272,41 +1279,41 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		mainImageTileProjectile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 */
 
-		
+
 		//added by Mike, 20231121
-		
+
 		var textEnterDiv = document.getElementById("textEnterDivId");
 
 			var iTextEnterDivWidth = (textEnterDiv.clientWidth);
 			var iTextEnterDivHeight = (textEnterDiv.clientHeight);
-				
+
 			textEnterDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextEnterDivWidth/2 +"px";
-	
-			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight*2+"px"; 
-			
+
+			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight*2+"px";
+
 			//alert ("textEnterDiv.style.left: "+textEnterDiv.style.left);
 			//alert ("textEnterDiv.style.top: "+textEnterDiv.style.top);
 
-			textEnterDiv.style.visibility="visible";	
+			textEnterDiv.style.visibility="visible";
 
-			
+
 		var mouseInputImage = document.getElementById("mouseInputImageId");
-/*		
+/*
 		mouseInputImage.style.left = (iHorizontalOffset+iStageMaxWidth/2-iMouseInputImageWidth/2)+"px";
 
-		mouseInputImage.style.top = (iVerticalOffsetInnerScreen+iStageMaxHeight+iMouseInputImageHeight/2)+"px";		
+		mouseInputImage.style.top = (iVerticalOffsetInnerScreen+iStageMaxHeight+iMouseInputImageHeight/2)+"px";
 */
 
 		mouseInputImage.style.left = (iHorizontalOffset+iStageMaxWidth/2-iTextEnterDivWidth/2+iMouseInputImageWidth/2)+"px";
 
-		mouseInputImage.style.top = (iVerticalOffsetInnerScreen+iStageMaxHeight+iTextEnterDivHeight/2)+"px";		
-		
-		mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";		
+		mouseInputImage.style.top = (iVerticalOffsetInnerScreen+iStageMaxHeight+iTextEnterDivHeight/2)+"px";
+
+		mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
 	}
 
 	//added by Mike, 20231122
 	function isAllMultipleObjectsOfTileTypeDone(sCurrHitTileInput, sCurrHitTileTypeInput) {
-	
+
 		//added by Mike, 20231123
 		var iObjectCountForTileType=0;
 
@@ -1315,19 +1322,19 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
     		for (var iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
 
 				var iTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount];
-				
+
 				sCurrHitTile=arrayPuzzleTileCountId[iTileBgCount].alt;
-					
+
 				sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
-					
+
 				sCurrHitTileType="";
-			
+
 				sCurrHitTileType=Math.floor(parseInt((sCurrHitTile-1)/4));
-								
-				if (sCurrHitTileType==sCurrHitTileTypeInput) {				
+
+				if (sCurrHitTileType==sCurrHitTileTypeInput) {
 					if (sCurrHitTile==sCurrHitTileInput) {
-						//alert("sCurrHitTile: "+sCurrHitTile);	
-						
+						//alert("sCurrHitTile: "+sCurrHitTile);
+
 						//added by Mike, 20231123
 						iObjectCountForTileType++;
 					}
@@ -1337,20 +1344,20 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 				}
 			}
 		}
-		
+
 		//added by Mike, 20231123
 		//alert("iObjectCountForTileType: "+iObjectCountForTileType);
-		
+
 		if (iObjectCountForTileType==1) {
 			//bHasOnlyOneObjectCountForTileType=true;
 			return false;
 		}
-		
+
 		//alert("sCurrHitTileTypeInput: "+sCurrHitTileTypeInput);
 
 		//added by Mike, 20231123
 		//alert("sCurrHitTileTypeInput: "+sCurrHitTileTypeInput);
-		
+
 		if (parseInt(sCurrHitTileTypeInput)==0) {
 			if (bSoldierTileTypeDone) {
 				return false;
@@ -1365,39 +1372,42 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 			bTankTileTypeDone=true;
 		}
 		else if (parseInt(sCurrHitTileTypeInput)==2) {
-		
+
 			//alert(">>>bBuildingTileTypeDone: "+bBuildingTileTypeDone);
-		
+
 			if (bBuildingTileTypeDone) {
 				//alert(">>>>>>>>>>>>>>>>>>>>>>>");
-			
+
 				return false;
 			}
 
 			bBuildingTileTypeDone=true;
 		}
-		
-				
+
+
 		//soldier; 1; 0+1
 		//tank; 2; 1+1
-		//building; 3; 2+1		
+		//building; 3; 2+1
 		//iScore+=iObjectCountForTileType;
-				
+
 		//iScore+=iObjectCountForTileType*(sCurrHitTileTypeInput+1)*777;
-		
+
 		//edited by Mike, 20231123
 		//iTargetScore=iScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1)*777;
+
+    //added by Mike, 20231124
+    bIsIncreasingScore=true;
 
 		//OK;
 		if (iTargetScore==iScore) {
 			//iTargetScore=iScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1);//*777;
 			iTargetScore=iScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1)*777;
-			
+
 			//alert("iTargetScore: "+iTargetScore);
 		}
 		else {
-/*		
-			alert("DITO");		
+/*
+			alert("DITO");
 			alert("iScore: "+iScore);
 			alert("iTargetScore: "+iTargetScore);
 */
@@ -1405,11 +1415,11 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 	//		iTargetScore=iTargetScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1);//*777;
 			iTargetScore=iTargetScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1)*777;
 		}
-		
-		
+
+
 		return true;
 	}
-	
+
 	//added by Mike, 20231122
 	function verifyIfAllObjectsOfTileTypeDone(iXPos, iYPos) {
 
@@ -1426,51 +1436,51 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 				var iTilePosX= iHorizontalOffset+iOffsetWidth+iPuzzleTileWidth*iColumnCount+iBorderOffset*iColumnCount;
 
 				var iTilePosY=0+iOffsetHeight+iPuzzleTileHeight*iRowCount+iBorderOffset*iRowCount;
-			
-								
-				if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos,iTilePosX,iTilePosY)) {
-					
-					sCurrHitTile=arrayPuzzleTileCountId[iTileBgCount].alt;
-					
-					sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
-					
-					sCurrHitTileType="";
-										
 
-/*				
-					if (iPrevHitTileBgCount!=-1) {				
+
+				if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos,iTilePosX,iTilePosY)) {
+
+					sCurrHitTile=arrayPuzzleTileCountId[iTileBgCount].alt;
+
+					sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
+
+					sCurrHitTileType="";
+
+
+/*
+					if (iPrevHitTileBgCount!=-1) {
 						sPrevHitTile=arrayPuzzleTileCountId[iPrevHitTileBgCount].alt;
 						sPrevHitTile=sPrevHitTile.substring(0,sPrevHitTile.indexOf(",FK="));
 					}
 					sPrevHitTileType="";
 */
-					
+
 					sCurrHitTileType=Math.floor(parseInt((sCurrHitTile-1)/4));
-					
+
 					//alert (">> sCurrHitTile: "+sCurrHitTile);
-					
+
 					//verify all tiles if all objects of same type already use the same tile
 					if (isAllMultipleObjectsOfTileTypeDone(sCurrHitTile, sCurrHitTileType)) {
-						
+
 						//alert("HAS NO MORE COPIES!");
-						
+
 						return true;
-					}	
-					
+					}
+
 					return false;
 				}
 			}
 		}
 
 		//alert("HAS NO MORE COPIES!");
-		
+
 		//TODO: -update: this
 		return true; //bIsPuzzleDone; //false;
 
 //		return false;
 	}
-	
-	
+
+
 	//added by Mike, 20231109
 	function isAutoVerifiedPuzzleDone() {
 
@@ -1510,95 +1520,95 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 //		return false;
 	}
-	
+
 	//added by Mike, 20231120
 	function setExplosionEffectPosition(iTileBgCountInput) {
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
-		
+
 		explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
 
-		explosionEffectImage.style.visibility="visible";	
+		explosionEffectImage.style.visibility="visible";
 
 		iExplosionEffectAnimationDelayCount=iExplosionEffectAnimationDelayCountMax;
-		
+
 		iExplosionEffectAnimationCount=-1; //0;
 
 		explosionEffectImage.style.left = parseInt(arrayPuzzleTileCountId[iTileBgCountInput].style.left,10)-iImageExplosionEffectAnimationWidth/2;
 
-		explosionEffectImage.style.top = parseInt(arrayPuzzleTileCountId[iTileBgCountInput].style.top,10)-iImageExplosionEffectAnimationHeight/2;			
+		explosionEffectImage.style.top = parseInt(arrayPuzzleTileCountId[iTileBgCountInput].style.top,10)-iImageExplosionEffectAnimationHeight/2;
 	}
-	
+
 	//added by Mike, 20231121
 	function executeMouseClickAnimation() {
 		var mouseInputImage = document.getElementById("mouseInputImageId");
-		
+
 		if (iMouseAnimationDelayCount==iMouseAnimationDelayCountMax) {
-			iMouseAnimationCount=(iMouseAnimationCount+1)%5; //last hidden 
-			
-			
+			iMouseAnimationCount=(iMouseAnimationCount+1)%5; //last hidden
+
+
 			iMouseAnimationDelayCount=0;
 			/*
-			explosionEffectImage.style.visibility="visible";		
+			explosionEffectImage.style.visibility="visible";
 			*/
 		}
 		else {
 			iMouseAnimationDelayCount++;
-			
+
 	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
 
 		}
-			
+
 		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
-			
+
 		if (iMouseAnimationCount==0) { //%2
 			mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
-		}	
+		}
 		else {
 			mouseInputImage.style.objectPosition = "-" + 64 + "px -" + 192 + "px";
-		}		
+		}
 	}
-	
+
 	function executeExplosionEffect() {
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
-		
+
 		if (explosionEffectImage.style.visibility=="hidden") {
 			return;
 		}
 
 		if (iExplosionEffectAnimationDelayCount==iExplosionEffectAnimationDelayCountMax) {
 	//	if (iExplosionEffectAnimationDelayCount>=iExplosionEffectAnimationDelayCountMax) {
-			iExplosionEffectAnimationCount=(iExplosionEffectAnimationCount+1)%5; //last hidden 
-			
-			
+			iExplosionEffectAnimationCount=(iExplosionEffectAnimationCount+1)%5; //last hidden
+
+
 			iExplosionEffectAnimationDelayCount=0;
 			/*
-			explosionEffectImage.style.visibility="visible";		
+			explosionEffectImage.style.visibility="visible";
 			*/
 		}
 		else {
 			iExplosionEffectAnimationDelayCount++;
-			
+
 	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
 
 		}
-			
+
 		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
-			
+
 		if (iExplosionEffectAnimationCount==0) { //%2
 			explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
-		}			
-		else if (iExplosionEffectAnimationCount==1) { 
-			explosionEffectImage.style.objectPosition = "-" + 128 + "px -" + 0 + "px";	
+		}
+		else if (iExplosionEffectAnimationCount==1) {
+			explosionEffectImage.style.objectPosition = "-" + 128 + "px -" + 0 + "px";
 			//alert(">>>>");
 		}
-		else if (iExplosionEffectAnimationCount==2) { 
-			explosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + 0 + "px";	
+		else if (iExplosionEffectAnimationCount==2) {
+			explosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + 0 + "px";
 			//alert(">>>>");
 		}
-		else if (iExplosionEffectAnimationCount==3) { 
-			explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 0 + "px";		
+		else if (iExplosionEffectAnimationCount==3) {
+			explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 0 + "px";
 			//alert(">>>>");
-		}	
+		}
 		else {
 			explosionEffectImage.style.visibility="hidden";
 		}
@@ -1615,32 +1625,51 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		var textStatusDiv = document.getElementById("textStatusDivId");
 		var textEnterDiv = document.getElementById("textEnterDivId");
-						
+
 		//added by Mike, 20231119
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
-		
+
 		//added by Mike, 20231121
 		var mouseInputImage = document.getElementById("mouseInputImageId");
-		
+
 		//added by Mike, 20231121
-		var titleImage = document.getElementById("titleImageId");	
+		var titleImage = document.getElementById("titleImageId");
 		//titleImage.style.visibility="hidden";
-		
+
 		//added by Mike, 20231122
 		var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
 
 		//added by Mike, 20231123
 //		if (iScore<iTargetScore) {
-		if (iScore<(iTargetScore-77)) {
-			iScore+=77;
-		}
-		else {
-			iScore=iTargetScore;
-		}
-		
+    //edited by Mike, 20231124
+    if (bIsIncreasingScore) {
+  		if (iScore<(iTargetScore-77)) {
+  			iScore+=77;
+  		}
+  		else {
+  			iScore=iTargetScore;
+  		}
+    }
+    else {
+/*
+      alert("iScore: "+iScore);
+      alert("iTargetScore: "+iTargetScore);
+*/
+      if (iScore>(iTargetScore+77)) {
+  			iScore-=77;
+  		}
+  		else {
+  			iScore=iTargetScore;
+  		}
+    }
+
 		if (iScore>999999) {
 			iScore=999999;
 		}
+    else if (iScore<=0) {
+      //END; BATTLE FAIL
+      iScore=0;
+    }
 
 		var textScoreDiv = document.getElementById("textScoreDivId");
 
@@ -1648,9 +1677,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		textScoreDiv.innerHTML = iScore;
 
 		var iTextScoreDivWidthOffset=5;
-		var iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;	
+		var iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;
 
-		
+
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
 		var setPanelTable = document.getElementById("tableSetPanelId");
@@ -1730,7 +1759,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 	executeExplosionEffect();
 
-/*	//removed by Mike, 20231121	
+/*	//removed by Mike, 20231121
 	//added by Mike, 20231121
 	executeMouseClickAnimation();
 */
@@ -1739,60 +1768,60 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 	//removed by Mike, 20231120; from 20231119
 	//TODO: -update: this; reduce size of explosion effect image;
 	//explosionEffectImage.style.visibility="visible";
-	
+
 	explosionEffectImage.style.left = 0+"px";
 	//iHorizontalOffset+iOffsetWidth+iPuzzleTileWidth*iColumnCount+iBorderOffset*iColumnCount+"px";
-	
+
 	explosionEffectImage.style.top = 0+"px";
 	//0+iOffsetHeight+iPuzzleTileHeight*iRowCount+iBorderOffset*iRowCount+"px";
-		
-	
+
+
 	if (iExplosionEffectAnimationDelayCount==iExplosionEffectAnimationDelayCountMax) {
 //	if (iExplosionEffectAnimationDelayCount>=iExplosionEffectAnimationDelayCountMax) {
-		iExplosionEffectAnimationCount=(iExplosionEffectAnimationCount+1)%5; //last hidden 
+		iExplosionEffectAnimationCount=(iExplosionEffectAnimationCount+1)%5; //last hidden
 
 		iExplosionEffectAnimationDelayCount=0;
-		explosionEffectImage.style.visibility="visible";		
+		explosionEffectImage.style.visibility="visible";
 	}
 	else {
 		iExplosionEffectAnimationDelayCount++;
-		
+
 //		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
 
 	}
-		
+
 	if (iExplosionEffectAnimationCount==0) { //%2
 		explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
-	}			
-	else if (iExplosionEffectAnimationCount==1) { 
-		explosionEffectImage.style.objectPosition = "-" + 128 + "px -" + 0 + "px";	
+	}
+	else if (iExplosionEffectAnimationCount==1) {
+		explosionEffectImage.style.objectPosition = "-" + 128 + "px -" + 0 + "px";
 		//alert(">>>>");
 	}
-	else if (iExplosionEffectAnimationCount==2) { 
-		explosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + 0 + "px";	
+	else if (iExplosionEffectAnimationCount==2) {
+		explosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + 0 + "px";
 		//alert(">>>>");
 	}
-	else if (iExplosionEffectAnimationCount==3) { 
-		explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 0 + "px";		
+	else if (iExplosionEffectAnimationCount==3) {
+		explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 0 + "px";
 		//alert(">>>>");
-	}	
+	}
 	else {
 		explosionEffectImage.style.visibility="hidden";
 	}
 */
-	
+
 /*
 //alert("iExplosionEffectAnimationDelayCount: "+iExplosionEffectAnimationDelayCount);
-		
-	if (iExplosionEffectAnimationDelayCount==iExplosionEffectAnimationDelayCountMax*20) {		
-	
+
+	if (iExplosionEffectAnimationDelayCount==iExplosionEffectAnimationDelayCountMax*20) {
+
 //		alert(iExplosionEffectAnimationDelayCount);
 		iExplosionEffectAnimationCount=0;
 		iExplosionEffectAnimationDelayCount=0;
-		
+
 		explosionEffectImage.style.visibility="visible";
 	}
-*/	
+*/
 
 
 	if (bIsExecutingShake) {
@@ -1821,7 +1850,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		//added by Mike, 20231123
 		textScoreDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextScoreDivWidth+"px";
-		textScoreDiv.style.top= (0)+"px";	
+		textScoreDiv.style.top= (0)+"px";
 
 
 
@@ -1903,29 +1932,29 @@ mainImageTileStepX=15; //2;
 		//added by Mike, 20231121
 		if (!bHasViewedTitle) {
 			titleImage.style.visibility="visible";
-			
-			//added by Mike, 20231121
-			executeMouseClickAnimation();		
 
-/* //removed by Mike, 20231121			
+			//added by Mike, 20231121
+			executeMouseClickAnimation();
+
+/* //removed by Mike, 20231121
 //TODO: -update: position; in TITLE SCREEN
 			//edited by Mike, 20231121
 			var iTextEnterDivWidth = (textEnterDiv.clientWidth);
-			
+
 			var iTextEnterDivHeight = (textEnterDiv.clientHeight);
-				
+
 			textEnterDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextEnterDivWidth/2 +"px";
-	
+
 //			textEnterDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth-iTextEnterDivWidth+"px";
-	
-//			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight+"px"; 
-			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight*2+"px"; 
-			
+
+//			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight+"px";
+			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight*2+"px";
+
 			//alert ("textEnterDiv.style.left: "+textEnterDiv.style.left);
 			//alert ("textEnterDiv.style.top: "+textEnterDiv.style.top);
 
-			textEnterDiv.style.visibility="visible";	
-*/			
+			textEnterDiv.style.visibility="visible";
+*/
 		}
 
 		//added by Mike, 20231122; from 20231119
@@ -1933,51 +1962,51 @@ mainImageTileStepX=15; //2;
 		//added by Mike, 20231121
 //		if (!bHasPressedStart) {
 
-		if (bHasPressedStart) {		
+		if (bHasPressedStart) {
 			titleImage.style.visibility="hidden";
 			bHasViewedTitle=true;
-			
+
 			textEnterDiv.style.visibility="hidden";
-		
+
 			if (!bHasViewedHowToPlayGuide) {
-			
+
 				//added by Mike, 20231122
 				//var mouseInputImage = document.getElementById("mouseInputImageId");
 
 				mouseInputImage.style.visibility="hidden";
-				
+
 				howToPlayGuideImage.style.visibility = "visible";
-				
+
 				var iHowToPlayGuideImageWidth = (howToPlayGuideImage.clientWidth);
-				
+
 				var iHowToPlayGuideImageHeight = (howToPlayGuideImage.clientHeight);
 
 				howToPlayGuideImage.style.top = (iVerticalOffsetInnerScreen+0+iStageMaxHeight/2 -iHowToPlayGuideImageHeight/2)+"px";
-	
+
 				howToPlayGuideImage.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iHowToPlayGuideImageWidth/2 +"px";
 
 				return;
-				
-/*				
+
+/*
 				if (howToPlayGuideImage.style.visibility=="hidden") {
 					howToPlayGuideImage.style.visibility = "visible";
 				}
 				else {
 					howToPlayGuideImage.style.visibility = "hidden";
-				}	
-*/				
+				}
+*/
 			}
 			//added by Mike, 20231123
 			else {
 				textScoreDiv.style.visibility = "visible";
 			}
-			
-/*			
+
+/*
 			titleImage.style.visibility="hidden";
 			bHasViewedTitle=true;
-			
+
 			textEnterDiv.style.visibility="hidden";
-*/			
+*/
 		}
 
 
@@ -2163,7 +2192,7 @@ mainImageTileProjectilePosY++;
 		/* //removed by Mike, 20231121
 		//edited by Mike, 20230423; from 20230321;
 		mainImageTile.style.visibility = "visible";
-		
+
 		//mainImageTile.style.visibility = "hidden";
 */
 		//removed by Mike, 20230427
@@ -2358,7 +2387,7 @@ mainImageTileProjectilePosY++;
     		//alert(iTileBgCount);
 
         //alert(iBorderOffset);
-			
+
 
 //    		arrayPuzzleTileCountId[iTileBgCount].style.left = iHorizontalOffset+iOffsetWidth+iPuzzleTileWidth*iColumnCount+iBorderOffset*iColumnCount+"px";
     		arrayPuzzleTileCountId[iTileBgCount].style.left = iHorizontalOffset+iOffsetWidth+iPuzzleTileWidth*iColumnCount+iBorderOffset*iColumnCount+"px";
@@ -2373,10 +2402,10 @@ mainImageTileProjectilePosY++;
 
     		//edited by Mike, 20221127	//arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
     		if (bHasPressedStart) {
-    			arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";				
+    			arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
     		}
 			else {
-    			arrayPuzzleTileCountId[iTileBgCount].style.visibility="hidden";				
+    			arrayPuzzleTileCountId[iTileBgCount].style.visibility="hidden";
 			}
 
         iTileBgCount++;
@@ -2396,43 +2425,52 @@ mainImageTileProjectilePosY++;
 //    alert(iColumnCount);
 
     //----------
-	
+
 		//edited by Mike, 20231121
 		if (bHasPressedStart) {
 		//arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
-		
+
 			//edited by Mike, 20221113; 20221112
 			autoUpdatePuzzleTileImage();
-		}	
+		}
 
 
 		//added by Mike, 20231111
 		if (bIsPuzzleDone) {
-			//removed by Mike, 20231111
-			//alert("CONGRATULATIONS!");
 
-			//added by Mike, 20231111
-			var sText = "CONGRATULATIONS!";
-			
-			textStatusDiv.innerHTML = sText;
-			
-			//alert(sText.length);
-			var iTextStatusDivWidth = (textStatusDiv.clientWidth);
-			var iTextStatusDivHeight = (textStatusDiv.clientHeight);
+      //added by Mike, 20231124
+      if (bIsBossBattleDone) {
+
+  			//removed by Mike, 20231111
+  			//alert("CONGRATULATIONS!");
+
+  			//added by Mike, 20231111
+  			var sText = "CONGRATULATIONS!";
+
+  			textStatusDiv.innerHTML = sText;
+
+  			//alert(sText.length);
+  			var iTextStatusDivWidth = (textStatusDiv.clientWidth);
+  			var iTextStatusDivHeight = (textStatusDiv.clientHeight);
 
 
-			//TODO: -update: this
-			//iOffsetWidth			
-			textStatusDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextStatusDivWidth/2 +"px";
-				
-				//textStatusDiv.style.left = 0+iHorizontalOffset+iOffsetWidth+"px";
-		
-			//iOffsetHeight
-			textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px";
-			
-			textStatusDiv.style.visibility="visible";
-		
-		
+  			//TODO: -update: this
+  			//iOffsetWidth
+  			textStatusDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextStatusDivWidth/2 +"px";
+
+  				//textStatusDiv.style.left = 0+iHorizontalOffset+iOffsetWidth+"px";
+
+  			//iOffsetHeight
+  			textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px";
+
+  			textStatusDiv.style.visibility="visible";
+      }
+      else {
+        var mainImageTile = document.getElementById("mainImageTileImageId");
+        closePuzzle();
+      }
+
+
 /*
 			//added by Mike, 20221125
 			if (myAudio.volume>0) {
@@ -2457,8 +2495,8 @@ mainImageTileProjectilePosY++;
 			puzzleTileImageSpaceBorder.style.visibility = "hidden";
 			puzzleTileImageTargetBorder.style.visibility = "hidden";
 
-			
-/*	//removed by Mike, 20231115; TODO: -add: this			
+
+/*	//removed by Mike, 20231115; TODO: -add: this
 			//next battle?
 			bIsPuzzleDone=false;
 */
@@ -2699,13 +2737,13 @@ mainImageTileProjectilePosY++;
 */
 		return false;
 	}
-	
+
 	//added by Mike, 20231123
 	function isTileTypeDone(sCurrHitTile) {
 		sCurrHitTileType=Math.floor((parseInt(sCurrHitTile)-1)/4);
-	
+
 		//alert(">>>>sCurrHitTileType: "+sCurrHitTileType);
-	
+
 		if (parseInt(sCurrHitTileType)==0) {
 			if (bSoldierTileTypeDone) {
 				return true;
@@ -2721,11 +2759,23 @@ mainImageTileProjectilePosY++;
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
-	function processResultFromInput(iXPos, iYPos) {
+
+  function processResultFromInput(iXPos, iYPos) {
+    if (!bIsPuzzleDone) {
+      processPuzzleResultFromInput(iXPos, iYPos);
+    }
+    else {
+      if (!bIsBossBattleDone) {
+        processBossBattleResultFromInput(iXPos, iYPos);
+      }
+    }
+  }
+
+	function processPuzzleResultFromInput(iXPos, iYPos) {
 
 					var mainImageTile = document.getElementById("mainImageTileImageId");
 
@@ -2742,13 +2792,13 @@ mainImageTileProjectilePosY++;
 
   	//added by Mike, 20230523
   	bHasExecutedTileExchange=false;
-	
+
 	//added by Mike, 20231113
 	var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
 
 	var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
 
-	
+
 /* //removed by Mike, 20231111
   	for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
   		for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) 		{
@@ -2808,7 +2858,7 @@ mainImageTileProjectilePosY++;
         //OK
 //        alert("HIT!");
 			bIsPuzzleTileTargetHit=true;
-			
+
 			//removed by Mike, 20231120
 			//setExplosionEffectPosition(iTileBgCount);
 
@@ -2928,18 +2978,18 @@ mainImageTileProjectilePosY++;
 
 
 					//removed by Mike, 20231113; from 20231111
-/*					
+/*
 					var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
 
 					var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
-*/					
+*/
 					//edited by Mike, 20231119
 					puzzleTileImageTargetBorder.style.visibility = "visible";
 //					puzzleTileImageTargetBorder.style.visibility = "hidden";
 
 					puzzleTileImageSpaceBorder.style.visibility = "visible";
 //					puzzleTileImageSpaceBorder.style.visibility = "hidden";
-					
+
 					//reminder: arrayPuzzleTileCountId[iTileBgCount].alt="";
 					puzzleTileImageTargetBorder.style.left = arrayPuzzleTileCountId[iTileBgCount].style.left;
 
@@ -2952,14 +3002,14 @@ mainImageTileProjectilePosY++;
   				//alert("arrayPuzzleTileCountId[iTileBgCount].alt: " + arrayPuzzleTileCountId[iTileBgCount].alt);
 
 			//added by Mike, 20231122
-			
-			
-			
+
+
+
 				sCurrHitTile=arrayPuzzleTileCountId[iTileBgCount].alt;
 				sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
-				sCurrHitTileType="";			
-				
-				
+				sCurrHitTileType="";
+
+
 			//OK; TODO: -add: tiles connected to target via FK
 			//TODO: -add: more output testings;
 			//added by Mike, 20231109
@@ -2978,7 +3028,7 @@ mainImageTileProjectilePosY++;
 				//edited by Mike, 20231113
 				//TODO: -verify: this
 				if (iPrevHitTileBgCount!=-1) {
-				
+
 					sPrevHitTile=arrayPuzzleTileCountId[iPrevHitTileBgCount].alt;
 					sPrevHitTile=sPrevHitTile.substring(0,sPrevHitTile.indexOf(",FK="));
 				}
@@ -2995,14 +3045,14 @@ mainImageTileProjectilePosY++;
 				sPrevHitTileType=Math.floor((sPrevHitTile-1)/4)	;
 */
 
-/*	//edited by Mike, 20231123	
+/*	//edited by Mike, 20231123
 				sCurrHitTileType=Math.floor(parseInt((sCurrHitTile-1)/4));
 				sPrevHitTileType=Math.floor(parseInt((sPrevHitTile-1)/4));
 */
 				sCurrHitTileType=Math.floor((parseInt(sCurrHitTile)-1)/4);
 				sPrevHitTileType=Math.floor((parseInt(sPrevHitTile)-1)/4);
-				
-				
+
+
 				/*
 				alert("sCurrHitTileType: "+sCurrHitTileType);
 				alert("sPrevHitTileType: "+sPrevHitTileType);
@@ -3036,13 +3086,13 @@ mainImageTileProjectilePosY++;
 					else {
 						//TODO: -update: this
 					}
-					
+
 					//edited by Mike, 20231123; from 20231120
 					//setExplosionEffectPosition(iTileBgCount);
 					if (isTileTypeDone(sCurrHitTile)) {
 						return;
 					}
-/*					
+/*
 					if (parseInt(sCurrHitTileType)==0) {
 						if (bSoldierTileTypeDone) {
 							return;
@@ -3058,7 +3108,7 @@ mainImageTileProjectilePosY++;
 							return;
 						}
 					}
-*/					
+*/
 
 					setExplosionEffectPosition(iTileBgCount);
 
@@ -3078,19 +3128,38 @@ mainImageTileProjectilePosY++;
 					myAudioEffect.volume=fMyAudioEffectVolume;
 					myAudioEffect.loop=false;
 					myAudioEffect.play();
-		
-					
+
+          //added by Mike, 20231124
+          bIsIncreasingScore=false;
+      		if (iTargetScore==iScore) {
+      			//iTargetScore=iScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1);//*777;
+      			iTargetScore=iScore-2500;
+
+      			//alert("iTargetScore: "+iTargetScore);
+      		}
+      		else {
+      /*
+      			alert("DITO");
+      			alert("iScore: "+iScore);
+      			alert("iTargetScore: "+iTargetScore);
+      */
+      			iScore=iTargetScore;
+      	//		iTargetScore=iTargetScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1);//*777;
+      			iTargetScore=iTargetScore-2500;
+      		}
+
+
 					//edited by Mike, 20231113
 					//note: not an integer; blank
 					//iPrevHitTileBgCount="";//iTileBgCount;
 					iPrevHitTileBgCount=-1;//iTileBgCount;
 
 					bHasHitTileWithForeignKey=false;
-					
+
 					//added by Mike, 20231114
 					iInputDelayCount=0;
 
-					
+
 					//damage!
 					//TODO: -fix: if tile already is unique; not executed;
 					bIsExecutingShake=true;
@@ -3104,19 +3173,19 @@ mainImageTileProjectilePosY++;
 				//iPrevHitTileBgCount="";
 				sCurrHitTileType="";
 				sPrevHitTileType="";
-				
-/*				
+
+/*
 				return;
-*/				
+*/
 			}
-			
-			
+
+
 			//added by Mike, 20231123
 			if (isTileTypeDone(sCurrHitTile)) {
 				//alert("DITO");
-			
+
 				puzzleTileImageTargetBorder.style.visibility = "hidden";
-				
+
 				return;
 			}
 
@@ -3129,10 +3198,10 @@ mainImageTileProjectilePosY++;
 				//alert(">>>");
 
 				puzzleTileImageTargetBorder.style.visibility = "hidden";
-				
+
 				return;
 			}
-			
+
 			//added by Mike, 20231113
 			//TODO: -fix: multiple "...hasForeignKey(iTileBgCount)"
 			//edited by Mike, 20231109; from 20231108
@@ -3154,7 +3223,7 @@ mainImageTileProjectilePosY++;
   				bIsActionKeyPressed=true;
 
 
-				
+
           /*
           arrayPuzzleTileCountId[iTileBgCount].className="Image32x32Tile";
           				arrayPuzzleTileCountId[iTargetTileBgCount].className="Image32x32TileSpace";
@@ -3267,242 +3336,246 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 
 //---
 
-
-
-//iMainImageTileStepAngleTemp+=10;
-//iMainImageTileStepAngleTemp=90;
-
-					//note: start 0 @clock 12 o'clock; clock-wise
-
-/*					iMainImageTileStepAngle=(iMainImageTileStepAngle+10)%360;
-*/
-					//alert(iMainImageTileStepAngle);
-/*
-					//added by Mike, 20230427
-newMainImageTilePosY=mainImageTileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
-
-//					alert(newMainImageTilePosY);
-					newMainImageTilePosY*=-1;
-										newMainImageTilePosX=mainImageTileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
-*/
-
-
-/*
-	iYPos=iYPos-(mainImageTilePosY+iVerticalOffsetInnerScreen);
-	iXPos=iXPos-(mainImageTilePosX+iHorizontalOffset);
-
-	alert("iYPos: "+iYPos);
-	alert("iXPos: "+iXPos);
-
-	if (iYPos<0) {
-		iYPos*=-1;
 	}
-	if (iXPos<0) {
-		iXPos*=-1;
-	}
-*/
 
-					//adds: image's top
-					//edited by Mike, 20230425
-					//counter-clockwise;
-					//note: equation; output, correct; quadrants;
-				//iMainImageTileStepAngleTemp=((-1*iMainImageTileStepAngle+90)%(360+90))%360;
+  function processBossBattleResultFromInput(iXPos, iYPos) {
 
-/*
-					var fMainImageTileStepAngleRad=iMainImageTileStepAngle*Math.PI/180.0;
-					*/
 
-					//alert(fMainImageTileStepAngleRad);
+    //iMainImageTileStepAngleTemp+=10;
+    //iMainImageTileStepAngleTemp=90;
 
-					mainImageTileStepX=14; //2;
-					mainImageTileStepY=14; //2;
+    					//note: start 0 @clock 12 o'clock; clock-wise
 
+    /*					iMainImageTileStepAngle=(iMainImageTileStepAngle+10)%360;
+    */
+    					//alert(iMainImageTileStepAngle);
+    /*
+    					//added by Mike, 20230427
+    newMainImageTilePosY=mainImageTileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
 
-///TO-DO: -compute: angle based on mouse position;
+    //					alert(newMainImageTilePosY);
+    					newMainImageTilePosY*=-1;
+    										newMainImageTilePosX=mainImageTileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
+    */
 
-//newMainImageTilePosY=mainImageTileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
 
-					//var iYPosTemp=iYPos*-1;
+    /*
+    	iYPos=iYPos-(mainImageTilePosY+iVerticalOffsetInnerScreen);
+    	iXPos=iXPos-(mainImageTilePosX+iHorizontalOffset);
 
-					//alert(iYPosTemp);
+    	alert("iYPos: "+iYPos);
+    	alert("iXPos: "+iXPos);
 
-					//alert(iYPos);
+    	if (iYPos<0) {
+    		iYPos*=-1;
+    	}
+    	if (iXPos<0) {
+    		iXPos*=-1;
+    	}
+    */
 
-					//note: object @center
-					//mainImageTileStepX=mainImageTileStepX-iXPos
+    					//adds: image's top
+    					//edited by Mike, 20230425
+    					//counter-clockwise;
+    					//note: equation; output, correct; quadrants;
+    				//iMainImageTileStepAngleTemp=((-1*iMainImageTileStepAngle+90)%(360+90))%360;
 
+    /*
+    					var fMainImageTileStepAngleRad=iMainImageTileStepAngle*Math.PI/180.0;
+    					*/
 
-//Reference#1:https://www.mathsisfun.com/algebra/trig-finding-angle-right-triangle.html; last accessed: 20230427
-//angle = atan(O/A)
+    					//alert(fMainImageTileStepAngleRad);
 
-//Reference#2: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2; last accessed: 202304287
+    					mainImageTileStepX=14; //2;
+    					mainImageTileStepY=14; //2;
 
-//iMainImageTileStepAngle=Math.atan(300/400).toFixed(3);
-//iMainImageTileStepAngle=Math.atan(-iYPos/iXPos).toFixed(3);
-/*
-//TO-DO: -fix: this
-iMainImageTileStepAngle=Math.atan2(iYPos,iXPos).toFixed(3);
-						var fMainImageTileStepAngleDegrees=iMainImageTileStepAngle*180.0/Math.PI;
-*/
 
-if (!bHasFired) {
+    ///TO-DO: -compute: angle based on mouse position;
 
-mainImageTileStepY=10;
-mainImageTileStepX=10;
+    //newMainImageTilePosY=mainImageTileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
 
-		var mainImageTile = document.getElementById("mainImageTileImageId");
+    					//var iYPosTemp=iYPos*-1;
 
-//reference: https://stackoverflow.com/questions/15994194/how-to-convert-x-y-coordinates-to-an-angle; last accessed: 20230428;
-//--> answer by: Mohsen, 20130413T2357; from 20150322T2246;
+    					//alert(iYPosTemp);
 
-//start position @center
-//note: subtract margine offset
-/*
-var iDeltaX=iXPos-mainImageTilePosX;
-var iDeltaY=iYPos-mainImageTilePosY;
-*/
-/*
-var iDeltaX=(iXPos-iHorizontalOffset)-mainImageTilePosX;
-var iDeltaY=(iYPos-iVerticalOffset)-mainImageTilePosY;
-*/
-var iDeltaX=(iXPos-iHorizontalOffset)-(mainImageTilePosX+iImageFrameWidth/2);
-var iDeltaY=(iYPos-iVerticalOffset)-(mainImageTilePosY+iImageFrameHeight/2);
+    					//alert(iYPos);
 
+    					//note: object @center
+    					//mainImageTileStepX=mainImageTileStepX-iXPos
 
 
+    //Reference#1:https://www.mathsisfun.com/algebra/trig-finding-angle-right-triangle.html; last accessed: 20230427
+    //angle = atan(O/A)
 
-/*
-alert("iXPos: "+iXPos);
-alert("mainImageTilePosX: "+mainImageTilePosX);
-alert("iDeltaX: "+iDeltaX);
-*/
+    //Reference#2: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/atan2; last accessed: 202304287
 
+    //iMainImageTileStepAngle=Math.atan(300/400).toFixed(3);
+    //iMainImageTileStepAngle=Math.atan(-iYPos/iXPos).toFixed(3);
+    /*
+    //TO-DO: -fix: this
+    iMainImageTileStepAngle=Math.atan2(iYPos,iXPos).toFixed(3);
+    						var fMainImageTileStepAngleDegrees=iMainImageTileStepAngle*180.0/Math.PI;
+    */
 
-iDeltaY*=-1;
 
-var fMainImageTileStepAngleRad=Math.atan2(iDeltaX,iDeltaY);
+    if (!bHasFired) {
 
-iMainImageTileStepAngle=fMainImageTileStepAngleRad*(180/Math.PI);
+    mainImageTileStepY=10;
+    mainImageTileStepX=10;
 
-//					newMainImageTileProjectilePosY*=-1;
+    		var mainImageTile = document.getElementById("mainImageTileImageId");
 
-//clockwise
-iMainImageTileStepAngle=(iMainImageTileStepAngle)%360;
-/*
-alert(iMainImageTileStepAngle);
-*/
+    //reference: https://stackoverflow.com/questions/15994194/how-to-convert-x-y-coordinates-to-an-angle; last accessed: 20230428;
+    //--> answer by: Mohsen, 20130413T2357; from 20150322T2246;
 
-					mainImageTile.style.transform = "rotate("+ (iMainImageTileStepAngle % 360) +"deg)";
+    //start position @center
+    //note: subtract margine offset
+    /*
+    var iDeltaX=iXPos-mainImageTilePosX;
+    var iDeltaY=iYPos-mainImageTilePosY;
+    */
+    /*
+    var iDeltaX=(iXPos-iHorizontalOffset)-mainImageTilePosX;
+    var iDeltaY=(iYPos-iVerticalOffset)-mainImageTilePosY;
+    */
+    var iDeltaX=(iXPos-iHorizontalOffset)-(mainImageTilePosX+iImageFrameWidth/2);
+    var iDeltaY=(iYPos-iVerticalOffset)-(mainImageTilePosY+iImageFrameHeight/2);
 
 
 
 
+    /*
+    alert("iXPos: "+iXPos);
+    alert("mainImageTilePosX: "+mainImageTilePosX);
+    alert("iDeltaX: "+iDeltaX);
+    */
 
 
-//fMainImageTileStepAngleDegrees = (fMainImageTileStepAngleDegrees + 360) % 360;  // +360 for implementations where mod returns negative numbers
+    iDeltaY*=-1;
 
-//					alert(newMainImageTilePosY);
-/*
-alert("iYPos: "+iYPos);
-alert("iXPos: "+iXPos);
+    var fMainImageTileStepAngleRad=Math.atan2(iDeltaX,iDeltaY);
 
-alert("iMainImageTileStepAngle: "+iMainImageTileStepAngle);
-alert("fMainImageTileStepAngleDegrees: "+fMainImageTileStepAngleDegrees);
-*/
+    iMainImageTileStepAngle=fMainImageTileStepAngleRad*(180/Math.PI);
 
-/*
-			iMainImageTileStepAngle=fMainImageTileStepAngleDegrees;
-*/
+    //					newMainImageTileProjectilePosY*=-1;
 
-//alert(iMainImageTileStepAngle);
+    //clockwise
+    iMainImageTileStepAngle=(iMainImageTileStepAngle)%360;
+    /*
+    alert(iMainImageTileStepAngle);
+    */
 
+    					mainImageTile.style.transform = "rotate("+ (iMainImageTileStepAngle % 360) +"deg)";
 
-/* //edited by Mike, 20230427
-//note: negative; due to inverted y-axis
-					//newMainImageTilePosY=mainImageTileStepX/Math.sin(fMainImageTileStepAngleRad).toFixed(3);
-			newMainImageTilePosY=mainImageTileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
 
-//					alert(newMainImageTilePosY);
-					newMainImageTilePosY*=-1;
 
 
-					//newMainImageTilePosX=mainImageTileStepY/Math.cos(fMainImageTileStepAngleRad).toFixed(3);
-										newMainImageTilePosX=mainImageTileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
-*/
 
-mainImageTileProjectileStepY=20;
-mainImageTileProjectileStepX=20;
 
+    //fMainImageTileStepAngleDegrees = (fMainImageTileStepAngleDegrees + 360) % 360;  // +360 for implementations where mod returns negative numbers
 
-newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
+    //					alert(newMainImageTilePosY);
+    /*
+    alert("iYPos: "+iYPos);
+    alert("iXPos: "+iXPos);
 
-//start position @center
-//newMainImageTileProjectilePosY+=iVerticalOffsetInnerScreen+mainImageTilePosY;
-//newMainImageTileProjectilePosY=(iVerticalOffsetInnerScreen+mainImageTilePosY+mainImageTileProjectileStepY)*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
+    alert("iMainImageTileStepAngle: "+iMainImageTileStepAngle);
+    alert("fMainImageTileStepAngleDegrees: "+fMainImageTileStepAngleDegrees);
+    */
 
-					newMainImageTileProjectilePosY*=-1;
-												newMainImageTileProjectilePosX=mainImageTileProjectileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
+    /*
+    			iMainImageTileStepAngle=fMainImageTileStepAngleDegrees;
+    */
 
+    //alert(iMainImageTileStepAngle);
 
-					bHasFired=true;
-}
 
-//added by Mike, 20231119
-//reached this part
-bIsPuzzleTileTargetHit=false;
+    /* //edited by Mike, 20230427
+    //note: negative; due to inverted y-axis
+    					//newMainImageTilePosY=mainImageTileStepX/Math.sin(fMainImageTileStepAngleRad).toFixed(3);
+    			newMainImageTilePosY=mainImageTileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
 
+    //					alert(newMainImageTilePosY);
+    					newMainImageTilePosY*=-1;
 
 
-//newMainImageTileProjectilePosX=(iHorizontalOffset+mainImageTilePosX+mainImageTileProjectileStepX)*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
+    					//newMainImageTilePosX=mainImageTileStepY/Math.cos(fMainImageTileStepAngleRad).toFixed(3);
+    										newMainImageTilePosX=mainImageTileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
+    */
 
+    mainImageTileProjectileStepY=20;
+    mainImageTileProjectileStepX=20;
 
-/* //removed by Mike, 20230428
-					bHasFired=true;
-*/
 
-/*
-					alert("newMainImageTileProjectilePosY: "+newMainImageTileProjectilePosY);
-											alert("newMainImageTileProjectilePosX: "+newMainImageTileProjectilePosX);		*/
+    newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
 
-					//reference: https://stackoverflow.com/questions/8388440/converting-a-double-to-an-int-in-javascript-without-rounding; last accessed: 20230425
-					//answer by: kubetz, 20111205T1630
-					//edited by: Rooke, 20160329T1858
+    //start position @center
+    //newMainImageTileProjectilePosY+=iVerticalOffsetInnerScreen+mainImageTilePosY;
+    //newMainImageTileProjectilePosY=(iVerticalOffsetInnerScreen+mainImageTilePosY+mainImageTileProjectileStepY)*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
 
-					//identify the quadrant; start @1
-					var iQuadrant = parseInt(iMainImageTileStepAngle/90,10)+1;
-					//alert(iQuadrant);
-/*
-					switch (iQuadrant) {
-						case 1:
-							mainImageTileStepX=2;
-							mainImageTileStepY=-2;
-							break;
-						case 2:
-							mainImageTileStepX=-2;
-							mainImageTileStepY=-2;
-							break;
-						case 3:
-							mainImageTileStepX=-2;
-							mainImageTileStepY=2;
-							break;
-						case 4:
-							mainImageTileStepX=2;
-							mainImageTileStepY=2;
-							break;
-					}
-*/
+    					newMainImageTileProjectilePosY*=-1;
+    												newMainImageTileProjectilePosX=mainImageTileProjectileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
 
-/*
-				    //movement
-					mainImageTilePosY=mainImageTilePosY+newMainImageTilePosY;
-					mainImageTilePosX=mainImageTilePosX+newMainImageTilePosX;
 
-					//alert("mainImageTileStepX: "+mainImageTileStepX);
-					//alert("mainImageTilePosY Part1: "+mainImageTilePosY);
-		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
-		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
-*/
-	}
+    					bHasFired=true;
+    }
+
+    //added by Mike, 20231119
+    //reached this part
+    bIsPuzzleTileTargetHit=false;
+
+
+
+    //newMainImageTileProjectilePosX=(iHorizontalOffset+mainImageTilePosX+mainImageTileProjectileStepX)*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
+
+
+    /* //removed by Mike, 20230428
+    					bHasFired=true;
+    */
+
+    /*
+    					alert("newMainImageTileProjectilePosY: "+newMainImageTileProjectilePosY);
+    											alert("newMainImageTileProjectilePosX: "+newMainImageTileProjectilePosX);		*/
+
+    					//reference: https://stackoverflow.com/questions/8388440/converting-a-double-to-an-int-in-javascript-without-rounding; last accessed: 20230425
+    					//answer by: kubetz, 20111205T1630
+    					//edited by: Rooke, 20160329T1858
+
+    					//identify the quadrant; start @1
+    					var iQuadrant = parseInt(iMainImageTileStepAngle/90,10)+1;
+    					//alert(iQuadrant);
+    /*
+    					switch (iQuadrant) {
+    						case 1:
+    							mainImageTileStepX=2;
+    							mainImageTileStepY=-2;
+    							break;
+    						case 2:
+    							mainImageTileStepX=-2;
+    							mainImageTileStepY=-2;
+    							break;
+    						case 3:
+    							mainImageTileStepX=-2;
+    							mainImageTileStepY=2;
+    							break;
+    						case 4:
+    							mainImageTileStepX=2;
+    							mainImageTileStepY=2;
+    							break;
+    					}
+    */
+
+    /*
+    				    //movement
+    					mainImageTilePosY=mainImageTilePosY+newMainImageTilePosY;
+    					mainImageTilePosX=mainImageTilePosX+newMainImageTilePosX;
+
+    					//alert("mainImageTileStepX: "+mainImageTileStepX);
+    					//alert("mainImageTilePosY Part1: "+mainImageTilePosY);
+    		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
+    		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
+    */
+  }
 
 	//added by Mike, 20230423
 	function processMouseInput() {
@@ -3510,13 +3583,13 @@ bIsPuzzleTileTargetHit=false;
 		//last accessed: 20221110
 		//answer by:  Jacob, 20220124T0110
 		document.body.addEventListener('pointerdown', (event) => {
-		
+
 			//added by Mike, 20231114
 			if (iInputDelayCount<iInputDelayCountMax) {
 				iInputDelayCount++;
 				return;
 			}
-		
+
 			//reference: https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType;
 			//last accessed: 20221122
 			switch(event.pointerType) {
@@ -3526,19 +3599,19 @@ bIsPuzzleTileTargetHit=false;
 					//alert(">");
 					if (!bHasViewedHowToPlayGuide) {
 						//alert(">>>>>");
-						var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");	
-						
-						howToPlayGuideImage.style.visibility = "hidden"; 
-						
+						var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
+
+						howToPlayGuideImage.style.visibility = "hidden";
+
 						bHasViewedHowToPlayGuide=true;
-						
+
 						return;
 					}
 				  }
-				  else {				
+				  else {
 					  //added by Mike, 20231119
 					  bHasPressedStart=true;
-				  
+
 					  return;
 				  }
 
@@ -3576,17 +3649,19 @@ bIsPuzzleTileTargetHit=false;
 					//added by Mike, 20231107
 					processResultFromInput(iXPos, iYPos);
 
-					//added by Mike, 20231122
-					verifyIfAllObjectsOfTileTypeDone(iXPos, iYPos);
+					//edited by Mike, 20231124; from 20231122
+          if (!bIsPuzzleDone) {
+  					verifyIfAllObjectsOfTileTypeDone(iXPos, iYPos);
 
-					//added by Mike, 20231110
-					bIsPuzzleDone = isAutoVerifiedPuzzleDone();
+  					//added by Mike, 20231110
+  					bIsPuzzleDone = isAutoVerifiedPuzzleDone();
+          }
 
-					
+
 					//removed by Mike, 20231114
 					//iInputDelayCount=0;
 
-					
+
 					//alert(bIsPuzzleDone);
 
 /* //removed by Mike, 20231111
@@ -3638,7 +3713,7 @@ function processTouchInput() {
 			return;
 		}
 
-	
+
 		iEventChangedTouchCount = event.changedTouches.length;
 
 		for (iCount=0; iCount<iEventChangedTouchCount; iCount++) {
@@ -3666,13 +3741,13 @@ function processTouchInput() {
 */
 				processResultFromInput(iXPos, iYPos);
 
-				
+
 				//added by Mike, 20231114
 				bIsPuzzleDone = isAutoVerifiedPuzzleDone();
 				//removed by Mike, 20231114
 				//iInputDelayCount=0;
 
-				
+
 /* //removed temporarily by Mike, 20231107
 			}
 */
@@ -3757,7 +3832,7 @@ function autoUpdatePuzzleTileImage() {
 			arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-96px -96px";
 */
 			arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-192px -192px";
-			
+
 			}
 			else {
 						//alert(">>>>");
@@ -3790,38 +3865,38 @@ function autoUpdatePuzzleTileImage() {
 
 				//edited by Mike, 20231115
 //				arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + iColumnCount*64 + "px -" + iRowCount*64 + "px";
-				
+
 				//TODO: -add: rest animation for rest of tiles; over 2 frames?
 				sCurrHitTile=arrayPuzzleTileCountId[iTileBgCount].alt;
 				sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
 
-/* //TODO: -add: animation;				
-				if ((sCurrHitTile=="1") || (sCurrHitTile=="16")) {				
+/* //TODO: -add: animation;
+				if ((sCurrHitTile=="1") || (sCurrHitTile=="16")) {
 					if (iAnimationCount==0) { //%2
-						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64) + "px -" + iRowCount*64 + "px";				
-					}			
-					else if (iAnimationCount==1) { 
+						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64) + "px -" + iRowCount*64 + "px";
+					}
+					else if (iAnimationCount==1) {
 						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64+256) + "px -" + iRowCount*64 + "px";
-						
+
 						//alert(">>>>");
 					}
 					else {
 						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64+512) + "px -" + iRowCount*64 + "px";
-						
+
 						//alert(">>>>");
-					}					
+					}
 				}
 				else {
-*/				
+*/
 						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64) + "px -" + iRowCount*64 + "px";
-/*						
+/*
 				}
-*/				
+*/
 			}
 
 			iTileBgCount++;
 	}
-	
+
 	//alert("iAnimationCount: "+iAnimationCount);
 	//added by Mike, 20231115
 	if (iAnimationDelayCount==iAnimationDelayCountMax) {
@@ -3836,6 +3911,32 @@ function autoUpdatePuzzleTileImage() {
 
 }
 
+  //added by Mike, 20231124
+  function closePuzzle() {
+		let iTileBgCount=0;
+
+		for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+			for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
+  			//edited by Mike, 20221118
+  			//arrayPuzzleTileCountId[iTileBgCount] = document.getElementById("puzzleTileImageIdBg"+iTileBgCount);
+
+  			//alert(">>>");
+  			//alert(">>>"+iTileBgCount);
+
+  			arrayPuzzleTilePos[iRowCount][iColumnCount]=iTileBgCount;
+
+
+  			arrayPuzzleTileCountId[iTileBgCount] = document.getElementById("puzzleTileImageIdBg"+iTileBgCount);
+
+  			arrayPuzzleTileCountId[iTileBgCount].style.visibility="hidden";
+
+        iTileBgCount++;
+
+  			//alert(iTileBgCount);
+      }
+    }
+  }
+
 	function initPuzzle() {
 		//added by Mike, 20231111
 		//TODO: -verify: this
@@ -3845,9 +3946,9 @@ function autoUpdatePuzzleTileImage() {
 			//alert(iRowCountMax);
 
 		let iTileBgCount=0;
-		
+
 		var iCurrTileTypeCopyCount=0;
-		
+
 
 		for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
 			for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
@@ -3857,9 +3958,9 @@ function autoUpdatePuzzleTileImage() {
 
 			//alert(">>>");
 			//alert(">>>"+iTileBgCount);
-			
+
 			arrayPuzzleTilePos[iRowCount][iColumnCount]=iTileBgCount;
-	
+
 
 			arrayPuzzleTileCountId[iTileBgCount] = document.getElementById("puzzleTileImageIdBg"+iTileBgCount);
 
@@ -3909,11 +4010,11 @@ function autoUpdatePuzzleTileImage() {
 
 
 				arrayPuzzleTileCountId[iTileBgCount].className="Image32x32Tile";
-				
+
 				iTileBgCount++;
 			}
 		}
-		
+
 
 		for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
 		  for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
@@ -3924,21 +4025,21 @@ function autoUpdatePuzzleTileImage() {
 
 				//iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
 
-	
-				
+
+
 //-----
 
 		//alert(iTileBgCount);
 		//alert(arrayPuzzleTileCountId[iRowCount][iColumnCount]);
 		//alert(arrayPuzzleTilePos[iRowCount][iColumnCount]);
 
-		
+
 
 //init FK in puzzle; no FK with the same type;
 	//added by Mike, 20231109
 	//jumble the positions of the tiles;
 	//var sRecordedSteps="3121220312133003112111302212133333303312003030030303133122112122121303033033311212002";
-	
+
 			iTileBgCountTemp=arrayPuzzleTilePos[iRowCount][iColumnCount];
 
 		//alert(">>>>"+iTileBgCountTemp);
@@ -3950,7 +4051,7 @@ function autoUpdatePuzzleTileImage() {
 
 			//alert(">>>>"+iDirection);
 
-			//iDirection=2; //already done; 
+			//iDirection=2; //already done;
 			//iDirection=3; //pre-set puzzle; simple;
 
 
@@ -3997,19 +4098,19 @@ function autoUpdatePuzzleTileImage() {
 						arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
 					}
 					break;
-			}		
+			}
 
 		}
-	}		
+	}
 //-----
 
 		if (isAutoVerifiedPuzzleDone()) {
-		
+
 			var bAutoGenerateSoldierTileTypeDone=false;
 			var bAutoGenerateTankTileTypeDone=false;
 			var bAutoGenerateBuildingTileTypeDone=false;
-			
-		
+
+
 			for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
 			  for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
 
@@ -4020,48 +4121,48 @@ function autoUpdatePuzzleTileImage() {
 						iCurrTileBgCount=arrayPuzzleTilePos[iRowCount][iColumnCount];
 
 						//alert(">>iTileBgCountNew: "+iTileBgCountNew);
-						
+
 						sCurrHitTile=arrayPuzzleTileCountId[iCurrTileBgCount].alt;
 
 						//alert("DITO: "+sTileCountIdAltNew);
 
 						sCurrHitTile=sCurrHitTile.substring(0,sCurrHitTile.indexOf(",FK="));
-							
+
 						sCurrHitTileType="";
-					
+
 						sCurrHitTileType=Math.floor(parseInt((sCurrHitTile-1)/4));
 
-				
-				
+
+
 					if (parseInt(sCurrHitTileType)==0) {
 						if (!bAutoGenerateSoldierTileTypeDone) {
 							arrayPuzzleTileCountId[iCurrTileBgCount].alt=((parseInt(sCurrHitTile)+1)%4+(0*4))+",FK=1";
-							
+
 							bAutoGenerateSoldierTileTypeDone=true;
 						}
 					}
 					else if (parseInt(sCurrHitTileType)==1) {
 						if (!bAutoGenerateTankTileTypeDone) {
 							arrayPuzzleTileCountId[iCurrTileBgCount].alt=((parseInt(sCurrHitTile)+1)%4+(1*4))+",FK=1";
-							
+
 							bAutoGenerateTankTileTypeDone=true;
 						}
 					}
 					else if (parseInt(sCurrHitTileType)==2) {
 						if (!bAutoGenerateBuildingTileTypeDone) {
 							arrayPuzzleTileCountId[iCurrTileBgCount].alt=((parseInt(sCurrHitTile)+1)%4+(2*4))+",FK=1";
-							
+
 							bAutoGenerateBuildingTileTypeDone=true;
-						}					
+						}
 					}
-		
-	
-		
-/*						
-						
+
+
+
+/*
+
 
 						arrayPuzzleTileCountId[iTileBgCountTemp].alt=sTileCountIdAltNew;
-*/						
+*/
 				}
 			}
 		}
@@ -4400,11 +4501,11 @@ opting to put assets folder in "html_application" folder instead
 		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
 		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
-		
+
 		<!-- added by Mike, 20231121 -->
-		<img id="mouseInputImageId" class="ImageMouseInput" src="assets/images/inputImage.png">		
-		
-<!--		
+		<img id="mouseInputImageId" class="ImageMouseInput" src="assets/images/inputImage.png">
+
+<!--
 		<img id="explosionEffectImageId" class="ImageExplosion" src="assets/images/effects.png">
 -->
 
@@ -4434,8 +4535,8 @@ opting to put assets folder in "html_application" folder instead
 <img id="puzzleTileImageIdBg15" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
 <img id="puzzleTileImageIdBg16" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
 
-		
-		
+
+
 	<img id="explosionEffectImageId" class="ImageExplosion" src="assets/images/effects.png">
 
 
@@ -4448,23 +4549,23 @@ opting to put assets folder in "html_application" folder instead
 	<div id="divPuzzleTileImageSpaceBorderId" class="Image32x32TileSpaceBorder"></div>
 
 	<img id="howToPlayGuideImageId" class="ImageHowToPlayGuide" src="assets/images/gameOff2023HowToPlay.png">
-	
-	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">	
-	
-	
+
+	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">
+
+
 	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
-	
+
 	<!-- PRESS ENTER; PRESS START -->
 	<div id="textEnterDivId" class="DivTextClickStart">START</div>
 
-	
+
 	<div id="textScoreDivId" class="DivTextScore">0</div>
 
-<!--	
+<!--
 	<div id="stepCountStatusShadowDivId" class="DivStepCountStatusShadow">0</div>
 	<div id="stepCountStatusDivId" class="DivStepCountStatus">0</div>
 -->
-	
+
 
   <audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2023TapLoudEdited.mp3" type="audio/x-m4a" controls loop>
 	  Your browser does not support the audio tag.
