@@ -129,7 +129,7 @@
 			position: absolute;
 
       /*added by Mike, 20231105*/
-  		clip: rect(0px,32px,32px,0px);
+  		clip: rect(0px,64px,64px,0px);
 
 			visibility: hidden;
 		}
@@ -679,20 +679,20 @@ var bIsIncreasingScore=true;
 
 //added by Mike, 20231124
 //note: parameters
-iDefaultAnimationImageX=0;//-32; //default x
-iDefaultAnimationImageY=0;//-32; //default y
+var iDefaultAnimationImageX=0;//-32; //default x
+var iDefaultAnimationImageY=0;//-32; //default y
 
 //edited by Mike, 20230418
 //iTotalAnimImageFrameCount=4;//2;
-iTotalAnimImageFrameCount=2;
+var iTotalAnimImageFrameCount=2;
 
 //edited by Mike, 20230322
-iImageFrameWidth=64;// 32; //0;
-iImageFrameHeight=64;// 32;
+var iImageFrameWidth=64;// 32; //0;
+var iImageFrameHeight=64;// 32;
 
 //added by Mike, 20231121
-iMouseInputImageWidth=64;
-iMouseInputImageHeight=64;
+var iMouseInputImageWidth=64;
+var iMouseInputImageHeight=64;
 
 		
 		
@@ -1166,8 +1166,12 @@ var iOffsetHeight=0;
 
 		//added by Mike, 20230427
 		mainImageTileProjectilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
-		mainImageTileProjectilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
+		
+		//edited by Mike, 20231124
+		//mainImageTileProjectilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
+		mainImageTileProjectilePosY=iStageMaxHeight-iImageFrameHeight;
 
+		
 		//TO-DO: -update: newMainImage... step
 		newMainImageTileProjectilePosX=0; //mainImageTileProjectilePosX;
 		newMainImageTileProjectilePosY=0; //mainImageTileProjectilePosY;
@@ -1233,6 +1237,7 @@ var iOffsetHeight=0;
     */
 
 		var mainImageTile = document.getElementById("mainImageTileImageId");
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
@@ -1281,19 +1286,40 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 */
 
 		mainImageTile.style.visibility = "hidden";
+		mainImageTileTankBody.style.visibility = "hidden";
+		
 		mainImageTileProjectile.style.visibility = "hidden";
 
 
 		//added by Mike, 20230423
 		mainImageTilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
-		mainImageTilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
+		//edited by Mike, 20231124
+		//mainImageTilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
+		mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
+		
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 
+		//added by Mike, 20231124
+		mainImageTileTankBody.style.left = mainImageTile.style.left;
+		mainImageTileTankBody.style.top = mainImageTile.style.top;
+		
+		//added by Mike, 20231124
+		//tank body
+		mainImageTileTankBody.style.objectPosition = "-" + 128 + "px -" + 192 + "px";
+//		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+	
+		mainImageTile.style.objectPosition = "-" + 192 + "px -" + 192 + "px";
+	
+
 		//added by Mike, 20230427
 		mainImageTileProjectilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
-		mainImageTileProjectilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
-
+		
+		//edited by Mike, 20231124
+		//mainImageTileProjectilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
+		mainImageTileProjectilePosY=iStageMaxHeight-iImageFrameHeight;
+		
+		
 /* //removed by Mike, 20231123		
 		//TO-DO: -update: "newMain" to ..."step"
 		newMainImageTileProjectilePosX=0;//mainImageTileProjectilePosX;
@@ -1642,6 +1668,10 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 	function myUpdateFunction() {	
 		var mainImageTile = document.getElementById("mainImageTileImageId");
+		
+		//added by Mike, 20231124
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		
 		//added by Mike, 20230427
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
@@ -2085,12 +2115,17 @@ mainImageTileStepX=15; //2;
 
 
 			if (animDirectionSelectedIndex==AnimImageDirection_VERTICAL) {
-				mainImageTile.style.objectPosition=(iDefaultAnimationImageX-(0))+"px "+
-										   	(iDefaultAnimationImageY-(iAnimImageFrameCount*iImageFrameHeight))+"px";
+				mainImageTile.style.objectPosition=(iDefaultAnimationImageX-(0))+"px "+(iDefaultAnimationImageY-(iAnimImageFrameCount*iImageFrameHeight))+"px";
+				
+				mainImageTileTankBody.style.objectPosition=(iDefaultAnimationImageX-(0))+"px "+(iDefaultAnimationImageY-(iAnimImageFrameCount*iImageFrameHeight))+"px";
+													
+											
 			}
 			//AnimImageDirection_HORIZONTAL
 			else {
 				mainImageTile.style.objectPosition=(iDefaultAnimationImageX-(iAnimImageFrameCount*iImageFrameWidth))+"px "+(iDefaultAnimationImageY-(0))+"px";
+
+				mainImageTileTankBody.style.objectPosition=(iDefaultAnimationImageX-(iAnimImageFrameCount*iImageFrameWidth))+"px "+(iDefaultAnimationImageY-(0))+"px";				
 			}
 
 			if (iAnimImageFrameCount<(iTotalAnimImageFrameCount-1)) {
@@ -2285,7 +2320,9 @@ mainImageTileStepX=15; //2;
 		
 		
 			mainImageTile.style.visibility = "visible";	
+			mainImageTileTankBody.style.visibility = "visible";	
 
+			
 			//added by Mike, 20230427
 			//movement
 			if (bHasFired) {
@@ -2326,8 +2363,9 @@ mainImageTileProjectilePosY++;
 
 //		if (mainImageTileProjectilePosX+iImageFrameWidth>iHorizontalOffset+iStageMaxWidth) {
 
-	//edited by Mike, 20230428; OK; inside stage border;
+	//edited by Mike, 20231124; from 20230428; OK; inside stage border;
 		if (mainImageTileProjectilePosX+iImageFrameWidth>iStageMaxWidth) {
+//+iImageFrameWidth
 			resetProjectile();
 		}
 		else if (mainImageTileProjectilePosX<0){//+iHorizontalOffset) {
@@ -2335,7 +2373,9 @@ mainImageTileProjectilePosY++;
 		}
 //		if (mainImageTileProjectilePosY+iImageFrameHeight>iVerticalOffset+iStageMaxHeight) {
 
-		if (mainImageTileProjectilePosY+iImageFrameHeight>iStageMaxHeight) {
+//		if (mainImageTileProjectilePosY+iImageFrameHeight>iStageMaxHeight) {
+//		if (mainImageTileProjectilePosY>iStageMaxHeight) { //+iImageFrameHeight
+		if (mainImageTileProjectilePosY+iImageFrameHeight/2>iStageMaxHeight) { 
 			resetProjectile();
 		}
 //		else if (mainImageTileProjectilePosY<0+iVerticalOffset) {
@@ -2416,7 +2456,12 @@ mainImageTileProjectilePosY++;
 
 		//added by Mike, 20230428
 		mainImageTilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
-		mainImageTilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
+		
+		//edited by Mike, 20231124
+		//mainImageTilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
+		mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;		
+		
+		
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 
@@ -3486,7 +3531,11 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 	var mainImageTile = document.getElementById("mainImageTileImageId");	
 	mainImageTile.style.visibility = "visible";	
 	
+	//added by Mike, 20231124
+	var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");	
+	mainImageTileTankBody.style.visibility = "visible";	
 
+	
     if (!bHasFired) {
 
     mainImageTileStepY=10;
@@ -3588,7 +3637,7 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
     //newMainImageTileProjectilePosY=(iVerticalOffsetInnerScreen+mainImageTilePosY+mainImageTileProjectileStepY)*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
 
     					newMainImageTileProjectilePosY*=-1;
-    												newMainImageTileProjectilePosX=mainImageTileProjectileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
+    					newMainImageTileProjectilePosX=mainImageTileProjectileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
 
 
     					bHasFired=true;
@@ -4502,8 +4551,11 @@ incorrect output on Safari; macOS;
 opting to put assets folder in "html_application" folder instead
 -->
 
-		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
+		<img id="mainImageTileImageTankBodyId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
+
+		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
+		
 		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
 		<!-- added by Mike, 20231121 -->
