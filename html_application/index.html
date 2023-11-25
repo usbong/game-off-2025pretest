@@ -491,37 +491,37 @@
 			div.DivStepCountStatusShadow
 			{
 				position: absolute;
-/*							
+/*
 				background-color: #000000aa;
-*/							
+*/
 				/*color: #ffffff;*/ /* white */
-				
+
 				color: #6d4e22; /* brown */
 
 				/*opacity: 50%;*/
 
 				font-size: 32px;/*42px;*/
 				font-weight: bold;
-				
-/* //edited by Mike, 20230130							
+
+/* //edited by Mike, 20230130
 				padding: 10px;
 */
 				/* //changed from margin */
-				/* //edited by Mike, 20230130 
+				/* //edited by Mike, 20230130
 				margin: 10px;
 				*/
 				padding: 0px;
 
 
-				visibility: hidden;							
-				
+				visibility: hidden;
+
 				/* put above image tiles;
 					below step count button
-				*/							
+				*/
 				z-index: 90; /*4;*/
-			}												
+			}
 
-						
+
 
 			div.DivTextEnter
 			{
@@ -716,7 +716,7 @@ var iTextScoreDivWidthOffset=5;
 var iTextScoreDivWidth;
 var iTextScoreShadowDivWidthOffset=1;
 
-		
+
 //added by Mike, 20231124
 //note: acceleration
 
@@ -732,6 +732,9 @@ var mainImageTileProjectileStepXMin=mainImageTileProjectileVelocityX;//4;//12;
 var mainImageTileProjectileStepY=mainImageTileProjectileStepYMin;//20;
 var mainImageTileProjectileStepX=mainImageTileProjectileStepYMin;//20;
 
+//added by Mike, 20231125
+var mainImageMonsterPosX=0;
+var mainImageMonsterPosY=0;
 
 //added by Mike, 20231124
 //note: parameters
@@ -750,8 +753,8 @@ var iImageFrameHeight=64;// 32;
 var iMouseInputImageWidth=64;
 var iMouseInputImageHeight=64;
 
-		
-		
+
+
 
 
 /*
@@ -862,7 +865,7 @@ var iOffsetHeight=0;
 
 	//added by Mike, 20230421
 	var iDirection=-1;
-	
+
 	//added by Mike, 20231125
 	//https://www.w3schools.com/js/js_arrays.asp; last accessed: 20220823
 	const arrayKeyPressed = [];
@@ -870,7 +873,7 @@ var iOffsetHeight=0;
 		arrayKeyPressed[iCount]=false;
 	}
 
-	
+
 	var arrayCountMovementStep= [];
 
 	//added by Mike, 20230311
@@ -931,12 +934,12 @@ var iOffsetHeight=0;
 	var mainImageTileProjectilePosX=0;
 	var mainImageTileProjectilePosY=0;
 
-/*	//removed by Mike, 20231124	
+/*	//removed by Mike, 20231124
 	//edited by Mike, 20230418
 	var mainImageTileProjectileStepX=2;//0; //2;
 	var mainImageTileProjectileStepY=2;//0; //2;
 */
-	
+
 	//edited by Mike, 20230314
 /*
 	const iStageMaxWidth=160*2; //160;
@@ -1022,29 +1025,29 @@ var iOffsetHeight=0;
 	//added by Mike, 20230427
 	function resetProjectile() {
 		var mainImageTile = document.getElementById("mainImageTileImageId");
-	
+
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
-/*	//edited by Mike, 20231125		
+/*	//edited by Mike, 20231125
 		//added by Mike, 20230427
 		mainImageTileProjectilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
-		
+
 		//edited by Mike, 20231124
 		//mainImageTileProjectilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
 		mainImageTileProjectilePosY=iStageMaxHeight-iImageFrameHeight;
 */
 		mainImageTileProjectilePosX = mainImageTile.style.left;
 		mainImageTileProjectilePosY = mainImageTile.style.top;
-		
-		
+
+
 		//alert("mainImageTileProjectilePosX: "+mainImageTileProjectilePosX);
 		//alert("mainImageTileProjectilePosY: "+mainImageTileProjectilePosY);
-		
+
 		//TO-DO: -update: newMainImage... step
 		newMainImageTileProjectilePosX=0; //mainImageTileProjectilePosX;
 		newMainImageTileProjectilePosY=0; //mainImageTileProjectilePosY;
-		
-//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);		
+
+//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);
 
 /*		//removed by Mike, 20231125
 		//added by Mike, 20231125
@@ -1052,7 +1055,7 @@ var iOffsetHeight=0;
 		mainImageTileProjectileVelocityX=4;
 */
 
-/*	//removed by Mike, 20231125		
+/*	//removed by Mike, 20231125
 		mainImageTileProjectile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 
 		mainImageTileProjectile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
@@ -1065,11 +1068,11 @@ var iOffsetHeight=0;
 
 		//added by Mike, 20230428
 		iMainImageTileStepAngle=0;
-		
+
 		//added by Mike, 20231124
 		mainImageTileProjectileStepY=mainImageTileProjectileStepYMin;//20;
 		mainImageTileProjectileStepX=mainImageTileProjectileStepXMin;//20;
-		
+
 
 		//alert("dito");
 	}
@@ -1078,7 +1081,7 @@ var iOffsetHeight=0;
 	//TO-DO: -update: variable container names
 	//TO-DO: -fix: SET button NOT focused on SAFARI
 	function init() {
-/* //removed by Mike, 20231124	
+/* //removed by Mike, 20231124
 		//TO-DO: -update: this; add in window, input boxes
 		//note: parameters
 		iDefaultAnimationImageX=0;//-32; //default x
@@ -1101,7 +1104,7 @@ var iOffsetHeight=0;
 		var myCanvas = document.getElementById("myCanvasId");
 
 		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px";
-		
+
 		iHorizontalOffset=myCanvas.getBoundingClientRect().x;
 
 
@@ -1154,12 +1157,12 @@ var iOffsetHeight=0;
 
 		//var iTextScoreShadowDivWidthOffset=1;
 		//var iTextScoreShadowDivWidth = (textScoreShadowDiv.clientWidth)+iTextScoreShadowDivWidthOffset;
-		
+
 		textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
 
-		
+
 		//textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset+"px";
-		
+
 		//textScoreShadowDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextScoreDivWidth+iTextScoreShadowDivWidthOffset+"px";
 
 		textScoreShadowDiv.style.top = textScoreDiv.style.top;
@@ -1185,7 +1188,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		mainImageTile.style.visibility = "hidden";
 		mainImageTileTankBody.style.visibility = "hidden";
-		
+
 		mainImageTileProjectile.style.visibility = "hidden";
 
 /*	//removed by Mike, 20231125
@@ -1194,32 +1197,32 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//edited by Mike, 20231124
 		//mainImageTilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
 		mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
-*/		
+*/
 		//added by Mike, 20231125
 		mainImageTilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
 		mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
-		
+
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 
 		//added by Mike, 20231124
 		mainImageTileTankBody.style.left = mainImageTile.style.left;
 		mainImageTileTankBody.style.top = mainImageTile.style.top;
-		
+
 		//added by Mike, 20231124
 		//tank body
 		mainImageTileTankBody.style.objectPosition = "-" + 128 + "px -" + 192 + "px";
 //		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
-	
+
 		mainImageTile.style.objectPosition = "-" + 192 + "px -" + 192 + "px";
 
 		//added by Mike, 20231124
 		mainImageTileProjectile.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
-		
+
 /*	//edited by Mike, 20231125
 		//added by Mike, 20230427
 		mainImageTileProjectilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
-		
+
 		//edited by Mike, 20231124
 		//mainImageTileProjectilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
 		mainImageTileProjectilePosY=iStageMaxHeight-iImageFrameHeight;
@@ -1228,8 +1231,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		mainImageTileProjectilePosX = mainImageTile.style.left;
 		mainImageTileProjectilePosY = mainImageTile.style.top;
 
-		
-/* //removed by Mike, 20231123		
+
+/* //removed by Mike, 20231123
 		//TO-DO: -update: "newMain" to ..."step"
 		newMainImageTileProjectilePosX=0;//mainImageTileProjectilePosX;
 		newMainImageTileProjectilePosY=0;//mainImageTileProjectilePosY;
@@ -1578,18 +1581,24 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 	}
 
 
-	function myUpdateFunction() {	
+	function myUpdateFunction() {
 		var mainImageTile = document.getElementById("mainImageTileImageId");
-		
+
 		//added by Mike, 20231124
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
-		
+
 		//added by Mike, 20230427
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
+
+    //added by Mike, 20231125
+    var mainImageMonster = document.getElementById("mainImageMonster0");
+
+
+
     	//added by Mike, 20231124
     	var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
-				
+
 		//added by Mike, 20231111
 		var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
 
@@ -1608,8 +1617,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		//added by Mike, 20231122
 		var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
-		
-		
+
+
 		//added by Mike, 20231123
 //		if (iScore<iTargetScore) {
     //edited by Mike, 20231124
@@ -1656,7 +1665,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		//textScoreShadowDiv.style.left = textScoreDiv.style.left;
 		textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
-		
+
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
 		var setPanelTable = document.getElementById("tableSetPanelId");
@@ -1846,7 +1855,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 //25%/2 = 12.5%
 mainImageTile.style.transformOrigin = "12.5% 12.5%";
 
-		  
+
 
 //clockwise
 //iMainImageTileStepAngle=(iMainImageTileStepAngle+1)%360;
@@ -1979,7 +1988,7 @@ mainImageTileStepX=15; //2;
 			else {
 				textScoreDiv.style.visibility = "visible";
 				//added by Mike, 20231125
-				textScoreShadowDiv.style.visibility = "visible";				
+				textScoreShadowDiv.style.visibility = "visible";
 			}
 
 /*
@@ -2023,7 +2032,7 @@ mainImageTileStepX=15; //2;
 			}
 		}
 
-		
+
 		//added by Mike, 20231125
 		//TODO: -update: this
 
@@ -2040,15 +2049,15 @@ mainImageTileStepX=15; //2;
 
 			if (animDirectionSelectedIndex==AnimImageDirection_VERTICAL) {
 				mainImageTile.style.objectPosition=(iDefaultAnimationImageX-(0))+"px "+(iDefaultAnimationImageY-(iAnimImageFrameCount*iImageFrameHeight))+"px";
-				
+
 				mainImageTileTankBody.style.objectPosition=(iDefaultAnimationImageX-(0))+"px "+(iDefaultAnimationImageY-(iAnimImageFrameCount*iImageFrameHeight))+"px";
-											
+
 			}
 			//AnimImageDirection_HORIZONTAL
 			else {
 				mainImageTile.style.objectPosition=(iDefaultAnimationImageX-(iAnimImageFrameCount*iImageFrameWidth))+"px "+(iDefaultAnimationImageY-(0))+"px";
 
-				mainImageTileTankBody.style.objectPosition=(iDefaultAnimationImageX-(iAnimImageFrameCount*iImageFrameWidth))+"px "+(iDefaultAnimationImageY-(0))+"px";				
+				mainImageTileTankBody.style.objectPosition=(iDefaultAnimationImageX-(iAnimImageFrameCount*iImageFrameWidth))+"px "+(iDefaultAnimationImageY-(0))+"px";
 			}
 
 			if (iAnimImageFrameCount<(iTotalAnimImageFrameCount-1)) {
@@ -2102,16 +2111,16 @@ mainImageTileStepX=15; //2;
     	//added by Mike, 20221113
     	var bHasExecutedTileExchange=false;
 
-		
-/* //removed by Mike, 20231124		
+
+/* //removed by Mike, 20231124
     	//added by Mike, 20221119
     	var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
 
     	//added by Mike, 20221121
     	var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
 */
-		
-		
+
+
     /* //removed by Mike, 20230129
     	//added by Mike, 202221121
     	var miniPuzzleTileImage = document.getElementById("miniPuzzleTileImageId");
@@ -2233,32 +2242,42 @@ mainImageTileStepX=15; //2;
   			textStatusDiv.style.visibility="visible";
       }
       else {
-			//added by Mike, 20231124
-			myCanvasContext.fillStyle = "#000000"; //black background//stage
-			myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
-			
+
 			//added by Mike, 20231125
 			textScoreDivId.style.color="white";
-			
-	  
+
+/*    //removed by Mike 20231125
 			var mainImageTile = document.getElementById("mainImageTileImageId");
-			
+
 			var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
-			
+
+      //added by Mike, 20231125
+      var mainImageMonster = document.getElementById("mainImageMonster0");
+*/
+
 			if (!bHasClosedPuzzle) {
 				closePuzzle();
 			}
-		
-		
-			mainImageTile.style.visibility = "visible";	
-			mainImageTileTankBody.style.visibility = "visible";	
 
-/*	//removed by Mike, 20231125; TODO: -fix: at times, slow-moving projectile occurs			
+      //added by Mike, 20231125; from 20231124
+			myCanvasContext.fillStyle = "#000000"; //black background//stage
+			myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
+
+
+			mainImageTile.style.visibility = "visible";
+			mainImageTileTankBody.style.visibility = "visible";
+
+      //added by Mike, 20231125
+      mainImageMonster.style.visibility = "visible";
+
+
+
+/*	//removed by Mike, 20231125; TODO: -fix: at times, slow-moving projectile occurs
 	//added by Mike, 20231125
 	mainImageTileProjectileVelocityY+=1;//8;
 	mainImageTileProjectileVelocityX+=1;//8;
-*/	
-	
+*/
+
 	//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);
 
 	if (mainImageTileProjectileStepY<mainImageTileProjectileStepYMax) {
@@ -2269,9 +2288,9 @@ mainImageTileStepX=15; //2;
 		mainImageTileProjectileStepX+=mainImageTileProjectileVelocityX;//++;
 	}
 
-	
-//-----------------------			
-	
+
+//-----------------------
+
 	//		mainImageTilePosX++;
 //		mainImageTilePosX--;
 //		mainImageTilePosY++;
@@ -2281,20 +2300,20 @@ mainImageTileStepX=15; //2;
 		//autoIdentifyNextDirectionAIPart2Mouse();
 
 
-/*	//edited by Mike, 20231125		
+/*	//edited by Mike, 20231125
 		//edited by Mike, 20230421
 		mainImageTilePosX+=mainImageTileStepX; //horizontal movement;
 */
 		if (arrayKeyPressed[iKEY_D]==true) {
-			mainImageTilePosX+=mainImageTileStepX; //horizontal movement;			
+			mainImageTilePosX+=mainImageTileStepX; //horizontal movement;
 			arrayKeyPressed[iKEY_D]=false;
 		}
 		else if (arrayKeyPressed[iKEY_A]==true) {
-			mainImageTilePosX-=mainImageTileStepX; //horizontal movement;			
-			arrayKeyPressed[iKEY_A]=false;			
+			mainImageTilePosX-=mainImageTileStepX; //horizontal movement;
+			arrayKeyPressed[iKEY_A]=false;
 		}
-		
-/*		
+
+/*
 		mainImageTilePosY+=mainImageTileStepY; //goes downward; vertical
 */
 
@@ -2317,28 +2336,32 @@ mainImageTileStepX=15; //2;
 			mainImageTilePosY=0;
 		}
 
-/*		
+/*
 		mainImageTile.style.left = parseInt(mainImageTile.style.left)+mainImageTilePosX+"px";
-		mainImageTile.style.top = parseInt(mainImageTile.style.top)+mainImageTilePosY+"px";		
+		mainImageTile.style.top = parseInt(mainImageTile.style.top)+mainImageTilePosY+"px";
 */
 /*		//edited by Mike, 20231125
 		mainImageTile.style.left = mainImageTilePosX+"px";
-		mainImageTile.style.top = mainImageTilePosY+"px";		
+		mainImageTile.style.top = mainImageTilePosY+"px";
 */
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
-		
+
 		//added by Mike, 20231125
 		mainImageTileTankBody.style.left = mainImageTile.style.left;
 		mainImageTileTankBody.style.top = mainImageTile.style.top;
-		
+
+    mainImageMonster.style.left = (iHorizontalOffset+mainImageMonsterPosX)+"px";
+    mainImageMonster.style.top = (iVerticalOffsetInnerScreen+mainImageMonsterPosY)+"px";
+
+
 //-----------------------
-			
-			
+
+
 			//added by Mike, 20230427
 			//movement
 			if (bHasFired) {
-			  
+
 			  	mainImageTileProjectile.style.visibility = "visible";
 
 /*
@@ -2349,7 +2372,7 @@ mainImageTileProjectilePosY=mainImageTileProjectilePosY+newMainImageTileProjecti
 */
 
 mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTileProjectilePosY;
-					
+
 					mainImageTileProjectilePosX=parseInt(mainImageTileProjectilePosX)+newMainImageTileProjectilePosX;
 
 
@@ -2361,7 +2384,7 @@ mainImageTileProjectilePosY++;
 
 					//alert("mainImageTileProjectilePosY: "+mainImageTileProjectilePosY);
 
-/*					
+/*
 		mainImageTileProjectile.style.left = (iHorizontalOffset)+mainImageTileProjectilePosX+"px";
 
 		mainImageTileProjectile.style.top = (iVerticalOffsetInnerScreen)+mainImageTileProjectilePosY+"px";
@@ -2370,7 +2393,7 @@ mainImageTileProjectilePosY++;
 
 		mainImageTileProjectile.style.top = mainImageTileProjectilePosY+"px";
 
-		
+
 //alert(iHorizontalOffset);
 //alert(iVerticalOffsetInnerScreen);
 
@@ -2385,7 +2408,7 @@ mainImageTileProjectilePosY++;
 
 //		if (mainImageTileProjectilePosX+iImageFrameWidth>iHorizontalOffset+iStageMaxWidth) {
 
-/*	
+/*
 	//edited by Mike, 20231125; from 20230428; OK; inside stage border;
 		if (mainImageTileProjectilePosX+iImageFrameWidth>iStageMaxWidth) {
 //+iImageFrameWidth
@@ -2395,7 +2418,24 @@ mainImageTileProjectilePosY++;
 				resetProjectile();
 		}
 */
-		
+
+    //added by Mike, 20231125
+/*
+    mainImageMonster.style.left = (iHorizontalOffset+mainImageMonsterPosX)+"px";
+    mainImageMonster.style.top = (iVerticalOffsetInnerScreen+mainImageMonsterPosY)+"px";
+*/
+
+/*
+    mainImageMonsterPosX=parseInt(mainImageMonster.style.left);
+    mainImageMonsterPosY=parseInt(mainImageMonster.style.top);
+*/
+
+//    if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, mainImageMonsterPosX,mainImageMonsterPosY)) {
+    if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, parseInt(mainImageMonster.style.left),parseInt(mainImageMonster.style.top))) {
+        alert("HIT!");
+    }
+
+
 		if (mainImageTileProjectilePosX+iImageFrameWidth>iStageMaxWidth+iHorizontalOffset) {
 //+iImageFrameWidth
 			resetProjectile();
@@ -2404,14 +2444,14 @@ mainImageTileProjectilePosY++;
 				resetProjectile();
 		}
 
-		
+
 //		if (mainImageTileProjectilePosY+iImageFrameHeight>iVerticalOffset+iStageMaxHeight) {
 
 //		if (mainImageTileProjectilePosY+iImageFrameHeight>iStageMaxHeight) {
 //		if (mainImageTileProjectilePosY>iStageMaxHeight) { //+iImageFrameHeight
 
 		//edited by Mike, 20231125
-		if (mainImageTileProjectilePosY+iImageFrameHeight/2>iStageMaxHeight) { 
+		if (mainImageTileProjectilePosY+iImageFrameHeight/2>iStageMaxHeight) {
 			resetProjectile();
 		}
 //		else if (mainImageTileProjectilePosY<0+iVerticalOffset) {
@@ -2420,7 +2460,7 @@ mainImageTileProjectilePosY++;
 		}
 
 
-		
+
 /* //outside stage border;
 		if (mainImageTileProjectilePosX>iStageMaxWidth) {
 			resetProjectile();
@@ -2494,30 +2534,30 @@ mainImageTileProjectilePosY++;
 /* //removed by Mike, 20231125
 		//added by Mike, 20230428
 		mainImageTilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
-		
+
 		//edited by Mike, 20231124
 		//mainImageTilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
-		mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;		
-*/		
+		mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
+*/
 
-/*	//removed by Mike, 20231125		
+/*	//removed by Mike, 20231125
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 */
-		
-/*  //removed by Mike, 20231124		
+
+/*  //removed by Mike, 20231124
 		//added by Mike, 20231121
 		mainImageTile.style.visibility = "hidden";//"visible";
 */
-		
+
 /*
 		setPanelTable.style.left = (iHorizontalOffset+iStageMaxWidth)+"px";
 		setPanelTable.style.top = (iVerticalOffsetInnerScreen)+"px"; //+iStageMaxHeight
 */
 
 			}
-			
-		  }	  
+
+		  }
 	  }
 	  else {
 /*
@@ -2525,8 +2565,8 @@ mainImageTileProjectilePosY++;
 	  	mainImageTile.style.visibility = "hidden";
 		mainImageTileProjectile.style.visibility = "hidden";
 */
-		
-		
+
+
     	//added by Mike, 20221124; removed by Mike, 20221124
     	//iTileBgCount=0;
 
@@ -2611,7 +2651,7 @@ mainImageTileProjectilePosY++;
         iTileBgCount++;
       }
     }
-	
+
 	  }
 
 
@@ -2649,7 +2689,7 @@ mainImageTileProjectilePosY++;
 
 /*	//removed by Mike, 20231124
 		}
-*/		
+*/
 	}
 
 
@@ -3568,27 +3608,27 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
     */
 
 	//added by Mike, 20231124
-	var mainImageTile = document.getElementById("mainImageTileImageId");	
-	mainImageTile.style.visibility = "visible";	
-	
-	//added by Mike, 20231124
-	var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");	
-	mainImageTileTankBody.style.visibility = "visible";	
+	var mainImageTile = document.getElementById("mainImageTileImageId");
+	mainImageTile.style.visibility = "visible";
 
-	
+	//added by Mike, 20231124
+	var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+	mainImageTileTankBody.style.visibility = "visible";
+
+
     if (!bHasFired) {
 
-/*	//edited by Mike, 20231125	
+/*	//edited by Mike, 20231125
     mainImageTileStepY=10;
     mainImageTileStepX=10;
 */
 	mainImageTileProjectileStepY=mainImageTileProjectileVelocityY;
     mainImageTileProjectileStepX=mainImageTileProjectileVelocityX;
-	
-	
+
+
 /*	//removed by Mike, 20231124
     		var mainImageTile = document.getElementById("mainImageTileImageId");
-			
+
 			//added by Mike, 20231124
 			mainImageTile.style.visibility = "visible";
 */
@@ -3671,7 +3711,7 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
     										newMainImageTilePosX=mainImageTileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
     */
 
-/* //edited by Mike, 20232224	
+/* //edited by Mike, 20232224
     mainImageTileProjectileStepY=20;
     mainImageTileProjectileStepX=20;
 */
@@ -3679,7 +3719,7 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 	mainImageTileProjectileVelocityY+=10;//8;
 	mainImageTileProjectileVelocityX+=10;//8;
 
-	
+
 	//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);
 
 	if (mainImageTileProjectileStepY<mainImageTileProjectileStepYMax) {
@@ -3703,8 +3743,8 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 		//added by Mike, 20231125
 		mainImageTileProjectilePosX = mainImageTile.style.left;
 		mainImageTileProjectilePosY = mainImageTile.style.top;
-						
-						
+
+
     					bHasFired=true;
     }
 
@@ -3769,78 +3809,78 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 	function initKeyboardInput() {
 		document.body.onkeydown = function(e){
 			//alert("e.keyCode: "+e.keyCode);
-				
-				//added by Mike, 20221121
-				bIsActionKeyPressed=false;					
 
-				
+				//added by Mike, 20221121
+				bIsActionKeyPressed=false;
+
+
 				//RIGHT ARROW; 39
 				//LEFT ARROW; 37
 				//UP ARROW; 38
 				//DOWN ARROW; 40
 				//alert(e.keyCode);
 
-				
+
 				//OK; //note: unicode keycode, where: key d : 100?
-				//note: auto-accepts keyhold; however, with noticeable delay 
+				//note: auto-accepts keyhold; however, with noticeable delay
 				//solved: via bKeyDownRight = false; et cetera
 				if (e.keyCode==68) { //key d
 			//			alert("dito");
 					arrayKeyPressed[iKEY_D]=true;
 				}
-				else if (e.keyCode==65) { //key a			
-					arrayKeyPressed[iKEY_A]=true;			
+				else if (e.keyCode==65) { //key a
+					arrayKeyPressed[iKEY_A]=true;
 				}
 
 				if (e.keyCode==39) { //key RIGHT
 					arrayKeyPressed[iKEY_D]=true;
 				}
-				else if (e.keyCode==37) { //key LEFT			
-					arrayKeyPressed[iKEY_A]=true;			
+				else if (e.keyCode==37) { //key LEFT
+					arrayKeyPressed[iKEY_A]=true;
 				}
 
-				
+
 /*
-				if (e.keyCode==87) { //key w		
-					arrayKeyPressed[iKEY_W]=true;			
+				if (e.keyCode==87) { //key w
+					arrayKeyPressed[iKEY_W]=true;
 				}
 				else if (e.keyCode==83) { //key s
-					arrayKeyPressed[iKEY_S]=true;			
+					arrayKeyPressed[iKEY_S]=true;
 				}
-*/				
+*/
 
 /*
-				//added by Mike, 20221101		
-				//notes: RIGHT-SIDE BUTTONS to already accept 
+				//added by Mike, 20221101
+				//notes: RIGHT-SIDE BUTTONS to already accept
 				//both capital and small letters
 
 				//RIGHT-SIDE BUTTONS
 				if (e.keyCode==73) { //key i
-					arrayKeyPressed[iKEY_I]=true;		
-					
-					//added by Mike, 20221121
-					bIsActionKeyPressed=true;	
-				}
-				else if (e.keyCode==75) { //key k			
-					arrayKeyPressed[iKEY_K]=true;			
-
-					//added by Mike, 20221121
-					bIsActionKeyPressed=true;	
-				}
-				
-				if (e.keyCode==74) { //key j		
-					arrayKeyPressed[iKEY_J]=true;			
-
-					//added by Mike, 20221121
-					bIsActionKeyPressed=true;	
-				}
-				else if (e.keyCode==76) { //key l
-					arrayKeyPressed[iKEY_L]=true;			
+					arrayKeyPressed[iKEY_I]=true;
 
 					//added by Mike, 20221121
 					bIsActionKeyPressed=true;
-				}				
-*/				
+				}
+				else if (e.keyCode==75) { //key k
+					arrayKeyPressed[iKEY_K]=true;
+
+					//added by Mike, 20221121
+					bIsActionKeyPressed=true;
+				}
+
+				if (e.keyCode==74) { //key j
+					arrayKeyPressed[iKEY_J]=true;
+
+					//added by Mike, 20221121
+					bIsActionKeyPressed=true;
+				}
+				else if (e.keyCode==76) { //key l
+					arrayKeyPressed[iKEY_L]=true;
+
+					//added by Mike, 20221121
+					bIsActionKeyPressed=true;
+				}
+*/
 			}
 
 			//added by Mike, 20220822
@@ -3849,51 +3889,51 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 				if (e.keyCode==68) { //key d
 					//edited by Mike, 20220823
 					//bKeyDownRight=false;
-					arrayKeyPressed[iKEY_D]=false;						
+					arrayKeyPressed[iKEY_D]=false;
 				}
-				else if (e.keyCode==65) { //key a			
-					arrayKeyPressed[iKEY_A]=false;			
+				else if (e.keyCode==65) { //key a
+					arrayKeyPressed[iKEY_A]=false;
 				}
 
 				//added by Mike, 20220823
-				if (e.keyCode==87) { //key w			
-					arrayKeyPressed[iKEY_W]=false;			
+				if (e.keyCode==87) { //key w
+					arrayKeyPressed[iKEY_W]=false;
 				}
-				else if (e.keyCode==83) { //key s			
-					arrayKeyPressed[iKEY_S]=false;			
+				else if (e.keyCode==83) { //key s
+					arrayKeyPressed[iKEY_S]=false;
 				}
-/*				
+/*
 				//added by Mike, 20221101
 				//RIGHT-SIDE BUTTONS
 				if (e.keyCode==73) { //key i
-					arrayKeyPressed[iKEY_I]=false;		
-					
-					//added by Mike, 20221121
-					bIsActionKeyPressed=false;	
-				}
-				else if (e.keyCode==75) { //key k			
-					arrayKeyPressed[iKEY_K]=false;			
+					arrayKeyPressed[iKEY_I]=false;
 
 					//added by Mike, 20221121
-					bIsActionKeyPressed=false;	
+					bIsActionKeyPressed=false;
 				}
-				
-				if (e.keyCode==74) { //key j		
-					arrayKeyPressed[iKEY_J]=false;			
+				else if (e.keyCode==75) { //key k
+					arrayKeyPressed[iKEY_K]=false;
+
+					//added by Mike, 20221121
+					bIsActionKeyPressed=false;
+				}
+
+				if (e.keyCode==74) { //key j
+					arrayKeyPressed[iKEY_J]=false;
 
 					//added by Mike, 20221121
 					bIsActionKeyPressed=false;
 				}
 				else if (e.keyCode==76) { //key l
-					arrayKeyPressed[iKEY_L]=false;			
+					arrayKeyPressed[iKEY_L]=false;
 
 					//added by Mike, 20221121
-					bIsActionKeyPressed=false;	
-				}		
-*/				
+					bIsActionKeyPressed=false;
+				}
+*/
 			}
 	}
-  
+
 	//added by Mike, 20230423
 	function initMouseInput() {
 		//reference: https://stackoverflow.com/questions/70827887/detect-click-vs-touch-in-javascript;
@@ -4252,7 +4292,7 @@ function autoUpdatePuzzleTileImage() {
   			//alert(iTileBgCount);
       }
     }
-	
+
 	bHasClosedPuzzle=true;
   }
 
@@ -4260,7 +4300,8 @@ function autoUpdatePuzzleTileImage() {
 		//added by Mike, 20231111
 		//TODO: -verify: this
 		var myCanvas = document.getElementById("myCanvasId");
-		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px"; 		iHorizontalOffset=myCanvas.getBoundingClientRect().x;
+		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px";
+    iHorizontalOffset=myCanvas.getBoundingClientRect().x;
 
 			//alert(iRowCountMax);
 
@@ -4695,7 +4736,7 @@ window.addEventListener("orientationchange", function() {
 
 		//added by Mike, 20231125
 		initKeyboardInput();
-		
+
 		//added by Mike, 202301107
 		initTouchInput();
 
@@ -4750,13 +4791,17 @@ opting to put assets folder in "html_application" folder instead
 
 		<img id="mainImageTileImageTankBodyId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
-
 		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
-		
+
 		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
 		<!-- added by Mike, 20231121 -->
 		<img id="mouseInputImageId" class="ImageMouseInput" src="assets/images/inputImage.png">
+
+    <!-- added by Mike, 20231125 -->
+    <img id="mainImageMonster0" class="ImageTileFrame1" src="assets/images/inputImage.png">
+
+
 
 <!--
 		<img id="explosionEffectImageId" class="ImageExplosion" src="assets/images/effects.png">
@@ -4816,7 +4861,7 @@ opting to put assets folder in "html_application" folder instead
 
 	<div id="textScoreDivId" class="DivTextScore">0</div>
 
-	
+
 <!--
 	<div id="stepCountStatusDivId" class="DivStepCountStatus">0</div>
 -->
