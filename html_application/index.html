@@ -488,6 +488,41 @@
 				z-index: 90; /*4;*/
 			}
 
+			div.DivStepCountStatusShadow
+			{
+				position: absolute;
+/*							
+				background-color: #000000aa;
+*/							
+				/*color: #ffffff;*/ /* white */
+				
+				color: #6d4e22; /* brown */
+
+				/*opacity: 50%;*/
+
+				font-size: 32px;/*42px;*/
+				font-weight: bold;
+				
+/* //edited by Mike, 20230130							
+				padding: 10px;
+*/
+				/* //changed from margin */
+				/* //edited by Mike, 20230130 
+				margin: 10px;
+				*/
+				padding: 0px;
+
+
+				visibility: hidden;							
+				
+				/* put above image tiles;
+					below step count button
+				*/							
+				z-index: 90; /*4;*/
+			}												
+
+						
+
 			div.DivTextEnter
 			{
 				position: absolute;
@@ -676,6 +711,12 @@ var iTargetScore=10000;//0;
 //added by Mike, 20231124
 var bIsIncreasingScore=true;
 
+//added by Mike, 20231125
+var iTextScoreDivWidthOffset=5;
+var iTextScoreDivWidth;
+var iTextScoreShadowDivWidthOffset=1;
+
+		
 //added by Mike, 20231124
 //note: acceleration
 
@@ -1102,13 +1143,26 @@ var iOffsetHeight=0;
 		//added by Mike, 20231123
 		var textScoreDiv = document.getElementById("textScoreDivId");
 
-		var iTextScoreDivWidthOffset=5;
-		var iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;
+//		var iTextScoreDivWidthOffset=5;
+		iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;
 
 		textScoreDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextScoreDivWidth+"px";
 		textScoreDiv.style.top= (0)+"px";
 
+		//added by Mike, 20231125
+		var textScoreShadowDiv = document.getElementById("textScoreShadowDivId");
 
+		//var iTextScoreShadowDivWidthOffset=1;
+		//var iTextScoreShadowDivWidth = (textScoreShadowDiv.clientWidth)+iTextScoreShadowDivWidthOffset;
+		
+		textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
+
+		
+		//textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset+"px";
+		
+		//textScoreShadowDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextScoreDivWidth+iTextScoreShadowDivWidthOffset+"px";
+
+		textScoreShadowDiv.style.top = textScoreDiv.style.top;
 
 /*
 		setAnimImageFrameWidthText.value=iImageFrameWidth;
@@ -1593,10 +1647,16 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//note: correct sequence to cause correct OUTPUT
 		textScoreDiv.innerHTML = iScore;
 
-		var iTextScoreDivWidthOffset=5;
-		var iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;
+//		var iTextScoreDivWidthOffset=5;
+		iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;
 
+		//added by Mike, 20231125
+		var textScoreShadowDiv = document.getElementById("textScoreShadowDivId");
+		textScoreShadowDiv.innerHTML = iScore;
 
+		//textScoreShadowDiv.style.left = textScoreDiv.style.left;
+		textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
+		
 /*
 		//var setAnimImageFrameXButton = document.getElementById("buttonSetAnimImageFrameXId");
 		var setPanelTable = document.getElementById("tableSetPanelId");
@@ -1918,6 +1978,8 @@ mainImageTileStepX=15; //2;
 			//added by Mike, 20231123
 			else {
 				textScoreDiv.style.visibility = "visible";
+				//added by Mike, 20231125
+				textScoreShadowDiv.style.visibility = "visible";				
 			}
 
 /*
@@ -2174,6 +2236,9 @@ mainImageTileStepX=15; //2;
 			//added by Mike, 20231124
 			myCanvasContext.fillStyle = "#000000"; //black background//stage
 			myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
+			
+			//added by Mike, 20231125
+			textScoreDivId.style.color="white";
 			
 	  
 			var mainImageTile = document.getElementById("mainImageTileImageId");
@@ -4747,10 +4812,12 @@ opting to put assets folder in "html_application" folder instead
 	<div id="textEnterDivId" class="DivTextClickStart">START</div>
 
 
+	<div id="textScoreShadowDivId" class="DivStepCountStatusShadow">0</div>
+
 	<div id="textScoreDivId" class="DivTextScore">0</div>
 
+	
 <!--
-	<div id="stepCountStatusShadowDivId" class="DivStepCountStatusShadow">0</div>
 	<div id="stepCountStatusDivId" class="DivStepCountStatus">0</div>
 -->
 
