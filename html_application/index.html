@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231124; from 20231123
+' @date updated: 20231125; from 20231124
 ' @website: www.usbong.ph
 '
 '
@@ -679,11 +679,14 @@ var bIsIncreasingScore=true;
 //added by Mike, 20231124
 //note: acceleration
 
-var mainImageTileProjectileStepYMax=20;
-var mainImageTileProjectileStepXMax=20;
+var mainImageTileProjectileStepYMax=20;//20;
+var mainImageTileProjectileStepXMax=20;//20;
 
-var mainImageTileProjectileStepYMin=4;//12;
-var mainImageTileProjectileStepXMin=4;//12;
+var mainImageTileProjectileVelocityY=20;//4;//1;
+var mainImageTileProjectileVelocityX=20;//4;//1;
+
+var mainImageTileProjectileStepYMin=mainImageTileProjectileVelocityY;//4;//12;
+var mainImageTileProjectileStepXMin=mainImageTileProjectileVelocityX;//4;//12;
 
 var mainImageTileProjectileStepY=mainImageTileProjectileStepYMin;//20;
 var mainImageTileProjectileStepX=mainImageTileProjectileStepYMin;//20;
@@ -1190,7 +1193,15 @@ var iOffsetHeight=0;
 		//TO-DO: -update: newMainImage... step
 		newMainImageTileProjectilePosX=0; //mainImageTileProjectilePosX;
 		newMainImageTileProjectilePosY=0; //mainImageTileProjectilePosY;
+		
+//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);		
 
+/*		//removed by Mike, 20231125
+		//added by Mike, 20231125
+		mainImageTileProjectileVelocityY=4;
+		mainImageTileProjectileVelocityX=4;
+*/
+		
 		mainImageTileProjectile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 
 		mainImageTileProjectile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
@@ -1203,7 +1214,7 @@ var iOffsetHeight=0;
 		
 		//added by Mike, 20231124
 		mainImageTileProjectileStepY=mainImageTileProjectileStepYMin;//20;
-		mainImageTileProjectileStepX=mainImageTileProjectileStepYMin;//20;
+		mainImageTileProjectileStepX=mainImageTileProjectileStepXMin;//20;
 		
 
 		//alert("dito");
@@ -2350,6 +2361,25 @@ mainImageTileStepX=15; //2;
 			mainImageTile.style.visibility = "visible";	
 			mainImageTileTankBody.style.visibility = "visible";	
 
+
+/*	//removed by Mike, 20231125; TODO: -fix: at times, slow-moving projectile occurs			
+	//added by Mike, 20231125
+	mainImageTileProjectileVelocityY+=1;//8;
+	mainImageTileProjectileVelocityX+=1;//8;
+*/	
+	
+	//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);
+
+	if (mainImageTileProjectileStepY<mainImageTileProjectileStepYMax) {
+		mainImageTileProjectileStepY+=mainImageTileProjectileVelocityY;//++;
+	}
+
+	if (mainImageTileProjectileStepX<mainImageTileProjectileStepXMax) {
+		mainImageTileProjectileStepX+=mainImageTileProjectileVelocityX;//++;
+	}
+
+	
+			
 			
 			//added by Mike, 20230427
 			//movement
@@ -3566,9 +3596,14 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 	
     if (!bHasFired) {
 
+/*	//edited by Mike, 20231125	
     mainImageTileStepY=10;
     mainImageTileStepX=10;
-
+*/
+	mainImageTileProjectileStepY=mainImageTileProjectileVelocityY;
+    mainImageTileProjectileStepX=mainImageTileProjectileVelocityX;
+	
+	
 /*	//removed by Mike, 20231124
     		var mainImageTile = document.getElementById("mainImageTileImageId");
 			
@@ -3658,14 +3693,21 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
     mainImageTileProjectileStepY=20;
     mainImageTileProjectileStepX=20;
 */
+/* //removed by Mike, 20231125
+	mainImageTileProjectileVelocityY+=10;//8;
+	mainImageTileProjectileVelocityX+=10;//8;
+
+	
+	//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);
+
 	if (mainImageTileProjectileStepY<mainImageTileProjectileStepYMax) {
-		mainImageTileProjectileStepY+=6;//++;
+		mainImageTileProjectileStepY+=mainImageTileProjectileVelocityY;//++;
 	}
 
 	if (mainImageTileProjectileStepX<mainImageTileProjectileStepXMax) {
-		mainImageTileProjectileStepX+=6;//++;
+		mainImageTileProjectileStepX+=mainImageTileProjectileVelocityX;//++;
 	}
-
+*/
 
     newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
 
