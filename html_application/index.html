@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231125; from 20231124
+' @date updated: 20231126; from 20231125
 ' @website: www.usbong.ph
 '
 '
@@ -1361,8 +1361,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//edited by Mike, 20231123
 		//iTargetScore=iScore+iObjectCountForTileType*(parseInt(sCurrHitTileTypeInput)+1)*777;
 
-    //added by Mike, 20231124
-    bIsIncreasingScore=true;
+    //edited by Mike, 20231126; from 20231124
+//    bIsIncreasingScore=true;
 
 		//OK;
 		if (iTargetScore==iScore) {
@@ -1676,17 +1676,24 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//added by Mike, 20230315
 		var animDirectionSelectedIndex = document.getElementById("selectAnimDirectionId").selectedIndex;
 */
-		//added by Mike, 20230313
-		//reference: https://www.w3schools.com/tags/canvas_fillrect.asp;
-		//last accessed: 2020911
-		var myCanvas = document.getElementById("myCanvasId");
-		var myCanvasContext = myCanvas.getContext("2d");
 
+    //added by Mike, 20230313
+    //reference: https://www.w3schools.com/tags/canvas_fillrect.asp;
+    //last accessed: 2020911
+    var myCanvas = document.getElementById("myCanvasId");
+    var myCanvasContext = myCanvas.getContext("2d");
+    //myCanvasContext.clearRect(0, 0, iStageMaxWidth, iStageMaxHeight)
+
+    myCanvasContext.fillStyle = "#f3f3f3"; //"#f9f9f9"; //"#f3f3f3"; //"#ffffff"; //white background//stage
+    myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
+
+
+/* //edited by Mike, 20231125
+    if (!bHasClosedPuzzle) {
 		//myCanvasContext.clearRect(0, 0, iStageMaxWidth, iStageMaxHeight);
 
 		//myCanvasContext.fillStyle = "#000000"; //black; //"#ababab"; //"rgb(128,89,27)"; //"#604122"; //"blue";
 
-		if (!bHasClosedPuzzle) {
 			//myCanvasContext.fillStyle = "#c5c5c5"; //gray
 			//edited by Mike, 20231119; from 20231116
 			myCanvasContext.fillStyle = "#ffffff"; //white background//stage
@@ -1696,6 +1703,11 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 			myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
 		}
+    else {
+      myCanvasContext.fillStyle = "#000000"; //black background//stage
+			myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
+    }
+*/
 
 //added by Mike, 20231105
 
@@ -2259,16 +2271,22 @@ mainImageTileStepX=15; //2;
 				closePuzzle();
 			}
 
+/* //removed by Mike, 20231126
+      var myCanvas = document.getElementById("myCanvasId");
+  		var myCanvasContext = myCanvas.getContext("2d");
+
       //added by Mike, 20231125; from 20231124
 			myCanvasContext.fillStyle = "#000000"; //black background//stage
 			myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
-
+*/
 
 			mainImageTile.style.visibility = "visible";
 			mainImageTileTankBody.style.visibility = "visible";
 
       //added by Mike, 20231125
-      mainImageMonster.style.visibility = "visible";
+      if (mainImageMonster.style.visibility!="hidden") {
+        mainImageMonster.style.visibility = "visible";
+      }
 
 
 
@@ -2432,7 +2450,8 @@ mainImageTileProjectilePosY++;
 
 //    if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, mainImageMonsterPosX,mainImageMonsterPosY)) {
     if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, parseInt(mainImageMonster.style.left),parseInt(mainImageMonster.style.top))) {
-        alert("HIT!");
+//        alert("HIT!");
+      mainImageMonster.style.visibility="hidden";
     }
 
 
@@ -3047,6 +3066,9 @@ mainImageTileProjectilePosY++;
         //OK
 //        alert("HIT!");
 			bIsPuzzleTileTargetHit=true;
+
+      //added by Mike, 20231126
+      bIsIncreasingScore=true;
 
 			//removed by Mike, 20231120
 			//setExplosionEffectPosition(iTileBgCount);
