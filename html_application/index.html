@@ -676,6 +676,18 @@ var iTargetScore=10000;//0;
 //added by Mike, 20231124
 var bIsIncreasingScore=true;
 
+//added by Mike, 20231124
+//note: acceleration
+
+var mainImageTileProjectileStepYMax=20;
+var mainImageTileProjectileStepXMax=20;
+
+var mainImageTileProjectileStepYMin=4;//12;
+var mainImageTileProjectileStepXMin=4;//12;
+
+var mainImageTileProjectileStepY=mainImageTileProjectileStepYMin;//20;
+var mainImageTileProjectileStepX=mainImageTileProjectileStepYMin;//20;
+
 
 //added by Mike, 20231124
 //note: parameters
@@ -863,10 +875,13 @@ var iOffsetHeight=0;
 	//added by Mike, 20230427
 	var mainImageTileProjectilePosX=0;
 	var mainImageTileProjectilePosY=0;
+
+/*	//removed by Mike, 20231124	
 	//edited by Mike, 20230418
 	var mainImageTileProjectileStepX=2;//0; //2;
 	var mainImageTileProjectileStepY=2;//0; //2;
-
+*/
+	
 	//edited by Mike, 20230314
 /*
 	const iStageMaxWidth=160*2; //160;
@@ -1185,6 +1200,11 @@ var iOffsetHeight=0;
 
 		//added by Mike, 20230428
 		iMainImageTileStepAngle=0;
+		
+		//added by Mike, 20231124
+		mainImageTileProjectileStepY=mainImageTileProjectileStepYMin;//20;
+		mainImageTileProjectileStepX=mainImageTileProjectileStepYMin;//20;
+		
 
 		//alert("dito");
 	}
@@ -1310,7 +1330,10 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 //		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
 	
 		mainImageTile.style.objectPosition = "-" + 192 + "px -" + 192 + "px";
-	
+
+		//added by Mike, 20231124
+		mainImageTileProjectile.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
+		
 
 		//added by Mike, 20230427
 		mainImageTileProjectilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
@@ -1759,15 +1782,16 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		//myCanvasContext.fillStyle = "#000000"; //black; //"#ababab"; //"rgb(128,89,27)"; //"#604122"; //"blue";
 
-		//myCanvasContext.fillStyle = "#c5c5c5"; //gray
-		//edited by Mike, 20231119; from 20231116
-		myCanvasContext.fillStyle = "#ffffff"; //white background//stage
-		//myCanvasContext.fillStyle = "#8dff6e"; //light green background//stage
+		if (!bHasClosedPuzzle) {
+			//myCanvasContext.fillStyle = "#c5c5c5"; //gray
+			//edited by Mike, 20231119; from 20231116
+			myCanvasContext.fillStyle = "#ffffff"; //white background//stage
+			//myCanvasContext.fillStyle = "#8dff6e"; //light green background//stage
 
-		//myCanvasContext.fillStyle = "#1c640b"; //dark green background//stage
+			//myCanvasContext.fillStyle = "#1c640b"; //dark green background//stage
 
-		myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
-
+			myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
+		}
 
 //added by Mike, 20231105
 
@@ -2118,7 +2142,6 @@ mainImageTileStepX=15; //2;
 				mainImageTile.style.objectPosition=(iDefaultAnimationImageX-(0))+"px "+(iDefaultAnimationImageY-(iAnimImageFrameCount*iImageFrameHeight))+"px";
 				
 				mainImageTileTankBody.style.objectPosition=(iDefaultAnimationImageX-(0))+"px "+(iDefaultAnimationImageY-(iAnimImageFrameCount*iImageFrameHeight))+"px";
-													
 											
 			}
 			//AnimImageDirection_HORIZONTAL
@@ -2310,6 +2333,11 @@ mainImageTileStepX=15; //2;
   			textStatusDiv.style.visibility="visible";
       }
       else {
+			//added by Mike, 20231124
+			myCanvasContext.fillStyle = "#000000"; //black background//stage
+			myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
+			
+	  
 			var mainImageTile = document.getElementById("mainImageTileImageId");
 			
 			var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
@@ -3626,8 +3654,17 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
     										newMainImageTilePosX=mainImageTileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
     */
 
+/* //edited by Mike, 20232224	
     mainImageTileProjectileStepY=20;
     mainImageTileProjectileStepX=20;
+*/
+	if (mainImageTileProjectileStepY<mainImageTileProjectileStepYMax) {
+		mainImageTileProjectileStepY+=6;//++;
+	}
+
+	if (mainImageTileProjectileStepX<mainImageTileProjectileStepXMax) {
+		mainImageTileProjectileStepX+=6;//++;
+	}
 
 
     newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
