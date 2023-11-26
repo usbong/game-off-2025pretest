@@ -12,6 +12,8 @@ http://store.usbong.ph/server/html_application/index.html
 
 <img src="https://github.com/usbong/game-off-2023/blob/main/screenshots/usbongGameOff2023V20231120T1547.png" width="60%">
 
+3) https://masarapmabuhay.itch.io/game-off-2023-prototype3
+
 ## Select Software Development Productivity Tools
 
 1) https://notepad-plus-plus.org/downloads/ (Windows)
