@@ -124,6 +124,8 @@
 /*
 			padding: -10px;
 */
+      visibility: hidden;
+
 			border: 1px dotted gray;
 
 			z-index: -1;
@@ -667,7 +669,6 @@ var bIsPuzzleDone=false;
 
 var bHasClosedPuzzle=false;
 
-
 //added by Mike, 20231124
 var bIsBossBattleDone=false;
 
@@ -688,6 +689,8 @@ var iInputDelayCount=iInputDelayCountMax;
 //added by Mike, 20231122
 var bHasViewedHowToPlayGuide=false;
 
+//added by Mike, 20231116
+var bIsStillUsingItchScreen=false;
 
 //added by Mike, 20231111
 //reference: https://github.com/usbong/tugon/blob/main/mainLinux.cpp;
@@ -991,12 +994,18 @@ var iOffsetHeight=0;
 	var iStageMaxWidth=640;
 	var iStageMaxHeight=360; //480
 
-	var iHorizontalOffset=0;
+//	var iHorizontalOffset=0;
 	var iVerticalOffset=0;
 
 	//note: for INNER SCREEN
-	iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
-	iVerticalOffsetInnerScreen=0;
+//edited by Mike, 20231126; itch.io; screen.width appears to cause incorrect output;
+//due to itch.io window top-left at 0;
+//iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
+iHorizontalOffset=0;
+
+//edited by Mike, 20231126
+iVerticalOffsetInnerScreen=0;
+//iVerticalOffsetInnerScreen=10;
 
 /*
 	//added by Mike, 20230312
@@ -1143,8 +1152,26 @@ var iOffsetHeight=0;
 
 		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px";
 
+    //alert(screen.width);
+
     //removed by Mike, 20231126
 		//iHorizontalOffset=myCanvas.getBoundingClientRect().x;
+    //iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
+    iHorizontalOffset=0;
+
+    myCanvas.style.left=iHorizontalOffset+"px";
+
+/*
+    //added by Mike, 20231126
+//    document.addEventListener("fullscreenchange", function() {
+    object.onfullscreenchange = function(){
+
+////      output.innerHTML = "fullscreenchange event fired!";
+////      alert("DITO");
+
+	    iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
+    };
+*/
 
     //added by Mike, 20231126
     var myCanvasTwo = document.getElementById("myCanvasTwoId");
@@ -1666,6 +1693,26 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 
 	function myUpdateFunction() {
+//    alert(window.getfullscreen());
+
+/*
+    //alert(window.getfullscreen);
+    if (window.getfullscreen!=undefined) {
+      alert(window.getfullscreen);
+    }
+*/
+   //alert(screen.width);
+/*
+   if (screen.width!==1280) {
+     alert(screen.width);
+   }
+*/
+
+/*iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
+*/
+//iHorizontalOffset=0;
+
+
 		var mainImageTile = document.getElementById("mainImageTileImageId");
 
 		//added by Mike, 20231124
@@ -1942,12 +1989,28 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 
 	myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+iShakeOffsetHeight+"px";
+/*
+  if (bIsStillUsingItchScreen) {
+    iHorizontalOffset=0;
+    myCanvas.style.left=iHorizontalOffset+"px";
+  }
+  else {
+    iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
+    myCanvas.style.left=iHorizontalOffset+"px";
+  }
+*/
 
+  iHorizontalOffset=myCanvas.getBoundingClientRect().x+iShakeOffsetWidth;
+
+
+/*  //removed by Mike, 20231126; itch.io
   //edited by Mike, 20231126
   //iHorizontalOffset=myCanvas.getBoundingClientRect().x+iShakeOffsetWidth;
   //note: for INNER SCREEN
 	iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2+iShakeOffsetWidth;
   myCanvas.style.left = iHorizontalOffset+"px";
+*/
+//  myCanvas.style.left = iHorizontalOffset+"px";
 
   //added by Mike, 20231126
   myCanvasTwo.style.top = myCanvas.style.top;
@@ -2724,7 +2787,8 @@ mainImageTileProjectilePosY++;
 	  	mainImageTile.style.visibility = "hidden";
 		mainImageTileProjectile.style.visibility = "hidden";
 */
-
+      //added by Mike, 20231126
+      myCanvas.style.visibility="visible";
 
     	//added by Mike, 20221124; removed by Mike, 20221124
     	//iTileBgCount=0;
@@ -4113,26 +4177,68 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 			//last accessed: 20221122
 			switch(event.pointerType) {
 				case 'mouse':
+        //note: ZOOM function causes position ERROR via screenX
+        var iXPos = event.clientX;//screenX;
+
+        //note: screenY includes BROWSER address bar, et cetera;
+        var iYPos = event.pageY; //screenY;
+
+/*
+        //edited by Mike, 20230423
+        alert("iXPos: "+iXPos);
+        alert("iYPos: "+iYPos);
+*/
+
 				  //added by Mike, 20231122
 				  if (bHasPressedStart) {
 					//alert(">");
-					if (!bHasViewedHowToPlayGuide) {
-						//alert(">>>>>");
-						var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
+  					if (!bHasViewedHowToPlayGuide) {
+  						//alert(">>>>>");
+  						var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
 
-						howToPlayGuideImage.style.visibility = "hidden";
+  						howToPlayGuideImage.style.visibility = "hidden";
 
-						bHasViewedHowToPlayGuide=true;
+  						bHasViewedHowToPlayGuide=true;
 
-						return;
-					}
+  						return;
+  					}
 				  }
 				  else {
 					  //added by Mike, 20231119
 					  bHasPressedStart=true;
+/*
+            var myCanvas = document.getElementById("myCanvasId");
+            iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
+            myCanvas.style.left=iHorizontalOffset+"px";
+*/
 
+            //added by Mike, 20231126
+  //          alert(iXPos);
+/*
+            if (iXPos>300) {
+////              var myCanvas = document.getElementById("myCanvasId");
+////              iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
+////              myCanvas.style.left=iHorizontalOffset+"px";
+            }
+            else {
+              bIsStillUsingItchScreen=true; //not itch.io full screen;
+            }
+*/
 					  return;
 				  }
+
+
+/*
+          alert(iXPos);
+          //935+/-; itch.io fullscreen button
+          if ((iXPos>925) && (iXPos<945)){
+//          if (iXPos==930){
+
+                        var myCanvas = document.getElementById("myCanvasId");
+                        iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
+                        myCanvas.style.left=iHorizontalOffset+"px";
+          }
+*/
 
 /*
           //TODO: -add: this
@@ -4153,17 +4259,8 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
   					return;
   				}
 */
-					//note: ZOOM function causes position ERROR via screenX
-					var iXPos = event.clientX;//screenX;
 
-					//note: screenY includes BROWSER address bar, et cetera;
-					var iYPos = event.pageY; //screenY;
 
-/*
-					//edited by Mike, 20230423
-					alert("iXPos: "+iXPos);
-					alert("iYPos: "+iYPos);
-*/
 
 					//added by Mike, 20231107
 					processResultFromInput(iXPos, iYPos);
@@ -4463,11 +4560,15 @@ function autoUpdatePuzzleTileImage() {
 		//TODO: -verify: this
 		var myCanvas = document.getElementById("myCanvasId");
 		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px";
+
+/*  //removed by Mike, 20231126
     //edited by Mike, 20231126
     //iHorizontalOffset=myCanvas.getBoundingClientRect().x;
     //note: for INNER SCREEN
   	iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2+iShakeOffsetWidth;
+
     myCanvas.style.left = iHorizontalOffset+"px";
+*/
 
 
     //added by Mike, 20231126
@@ -4923,6 +5024,7 @@ window.addEventListener("orientationchange", function() {
 
 
   </script>
+
   <body id="myBodyId" onload="onLoad();">
 
 	<canvas id="myCanvasId" class="myCanvas">
