@@ -162,7 +162,7 @@
 
 			clip: rect(0px,64px,64px,0px);
 
-			visibility: visible;
+			visibility: hidden; /*visible;*/
 		}
 
 
@@ -1172,6 +1172,7 @@ var iOffsetHeight=0;
     */
 
 		var mainImageTile = document.getElementById("mainImageTileImageId");
+
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
@@ -1589,6 +1590,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 	//added by Mike, 20231121
 	function executeMouseClickAnimation() {
 		var mouseInputImage = document.getElementById("mouseInputImageId");
+    mouseInputImage.style.visibility="visible";
 
 		if (iMouseAnimationDelayCount==iMouseAnimationDelayCountMax) {
 			iMouseAnimationCount=(iMouseAnimationCount+1)%5; //last hidden
@@ -4512,7 +4514,8 @@ function autoUpdatePuzzleTileImage() {
 			//edited by Mike, 20221127	//arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
 /*			if (bHasPressedStart) {
 */
-			   arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
+         //removed by Mike 20231126
+			   //arrayPuzzleTileCountId[iTileBgCount].style.visibility="visible";
 /*
 			}
 */
