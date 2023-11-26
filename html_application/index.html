@@ -673,6 +673,7 @@ var bIsBossBattleDone=false;
 
 //added by Mike, 20231126
 var bIsMonsterBossHit=false;
+var iBossLife=50;
 
 //added by Mike, 20231111
 var bIsActionKeyPressed=false;
@@ -1545,6 +1546,11 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 	function setExplosionEffectPosition(iTileBgCountInput) {
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
 
+    //added by Mike, 20231126
+    if (explosionEffectImage.style.visibility=="visible") {
+      return;
+    }
+
 		explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
 
 		explosionEffectImage.style.visibility="visible";
@@ -1557,6 +1563,28 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		explosionEffectImage.style.top = parseInt(arrayPuzzleTileCountId[iTileBgCountInput].style.top,10)-iImageExplosionEffectAnimationHeight/2;
 	}
+
+  //added by Mike, 20231126
+  function setMonsterExplosionEffectPosition(iInputX, iInputY) {
+    var explosionEffectImage = document.getElementById("explosionEffectImageId");
+
+    //added by Mike, 20231126
+    if (explosionEffectImage.style.visibility=="visible") {
+      return;
+    }
+
+    explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+
+    explosionEffectImage.style.visibility="visible";
+
+    iExplosionEffectAnimationDelayCount=iExplosionEffectAnimationDelayCountMax;
+
+    iExplosionEffectAnimationCount=-1; //0;
+
+    explosionEffectImage.style.left = iInputX-iImageExplosionEffectAnimationWidth/2;
+
+    explosionEffectImage.style.top = iInputY-iImageExplosionEffectAnimationHeight/2;
+  }
 
 	//added by Mike, 20231121
 	function executeMouseClickAnimation() {
@@ -2431,6 +2459,18 @@ mainImageTileStepX=15; //2;
 
       if (iAnimationCount==1) {
         bIsMonsterBossHit=false;
+        iBossLife--;
+/*
+alert("iMonsterBossTileWidth: "+iMonsterBossTileWidth);
+alert("iMonsterBossTileHeight: "+iMonsterBossTileHeight);
+*/
+//        setMonsterExplosionEffectPosition(parseInt(mainImageMonsterBoss.style.left)+iMonsterBossTileWidth/2,parseInt(mainImageMonsterBoss.style.top)+iMonsterBossTileHeight/2);
+//        setMonsterExplosionEffectPosition(parseInt(mainImageMonsterBoss.style.left)+32,parseInt(mainImageMonsterBoss.style.top)+32);
+        setMonsterExplosionEffectPosition(parseInt(mainImageMonsterBoss.style.left)+iMonsterBossTileWidth/4,parseInt(mainImageMonsterBoss.style.top)+iMonsterBossTileHeight/4);
+
+        if (iBossLife<=0) {
+            //alert("MISSION COMPLETE!");
+        }
       }
     }
     else {
