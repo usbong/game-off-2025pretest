@@ -100,6 +100,8 @@
 		}
 
 		canvas.myCanvas {
+      position: absolute;
+
 			padding: 0;
 			margin: auto;
 			display: block;
@@ -119,7 +121,9 @@
 				border: 1px solid gray;
 			*/
 
+/*
 			padding: -10px;
+*/
 			border: 1px dotted gray;
 
 			z-index: -1;
@@ -1105,8 +1109,17 @@ var iOffsetHeight=0;
 
 		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px";
 
-		iHorizontalOffset=myCanvas.getBoundingClientRect().x;
+    //removed by Mike, 20231126
+		//iHorizontalOffset=myCanvas.getBoundingClientRect().x;
 
+    //added by Mike, 20231126
+    var myCanvasTwo = document.getElementById("myCanvasTwoId");
+
+		myCanvasTwo.style.top = (iVerticalOffsetInnerScreen+0)+"px";
+
+		//iHorizontalOffset=myCanvasTwo.getBoundingClientRect().x;
+    myCanvasTwo.style.left = iHorizontalOffset+"px";
+    myCanvasTwo.style.visibility="hidden";
 
 
 /*
@@ -1687,6 +1700,15 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
     myCanvasContext.fillStyle = "#f3f3f3"; //"#f9f9f9"; //"#f3f3f3"; //"#ffffff"; //white background//stage
     myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
 
+    //added by Mike, 20231126
+    var myCanvasTwo = document.getElementById("myCanvasTwoId");
+    var myCanvasTwoContext = myCanvasTwo.getContext("2d");
+    //myCanvasContext.clearRect(0, 0, iStageMaxWidth, iStageMaxHeight)
+
+    myCanvasTwoContext.fillStyle = "#000000"; //"#ffffff"; //white background//stage
+    //note: max is 150 for height?...
+    myCanvasTwoContext.fillRect(0, 0, iStageMaxWidth, 120);//iStageMaxHeight/2);
+
 
 /* //edited by Mike, 20231125
     if (!bHasClosedPuzzle) {
@@ -1845,9 +1867,18 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 
 	myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+iShakeOffsetHeight+"px";
-	iHorizontalOffset=myCanvas.getBoundingClientRect().x+iShakeOffsetWidth;
 
-		//added by Mike, 20231123
+  //edited by Mike, 20231126
+  //iHorizontalOffset=myCanvas.getBoundingClientRect().x+iShakeOffsetWidth;
+  //note: for INNER SCREEN
+	iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2+iShakeOffsetWidth;
+  myCanvas.style.left = iHorizontalOffset+"px";
+
+  //added by Mike, 20231126
+  myCanvasTwo.style.top = myCanvas.style.top;
+  myCanvasTwo.style.left = myCanvas.style.left;
+
+
 		textScoreDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextScoreDivWidth+"px";
 		textScoreDiv.style.top= (0)+"px";
 
@@ -2257,6 +2288,7 @@ mainImageTileStepX=15; //2;
 
 			//added by Mike, 20231125
 			textScoreDivId.style.color="white";
+      myCanvasTwo.style.visibility="visible";
 
 /*    //removed by Mike 20231125
 			var mainImageTile = document.getElementById("mainImageTileImageId");
@@ -4323,7 +4355,18 @@ function autoUpdatePuzzleTileImage() {
 		//TODO: -verify: this
 		var myCanvas = document.getElementById("myCanvasId");
 		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px";
-    iHorizontalOffset=myCanvas.getBoundingClientRect().x;
+    //edited by Mike, 20231126
+    //iHorizontalOffset=myCanvas.getBoundingClientRect().x;
+    //note: for INNER SCREEN
+  	iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2+iShakeOffsetWidth;
+    myCanvas.style.left = iHorizontalOffset+"px";
+
+
+    //added by Mike, 20231126
+    var myCanvasTwo = document.getElementById("myCanvasTwoId");
+    myCanvasTwo.style.top = myCanvas.style.top;
+    myCanvasTwo.style.left = myCanvas.style.left;
+
 
 			//alert(iRowCountMax);
 
@@ -4775,6 +4818,10 @@ window.addEventListener("orientationchange", function() {
 
 	<canvas id="myCanvasId" class="myCanvas">
 	</canvas>
+
+  <canvas id="myCanvasTwoId" class="myCanvas">
+	</canvas>
+
 
 <!-- note: using absolute positions; table technique NO EFFECT
 	<table>
