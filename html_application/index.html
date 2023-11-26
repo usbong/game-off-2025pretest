@@ -138,6 +138,25 @@
 			visibility: hidden;
 		}
 
+    .ImageMonsterBoss {
+			position: absolute;
+
+      clip: rect(0px,128px,128px,0px);
+
+      width:512px;
+      height: auto;
+
+			visibility: hidden;
+		}
+
+    .ImageMonster0 {
+      position: absolute;
+
+      clip: rect(0px,64px,64px,0px);
+
+      visibility: hidden;
+    }
+
 		.ImageMouseInput {
 			position: absolute;
 
@@ -652,6 +671,8 @@ var bHasClosedPuzzle=false;
 //added by Mike, 20231124
 var bIsBossBattleDone=false;
 
+//added by Mike, 20231126
+var bIsMonsterBossHit=false;
 
 //added by Mike, 20231111
 var bIsActionKeyPressed=false;
@@ -740,6 +761,11 @@ var mainImageTileProjectileStepX=mainImageTileProjectileStepYMin;//20;
 var mainImageMonsterPosX=0;
 var mainImageMonsterPosY=0;
 
+//added by Mike, 20231126
+var mainImageMonsterBossPosX=500;
+var mainImageMonsterBossPosY=10;
+
+
 //added by Mike, 20231124
 //note: parameters
 var iDefaultAnimationImageX=0;//-32; //default x
@@ -797,6 +823,13 @@ var iPuzzleTileHeight=64;
 //added by Mike, 20230123
 const iPuzzleTileTotalWidthMax=iPuzzleTileWidth*iColumnCountMax;
 const iPuzzleTileTotalHeightMax=iPuzzleTileHeight*iRowCountMax;
+
+//added by Mike, 20231126
+var iMonsterTileWidth=64;
+var iMonsterTileHeight=64;
+
+var iMonsterBossTileWidth=128;
+var iMonsterBossTileHeight=128;
 
 var iBorderOffset=0;
 var iOffsetWidth=0;
@@ -1213,9 +1246,12 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 */
 		//added by Mike, 20231125
 		mainImageTilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
-		mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
+    //edited by Mike, 20231126
+    //mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
+    mainImageTilePosY=iStageMaxHeight-iImageFrameHeight-iImageFrameHeight*0.25;
 
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
+    //edited by Mike, 20231126
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 
 		//added by Mike, 20231124
@@ -1288,6 +1324,11 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		mouseInputImage.style.top = (iVerticalOffsetInnerScreen+iStageMaxHeight+iTextEnterDivHeight/2)+"px";
 
 		mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
+
+    //added by Mike, 20231126
+    mainImageMonsterPosX=iHorizontalOffset+iStageMaxWidth/2-iMonsterTileWidth;
+//    mainImageMonsterPosY=iVerticalOffsetInnerScreen+iStageMaxHeight/2-iMonsterTileWidth;
+    mainImageMonsterPosY=iVerticalOffsetInnerScreen+0-iMonsterTileHeight;
 	}
 
 	//added by Mike, 20231122
@@ -1605,6 +1646,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 
     //added by Mike, 20231125
+    var mainImageMonsterBoss = document.getElementById("mainImageMonsterBoss");
     var mainImageMonster = document.getElementById("mainImageMonster0");
 
 
@@ -1708,6 +1750,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
     myCanvasTwoContext.fillStyle = "#000000"; //"#ffffff"; //white background//stage
     //note: max is 150 for height?...
     myCanvasTwoContext.fillRect(0, 0, iStageMaxWidth, 120);//iStageMaxHeight/2);
+
+    //TODO: -verify: this
+    //myCanvasTwoContext.rotate(20 * Math.PI / 180);
 
 
 /* //edited by Mike, 20231125
@@ -2076,41 +2121,6 @@ mainImageTileStepX=15; //2;
 		}
 
 
-		//added by Mike, 20231125
-		//TODO: -update: this
-
-		//notes: delay before CHANGE in frame
-		//adds max (12) frames before frame update
-		if (iDelayAnimationCountMovementStep<iDelayAnimationCountMovementStepMax) {
-			iDelayAnimationCountMovementStep++;
-		}
-		else {
-			iDelayAnimationCountMovementStep=0;
-
-			//updated: IF using > 2 animating image frames
-
-
-			if (animDirectionSelectedIndex==AnimImageDirection_VERTICAL) {
-				mainImageTile.style.objectPosition=(iDefaultAnimationImageX-(0))+"px "+(iDefaultAnimationImageY-(iAnimImageFrameCount*iImageFrameHeight))+"px";
-
-				mainImageTileTankBody.style.objectPosition=(iDefaultAnimationImageX-(0))+"px "+(iDefaultAnimationImageY-(iAnimImageFrameCount*iImageFrameHeight))+"px";
-
-			}
-			//AnimImageDirection_HORIZONTAL
-			else {
-				mainImageTile.style.objectPosition=(iDefaultAnimationImageX-(iAnimImageFrameCount*iImageFrameWidth))+"px "+(iDefaultAnimationImageY-(0))+"px";
-
-				mainImageTileTankBody.style.objectPosition=(iDefaultAnimationImageX-(iAnimImageFrameCount*iImageFrameWidth))+"px "+(iDefaultAnimationImageY-(0))+"px";
-			}
-
-			if (iAnimImageFrameCount<(iTotalAnimImageFrameCount-1)) {
-				iAnimImageFrameCount++;
-			}
-			else {
-				iAnimImageFrameCount=0;
-			}
-		}
-
 
 /*	//removed by Mike, 20230425
 		mainImageTile.style.left = (iHorizontalOffset)+mainImageTilePosX+"px";
@@ -2320,6 +2330,9 @@ mainImageTileStepX=15; //2;
         mainImageMonster.style.visibility = "visible";
       }
 
+      if (mainImageMonsterBoss.style.visibility!="hidden") {
+        mainImageMonsterBoss.style.visibility = "visible";
+      }
 
 
 /*	//removed by Mike, 20231125; TODO: -fix: at times, slow-moving projectile occurs
@@ -2380,11 +2393,49 @@ mainImageTileStepX=15; //2;
 		}
 
 		if (mainImageTilePosY+iImageFrameHeight>iStageMaxHeight) {
-			mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
+      //edited by Mike, 20231126
+			//mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
+      mainImageTilePosY=iStageMaxHeight-iImageFrameHeight-iImageFrameHeight*0.25;
 		}
 		else if (mainImageTilePosY<0) {
 			mainImageTilePosY=0;
 		}
+
+    //added by Mike, 20231126
+    mainImageMonsterBossPosY+=2;//++;
+
+    if (mainImageMonsterBossPosY+iMonsterBossTileHeight>iStageMaxHeight) {
+			mainImageMonsterBossPosY=iStageMaxHeight-iMonsterBossTileHeight;
+		}
+		else if (mainImageMonsterBossPosY<0) {
+			mainImageMonsterBossPosY=0;
+		}
+
+    //ANIMATION;
+//    mainImageMonsterBoss.style.objectPosition = "-" + 128 + "px -" + 0 + "px";
+
+    //alert(iAnimationDelayCount);
+
+    if (iAnimationDelayCount==iAnimationDelayCountMax) {
+      iAnimationCount=(iAnimationCount+1)%2; //iAnimationCountMax
+      iAnimationDelayCount=0;
+    }
+    else {
+      iAnimationDelayCount++;
+      //bIsMonsterBossHit=false;
+    }
+
+    if (bIsMonsterBossHit) {
+      //alert(iAnimationCount);
+      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iAnimationCount-1) + "px -" + 128 + "px";
+
+      if (iAnimationCount==1) {
+        bIsMonsterBossHit=false;
+      }
+    }
+    else {
+      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iAnimationCount-1) + "px -" + 0 + "px";
+    }
 
 /*
 		mainImageTile.style.left = parseInt(mainImageTile.style.left)+mainImageTilePosX+"px";
@@ -2403,6 +2454,9 @@ mainImageTileStepX=15; //2;
 
     mainImageMonster.style.left = (iHorizontalOffset+mainImageMonsterPosX)+"px";
     mainImageMonster.style.top = (iVerticalOffsetInnerScreen+mainImageMonsterPosY)+"px";
+
+    mainImageMonsterBoss.style.left = (iHorizontalOffset+mainImageMonsterBossPosX)+"px";
+    mainImageMonsterBoss.style.top = (iVerticalOffsetInnerScreen+mainImageMonsterBossPosY)+"px";
 
 
 //-----------------------
@@ -2481,10 +2535,22 @@ mainImageTileProjectilePosY++;
 */
 
 //    if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, mainImageMonsterPosX,mainImageMonsterPosY)) {
+
+//-----------------
+
     if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, parseInt(mainImageMonster.style.left),parseInt(mainImageMonster.style.top))) {
 //        alert("HIT!");
       mainImageMonster.style.visibility="hidden";
     }
+
+    if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, parseInt(mainImageMonsterBoss.style.left),parseInt(mainImageMonsterBoss.style.top))) {
+//        alert("HIT!");
+      //mainImageMonsterBoss.style.visibility="hidden";
+      //added by Mike, 20231126
+      bIsMonsterBossHit=true;
+    }
+
+//-----------------
 
 
 		if (mainImageTileProjectilePosX+iImageFrameWidth>iStageMaxWidth+iHorizontalOffset) {
@@ -4868,7 +4934,8 @@ opting to put assets folder in "html_application" folder instead
 		<img id="mouseInputImageId" class="ImageMouseInput" src="assets/images/inputImage.png">
 
     <!-- added by Mike, 20231125 -->
-    <img id="mainImageMonster0" class="ImageTileFrame1" src="assets/images/inputImage.png">
+    <img id="mainImageMonsterBoss" class="ImageMonsterBoss" src="assets/images/inputImage.png">
+    <img id="mainImageMonster0" class="ImageMonster0" src="assets/images/inputImage.png">
 
 
 
