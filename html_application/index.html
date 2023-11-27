@@ -171,6 +171,27 @@
 */
 			z-index: 20;
 		}
+
+		div.myDivTransitionEffect
+		{
+			position: absolute;
+
+			background-color: black; /*pink;*/
+			
+			padding: 0;
+			margin: auto;
+			display: block;
+
+
+			width: 360px;
+			height: 360px;
+
+
+			visibility: visible; /*hidden;*/
+			z-index: 99;
+			
+			transform: scale(0, 0);
+		}
 		
 
 		.ImageTileFrame1 {
@@ -777,10 +798,18 @@ var iMonsterExplosionEffectAnimationCountMax=5;
 var iMonsterExplosionEffectAnimationDelayCount=0;
 var iMonsterExplosionEffectAnimationDelayCountMax=4;//1;
 
-
 //added by Mike, 20231120
 var iImageExplosionEffectAnimationWidth=64;
 var iImageExplosionEffectAnimationHeight=64;
+
+//added by Mike, 20231127
+var iTransitionRotate=0;
+var iTransitionScale=0;//1;
+var iTransitionDelayCount=0;
+var iTransitionDelayCountMax=20;
+
+var bIsExecutingTransition=false;
+var bIsTransitionFirstPartDone=false;
 
 //added by Mike, 20231121
 var iMouseAnimationCount=-1; //0; //due to immediately +1 in execution;
@@ -1802,7 +1831,142 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		}
 	}
 
+	//added by Mike, 20231127
+	function resetTransitionEffect() {
+		var myDivTransitionEffect = document.getElementById("divTransitionEffectId");
+		
+		iTransitionScale=0; //0.00005;
+		iTransitionRotate=0;
+		iTransitionDelayCount=0;
+				
+		myDivTransitionEffect.style.transform = "rotate("+iTransitionRotate+"deg)"+" scale("+iTransitionScale+","+iTransitionScale+")";	
+				
+		myDivTransitionEffect.style.visibility="visible";
+		
+		bIsExecutingTransition=true;
+		bIsTransitionFirstPartDone=false;
+		
+		//alert("HALLO!!");
+	}
 
+	function executeTransitionEffect() {
+		var myDivTransitionEffect = document.getElementById("divTransitionEffectId");
+		
+//		if (myDivTransitionEffect.style.visibility!=="visible") {
+
+		if (!bIsExecutingTransition) {
+			return;
+		}
+
+		//alert(bIsExecutingTransition);
+		
+		//alert(">>>>>>DITO");
+		
+		//alert(myDivTransitionEffect.style.visibility);
+			
+		//width of transition shape is also iStageMaxHeight;
+		myDivTransitionEffect.style.left=0+iHorizontalOffset+iStageMaxWidth/2-iStageMaxHeight/2+"px";
+		myDivTransitionEffect.style.top=0+iVerticalOffsetInnerScreen+iStageMaxHeight/2-iStageMaxHeight/2+"px";	
+
+		//myDivTransitionEffect.style.visibility="visible";
+		
+		iTransitionRotate=(iTransitionRotate+5)%360;
+		
+		//alert(">>>>>>iTransitionRotate: "+iTransitionRotate);
+		//alert(">>>>>>iTransitionScale: "+iTransitionScale);
+				
+		if (!bIsTransitionFirstPartDone) {		
+			if (iTransitionScale<2) {
+				iTransitionScale+=0.02;//1;
+				
+				//alert("scaling...");
+			}
+			else {
+				//alert("DONE!");
+			
+				iTransitionScale=2;
+				iTransitionRotate=0;
+
+				if (iTransitionDelayCount<iTransitionDelayCountMax) {
+				}
+				else {
+/*				
+					myDivTransitionEffect.style.visibility="hidden";
+					bIsExecutingTransition=false;
+*/					
+					bIsTransitionFirstPartDone=true;				
+					iTransitionDelayCount=0;
+									
+					//added by Mike, 20231127
+					if (!bIsPuzzleDone) {
+						//used when transitioning to puzzle from how to play guide
+						var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");					
+						var mainImageMonster = document.getElementById("mainImageMonster0");
+						
+						howToPlayGuideImage.style.visibility = "hidden";
+									
+						mainImageMonster.style.visibility = "visible";
+					}
+					else {
+					  if (!bIsBossBattleDone) {					
+						if (!bHasClosedPuzzle) {
+							closePuzzle();
+						}
+					
+						var mainImageMonster = document.getElementById("mainImageMonster0");
+						var textScoreDiv = document.getElementById("textScoreDivId");
+						var myCanvasTwo = document.getElementById("myCanvasTwoId");
+						var mainImageTile = document.getElementById("mainImageTileImageId");
+						var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+						 
+						mainImageMonster.style.visibility = "hidden";
+						textScoreDivId.style.color="white";
+						myCanvasTwo.style.visibility="visible";
+						
+						
+						mainImageTile.style.visibility = "visible";
+						mainImageTileTankBody.style.visibility = "visible";
+					  }
+					}
+					
+				}
+				iTransitionDelayCount++;			
+			}
+		}
+		else {
+			if (iTransitionScale>0) {
+				iTransitionScale-=0.02;//0.01;
+/*				
+				if (bIsPuzzleDone) {
+					alert("scaling..."+iTransitionScale);
+				}
+*/				
+			}
+			else {
+			
+				iTransitionScale=0;
+				iTransitionRotate=0;
+
+				if (iTransitionDelayCount<iTransitionDelayCountMax) {
+				}
+				else {
+					myDivTransitionEffect.style.visibility="hidden";
+					bIsExecutingTransition=false;
+					
+					//alert("DITO!!!");
+				}
+				iTransitionDelayCount++;			
+			}
+			
+		}
+		
+	////	myDivTransitionEffect.style.transform = "rotate("+iTransitionRotate+"deg)";
+		
+	////	myDivTransitionEffect.style.transform = "scale("+iTransitionScale+","+iTransitionScale+")";
+
+		myDivTransitionEffect.style.transform = "rotate("+iTransitionRotate+"deg)"+" scale("+iTransitionScale+","+iTransitionScale+")";	
+	}
+	
 	function myUpdateFunction() {
 //    alert(window.getfullscreen());
 
@@ -2039,13 +2203,14 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		iCurrSnowFlakeCountPosY=window.parseInt(Math.random() * iStageMaxHeight)%iStageMaxHeight;
 
-		myDivSnowEffect.style.left=iCurrSnowFlakeCountPosX+"px";
-		myDivSnowEffect.style.top=iCurrSnowFlakeCountPosY+"px";	
+		myDivSnowEffect.style.left=iCurrSnowFlakeCountPosX+iHorizontalOffset+"px";
+		myDivSnowEffect.style.top=iCurrSnowFlakeCountPosY+iVerticalOffsetInnerScreen+"px";	
 
 		myDivSnowEffect.style.visibility="visibility";		
 	}
 	
 
+	
 /* //edited by Mike, 20231125
     if (!bHasClosedPuzzle) {
 		//myCanvasContext.clearRect(0, 0, iStageMaxWidth, iStageMaxHeight);
@@ -2349,13 +2514,14 @@ mainImageTileStepX=15; //2;
 //		if (!bHasPressedStart) {
 
 		if (bHasPressedStart) {
+			
 			titleImage.style.visibility="hidden";
 			bHasViewedTitle=true;
 
 			textEnterDiv.style.visibility="hidden";
 
+			
 			if (!bHasViewedHowToPlayGuide) {
-
 				//added by Mike, 20231122
 				//var mouseInputImage = document.getElementById("mouseInputImageId");
 
@@ -2388,8 +2554,9 @@ mainImageTileStepX=15; //2;
 				//added by Mike, 20231125
 				textScoreShadowDiv.style.visibility = "visible";
 
-        //added by Mike, 20231126
-        mainImageMonster.style.visibility = "visible";
+				//removed by Mike, 20231127
+				//added by Mike, 20231126
+				//mainImageMonster.style.visibility = "visible";
 			}
 
 /*
@@ -2400,7 +2567,13 @@ mainImageTileStepX=15; //2;
 */
 		}
 
-
+		//added by Mike, 20231127
+		executeTransitionEffect();
+/*
+		if (bIsExecutingTransition) {
+			return;
+		}
+*/
 
 		//added by Mike, 20231111
 		if (bIsActionKeyPressed) {
@@ -2579,6 +2752,17 @@ mainImageTileStepX=15; //2;
 
 		//added by Mike, 20231111
 		if (bIsPuzzleDone) {
+/*			
+			//added by Mike, 20231127
+			
+//alert(">>>>");			
+			if (!bIsExecutingTransition) {
+//alert(">>>>>>>>2");			
+			resetTransitionEffect();
+//alert(">>>>>>>>>>>>>>3");			
+
+			}
+*/
 
       //added by Mike, 20231124
       if (bIsBossBattleDone) {
@@ -2608,11 +2792,18 @@ mainImageTileStepX=15; //2;
   			textStatusDiv.style.visibility="visible";
       }
       else {
+	  		//added by Mike, 20231127
+			if (bIsExecutingTransition) {
+				return;
+			}
 
+/* //removed by Mike, 20231127			
 			//added by Mike, 20231125
 			textScoreDivId.style.color="white";
-      myCanvasTwo.style.visibility="visible";
-
+			myCanvasTwo.style.visibility="visible";
+*/
+			
+			
 /*    //removed by Mike 20231125
 			var mainImageTile = document.getElementById("mainImageTileImageId");
 
@@ -2622,10 +2813,13 @@ mainImageTileStepX=15; //2;
       var mainImageMonster = document.getElementById("mainImageMonster0");
 */
 
+/*	  //removed by Mike, 20231127
+
 			if (!bHasClosedPuzzle) {
 				closePuzzle();
 			}
-
+*/
+			
 /* //removed by Mike, 20231126
       var myCanvas = document.getElementById("myCanvasId");
   		var myCanvasContext = myCanvas.getContext("2d");
@@ -2635,17 +2829,23 @@ mainImageTileStepX=15; //2;
 			myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
 */
 
+/*		//removed by Mike, 20231127; to execute transition function
 			mainImageTile.style.visibility = "visible";
 			mainImageTileTankBody.style.visibility = "visible";
+*/
 
+			/*	//removed by Mike, 20231127; TODO: -add: this
       //added by Mike, 20231125
       if (mainImageMonster.style.visibility!="hidden") {
         mainImageMonster.style.visibility = "visible";
       }
+*/	  
 
       if (mainImageMonsterBoss.style.visibility!="hidden") {
         mainImageMonsterBoss.style.visibility = "visible";
       }
+
+
 
 
 /*	//removed by Mike, 20231125; TODO: -fix: at times, slow-moving projectile occurs
@@ -4452,9 +4652,17 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
   						//alert(">>>>>");
   						var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
 
-  						howToPlayGuideImage.style.visibility = "hidden";
-
-  						bHasViewedHowToPlayGuide=true;
+							//removed by Mike, 20231127
+//							howToPlayGuideImage.style.visibility = "hidden";
+							
+							//added by Mike, 20231127
+							if (!bHasViewedHowToPlayGuide) {
+							  if (!bIsExecutingTransition) {
+								resetTransitionEffect();
+							  }
+							}
+							
+							bHasViewedHowToPlayGuide=true;
 
   						return;
   					}
@@ -4527,6 +4735,17 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 
   					//added by Mike, 20231110
   					bIsPuzzleDone = isAutoVerifiedPuzzleDone();
+					
+					//added by Mike, 20231127
+					if (bIsPuzzleDone) {
+						if (!bIsExecutingTransition) {
+							resetTransitionEffect();
+							
+							//added by Mike, 20231127
+							var mainImageMonster = document.getElementById("mainImageMonster0");
+							mainImageMonster.style.visibility = "hidden";
+						}
+					}					
           }
 
 
@@ -5407,7 +5626,9 @@ opting to put assets folder in "html_application" folder instead
 	<div id="divSnowEffectId14" class="myDivSnowEffect"></div>
 -->
 
-	
+	<div id="divTransitionEffectId" class="myDivTransitionEffect"></div>
+
+		
 	<img id="howToPlayGuideImageId" class="ImageHowToPlayGuide" src="assets/images/gameOff2023HowToPlay.png">
 
 	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">
