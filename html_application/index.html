@@ -1663,7 +1663,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
       return;
     }
 
-    explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+	//edited by Mike, 20231127
+    //explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+    explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
 
     explosionEffectImage.style.visibility="visible";
 
@@ -1781,18 +1783,18 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
 
 		if (iMonsterExplosionEffectAnimationCount==0) { //%2
-			explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+			explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
 		}
 		else if (iMonsterExplosionEffectAnimationCount==1) {
-			explosionEffectImage.style.objectPosition = "-" + 128 + "px -" + 0 + "px";
+			explosionEffectImage.style.objectPosition = "-" + 128 + "px -" + 128 + "px";
 			//alert(">>>>");
 		}
 		else if (iMonsterExplosionEffectAnimationCount==2) {
-			explosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + 0 + "px";
+			explosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + 128 + "px";
 			//alert(">>>>");
 		}
 		else if (iMonsterExplosionEffectAnimationCount==3) {
-			explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 0 + "px";
+			explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 128 + "px";
 			//alert(">>>>");
 		}
 		else {
@@ -2717,11 +2719,14 @@ mainImageTileStepX=15; //2;
 
     if (mainImageMonsterBossPosY+iMonsterBossTileHeight>iStageMaxHeight) {
 			mainImageMonsterBossPosY=iStageMaxHeight-iMonsterBossTileHeight;
-			
-			//added by Mike, 20231127
+
+/*			
+			//edited by Mike, 20231127
 			iScore=1;
 			iTargetScore=1;
-			
+*/			
+			iTargetScore=1;
+			bIsIncreasingScore=false;
 		    //setMonsterExplosionEffectPosition(0+iHorizontalOffset+iStageMaxHeight-iMonsterBossTileWidth/2,mainImageMonsterBossPosY+iMonsterBossTileHeight/2);
 			
 			
