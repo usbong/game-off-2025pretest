@@ -130,6 +130,48 @@
 
 			z-index: -1;
 		}
+		
+		canvas.myCanvasSnowEffect {
+			position: absolute;
+
+			padding: 0;
+			margin: auto;
+			display: block;
+
+
+			width: 640px;
+			height: 360px;
+
+			visibility: hidden;
+
+			border: 1px dotted gray;
+
+			z-index: 10;
+		}
+		
+		div.myDivSnowEffect
+		 {
+			position: absolute;
+
+			background-color: white; /*pink;*/
+			
+			padding: 0;
+			margin: auto;
+			display: block;
+
+
+			width: 5px; /*10px;*/
+			height: 5px; /*10px;*/
+
+
+			visibility: visible;
+/*
+
+			border: 1px dotted gray;
+*/
+			z-index: 20;
+		}
+		
 
 		.ImageTileFrame1 {
 			position: absolute;
@@ -757,6 +799,12 @@ var bIsIncreasingScore=true;
 var iTextScoreDivWidthOffset=5;
 var iTextScoreDivWidth;
 var iTextScoreShadowDivWidthOffset=1;
+
+//added by Mike, 20231127
+var iCurrSnowFlakeCount=0;
+var iCurrSnowFlakeCountMax=20;
+var iCurrSnowFlakeCountPosX=0;
+var iCurrSnowFlakeCountPosY=0;
 
 
 //added by Mike, 20231124
@@ -1883,6 +1931,31 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
     myCanvasContext.fillStyle = "#f3f3f3"; //"#f9f9f9"; //"#f3f3f3"; //"#ffffff"; //white background//stage
     myCanvasContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
 
+	//added by Mike, 20231127
+/*	
+	myCanvasContext.beginPath();
+	myCanvasContext.lineWidth = "6";
+	myCanvasContext.strokeStyle = "#ffffff";
+	myCanvasContext.rect(0, 0, 1, 1);
+	myCanvasContext.stroke();
+*/
+/*
+	for (iCurrSnowFlakeCount=0; iCurrSnowFlakeCount<iCurrSnowFlakeCountMax; iCurrSnowFlakeCount++) {
+////		var iCurrSnowFlakeCountPosX=0;
+////		var iCurrSnowFlakeCountPosY=0;
+
+		iCurrSnowFlakeCountPosX=window.parseInt(Math.random() * iStageMaxWidth)%iStageMaxWidth;
+
+		iCurrSnowFlakeCountPosY=window.parseInt(Math.random() * iStageMaxHeight)%iStageMaxHeight;
+
+		myCanvasContext.beginPath();
+		myCanvasContext.lineWidth = "3";
+		myCanvasContext.strokeStyle = "#ffffff";
+		myCanvasContext.rect(iCurrSnowFlakeCountPosX, iCurrSnowFlakeCountPosY, 1, 1);
+		myCanvasContext.stroke();
+	}
+*/	
+	
     //added by Mike, 20231126
     var myCanvasTwo = document.getElementById("myCanvasTwoId");
     var myCanvasTwoContext = myCanvasTwo.getContext("2d");
@@ -1923,6 +1996,53 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
     //TODO: -verify: this
     //myCanvasTwoContext.rotate(20 * Math.PI / 180);
 
+/*	//removed by Mike, 20231127
+	var myCanvasSnowEffect = document.getElementById("myCanvasSnowEffectId");
+    var myCanvasContextSnowEffect = myCanvas.getContext("2d");
+    //myCanvasContext.clearRect(0, 0, iStageMaxWidth, iStageMaxHeight)
+
+    myCanvasContextSnowEffect.fillStyle = "#000000"; //black    
+	myCanvasContextSnowEffect.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
+	
+
+	for (iCurrSnowFlakeCount=0; iCurrSnowFlakeCount<iCurrSnowFlakeCountMax; iCurrSnowFlakeCount++) {
+		
+////		var iCurrSnowFlakeCountPosX=0;
+////		var iCurrSnowFlakeCountPosY=0;
+
+		iCurrSnowFlakeCountPosX=window.parseInt(Math.random() * iStageMaxWidth)%iStageMaxWidth;
+
+		iCurrSnowFlakeCountPosY=window.parseInt(Math.random() * iStageMaxHeight)%iStageMaxHeight;
+
+		myCanvasContextSnowEffect.beginPath();
+		myCanvasContextSnowEffect.lineWidth = "3";
+		myCanvasContextSnowEffect.strokeStyle = "#000000"; //"#ffffff";
+		myCanvasContextSnowEffect.rect(iCurrSnowFlakeCountPosX, iCurrSnowFlakeCountPosY, 1, 1);
+		myCanvasContextSnowEffect.stroke();
+	}
+	
+	myCanvasSnowEffect.style.visibility="visibility";
+*/
+	
+	//iCurrSnowFlakeCountMax
+	for (iCurrSnowFlakeCount=0; iCurrSnowFlakeCount<10; iCurrSnowFlakeCount++) {
+	
+		var myDivSnowEffect = document.getElementById("divSnowEffectId"+iCurrSnowFlakeCount);
+	
+/*		
+		var iCurrSnowFlakeCountPosX=0;
+		var iCurrSnowFlakeCountPosY=0;
+*/
+		iCurrSnowFlakeCountPosX=window.parseInt(Math.random() * iStageMaxWidth)%iStageMaxWidth;
+
+		iCurrSnowFlakeCountPosY=window.parseInt(Math.random() * iStageMaxHeight)%iStageMaxHeight;
+
+		myDivSnowEffect.style.left=iCurrSnowFlakeCountPosX+"px";
+		myDivSnowEffect.style.top=iCurrSnowFlakeCountPosY+"px";	
+
+		myDivSnowEffect.style.visibility="visibility";		
+	}
+	
 
 /* //edited by Mike, 20231125
     if (!bHasClosedPuzzle) {
@@ -5161,10 +5281,10 @@ window.addEventListener("orientationchange", function() {
 	<canvas id="myCanvasId" class="myCanvas">
 	</canvas>
 
+				
   <canvas id="myCanvasTwoId" class="myCanvas">
 	</canvas>
-
-
+			
 <!-- note: using absolute positions; table technique NO EFFECT
 	<table>
 	<tr>
@@ -5199,7 +5319,6 @@ incorrect output on Safari; macOS;
 
 opting to put assets folder in "html_application" folder instead
 -->
-
 		<img id="mainImageTileImageTankBodyId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
 		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
@@ -5251,19 +5370,45 @@ opting to put assets folder in "html_application" folder instead
   <img id="explosionEffectToMonsterImageId" class="ImageExplosion" src="assets/images/effects.png">
 
 
-
-
 	<!-- added by Mike, 20221119 -->
 	<div id="divPuzzleTileImageTargetBorderId" class="Image32x32TileTargetBorder"></div>
 
 	<!-- added by Mike, 20221121 -->
 	<div id="divPuzzleTileImageSpaceBorderId" class="Image32x32TileSpaceBorder"></div>
 
+
+<!-- removed by Mike, 20231127
+	<canvas id="myCanvasSnowEffectId" class="myCanvasSnowEffect">
+	</canvas>
+ -->
+ 
+	<div id="divSnowEffectId0" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId1" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId2" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId3" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId4" class="myDivSnowEffect"></div>
+
+	<div id="divSnowEffectId5" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId6" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId7" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId8" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId9" class="myDivSnowEffect"></div>
+
+	<!--
+	<div id="divSnowEffectId10" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId11" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId12" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId13" class="myDivSnowEffect"></div>
+	<div id="divSnowEffectId14" class="myDivSnowEffect"></div>
+-->
+
+	
 	<img id="howToPlayGuideImageId" class="ImageHowToPlayGuide" src="assets/images/gameOff2023HowToPlay.png">
 
 	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">
 
 
+	
 	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
 
 	<!-- PRESS ENTER; PRESS START -->
