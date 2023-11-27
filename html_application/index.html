@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231126; from 20231125
+' @date updated: 20231127; from 20231126
 ' @website: www.usbong.ph
 '
 '
@@ -716,6 +716,13 @@ var iAnimationCount=-1;//0; start at -1
 var iAnimationCountMax=5;
 var iAnimationDelayCount=10; //0
 var iAnimationDelayCountMax=10;
+
+//added by Mike, 20231127
+var iMonsterAnimationCount=-1;//0; start at -1
+var iMonsterAnimationCountMax=5;
+var iMonsterAnimationDelayCount=10; //0
+var iMonsterAnimationDelayCountMax=10;
+
 
 //added by Mike, 20231119
 var iExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
@@ -2594,18 +2601,18 @@ mainImageTileStepX=15; //2;
 
     //alert(iAnimationDelayCount);
 
-    if (iAnimationDelayCount==iAnimationDelayCountMax) {
-      iAnimationCount=(iAnimationCount+1)%2; //iAnimationCountMax
-      iAnimationDelayCount=0;
+    if (iMonsterAnimationDelayCount==iMonsterAnimationDelayCountMax) {
+      iMonsterAnimationCount=(iMonsterAnimationCount+1)%2; //iAnimationCountMax
+      iMonsterAnimationDelayCount=0;
     }
     else {
-      iAnimationDelayCount++;
+      iMonsterAnimationDelayCount++;
       //bIsMonsterBossHit=false;
     }
 
     if (bIsMonsterBossHit) {
       //alert(iAnimationCount);
-      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iAnimationCount-1) + "px -" + 128 + "px";
+      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iMonsterAnimationCount) + "px -" + 128 + "px";
 
       if (iAnimationCount==1) {
         bIsMonsterBossHit=false;
@@ -2624,7 +2631,7 @@ alert("iMonsterBossTileHeight: "+iMonsterBossTileHeight);
       }
     }
     else {
-      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iAnimationCount-1) + "px -" + 0 + "px";
+      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iMonsterAnimationCount) + "px -" + 0 + "px";
     }
 
 /*
@@ -2879,16 +2886,16 @@ mainImageTileProjectilePosY++;
       myCanvas.style.visibility="visible";
 
       //added by Mike, 20231126
-      if (iAnimationDelayCount==iAnimationDelayCountMax) {
-        iAnimationCount=(iAnimationCount+1)%2; //iAnimationCountMax
-        iAnimationDelayCount=0;
+      if (iMonsterAnimationDelayCount==iMonsterAnimationDelayCountMax) {
+        iMonsterAnimationCount=(iMonsterAnimationCount+1)%2; //iAnimationCountMax
+        iMonsterAnimationDelayCount=0;
       }
       else {
-        iAnimationDelayCount++;
+        iMonsterAnimationDelayCount++;
       }
 
       //alert(iAnimationCount);
-      mainImageMonster.style.objectPosition = "-" + 64*(iAnimationCount-1) + "px -" + 0 + "px";
+      mainImageMonster.style.objectPosition = "-" + 64*(iMonsterAnimationCount) + "px -" + 0 + "px";
 
 
 
