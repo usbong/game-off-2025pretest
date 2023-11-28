@@ -242,7 +242,7 @@
 
 			visibility: hidden;
 
-			z-index: 4;
+			z-index: 10; /*4;*/
 		}
 
 		.ImageHowToPlayGuide {
@@ -551,7 +551,12 @@
 /*	//edited by Mike, 20221213
 				background-color: #000000aa;
 */
+/*
 				background-color: #00000099;
+				
+*/
+				background-color: transparent;
+
 				color: #eeeeee; /*#ffffff;*/ /*#ffbd00;*/ /* gold */
 
 				/*
@@ -576,6 +581,30 @@
 				z-index: 90; /*4;*/
 			}
 
+			div.DivTextStatusBackground
+			{
+				position: absolute;
+
+				background-color: #00000099;
+				border: 3px solid #ffffff;				
+				border-radius: 4px;
+
+				font-size: 30px; /*16px;*/
+				font-weight: bold;
+
+				padding: 10px;
+				
+				width: 120px; 
+				height: 120px; 
+
+				visibility: hidden;
+
+				/* added by Mike, 20230128;
+					put above tile images */
+				z-index: 80; /*4;*/
+			}
+
+			
 			div.DivStepCountStatusShadow
 			{
 				position: absolute;
@@ -796,7 +825,8 @@ var iExplosionEffectAnimationDelayCountMax=4;//1;
 var iMonsterExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iMonsterExplosionEffectAnimationCountMax=5;
 var iMonsterExplosionEffectAnimationDelayCount=0;
-var iMonsterExplosionEffectAnimationDelayCountMax=4;//1;
+//edited by Mike, 20231128
+var iMonsterExplosionEffectAnimationDelayCountMax=2;//4;//1;
 
 //added by Mike, 20231128
 var iTransitionFromPuzzleToBossDelayCount=0;
@@ -804,7 +834,7 @@ var iTransitionFromPuzzleToBossDelayCountMax=150;//100;
 
 //added by Mike, 20231128
 var iMonsterBossAttackDelayCount=0;
-var iMonsterBossAttackDelayCountMax=150;
+var iMonsterBossAttackDelayCountMax=120;
 
 //added by Mike, 20231120
 var iImageExplosionEffectAnimationWidth=64;
@@ -891,6 +921,13 @@ var iCurrTextCharacterCount=0;
 var iCurrTextCharacterCountMax=0;
 var sCurrText="";
 
+//added by Mike, 20231128
+var iTitleExplosionEffectDelayCount=0;
+var iTitleExplosionEffectDelayCountMax=200;
+
+//added by Mike, 20231128
+var iTitlePressStartEffectDelayCount=0;
+var iTitlePressStartEffectDelayCountMax=5;
 
 /*
 //added by Mike, 20221108
@@ -1441,6 +1478,10 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 			textEnterDiv.style.visibility="visible";
 
+			iTransitionScale=1;
+			
+			textEnterDiv.style.transform = "scale("+iTransitionScale+","+iTransitionScale+")";	
+			
 
 		var mouseInputImage = document.getElementById("mouseInputImageId");
 /*
@@ -1459,6 +1500,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
     mainImageMonsterPosX=iHorizontalOffset+iStageMaxWidth/2-iMonsterTileWidth;
 //    mainImageMonsterPosY=iVerticalOffsetInnerScreen+iStageMaxHeight/2-iMonsterTileWidth;
     mainImageMonsterPosY=iVerticalOffsetInnerScreen+0-iMonsterTileHeight;
+		
+		//added by Mike, 20231128
+		setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/2);
 	}
 
 	//added by Mike, 20231122
@@ -1702,7 +1746,7 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
     if (explosionEffectImage.style.visibility=="visible") {
       return;
     }
-
+	
 	//edited by Mike, 20231127
     //explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
     explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
@@ -1718,6 +1762,36 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
     explosionEffectImage.style.top = iInputY-iImageExplosionEffectAnimationHeight/2;
   }
 
+  
+  	//added by Mike, 20231128
+	function executeEnterClickAnimation() {	
+		var textEnterDiv = document.getElementById("textEnterDivId");
+
+			
+		if (iTitlePressStartEffectDelayCount<iTitlePressStartEffectDelayCountMax) {
+			iTitlePressStartEffectDelayCount++;
+			return;	
+		}
+		else {
+			iTitlePressStartEffectDelayCount=0;
+		}
+		
+		//textEnterDiv.innerHTML = "START";
+		//textEnterDiv.innerHTML = "<font color='red'>START</font>";
+
+		//alert(iTransitionScale);
+		
+		if (iTransitionScale<1) {
+			iTransitionScale+=0.1
+		}
+		else if (iTransitionScale>0) {
+			iTransitionScale-=0.1
+		}
+
+		textEnterDiv.style.transform = "scale("+iTransitionScale+","+iTransitionScale+")";	
+	}
+
+	
 	//added by Mike, 20231121
 	function executeMouseClickAnimation() {
 		var mouseInputImage = document.getElementById("mouseInputImageId");
@@ -1731,6 +1805,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 			/*
 			explosionEffectImage.style.visibility="visible";
 			*/
+			
+			//setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/2);
 		}
 		else {
 			iMouseAnimationDelayCount++;
@@ -1839,6 +1915,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		}
 		else {
 			explosionEffectImage.style.visibility="hidden";
+			//added by Mike, 20231128
+			//iTitleExplosionEffectDelayCount=0;
 		}
 	}
 
@@ -2038,6 +2116,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
 
 		var textStatusDiv = document.getElementById("textStatusDivId");
+		var textStatusBackgroundDiv = document.getElementById("textStatusBackgroundDivId");
+
 		var textEnterDiv = document.getElementById("textEnterDivId");
 
 		//added by Mike, 20231119
@@ -2511,10 +2591,61 @@ mainImageTileStepX=15; //2;
 		//added by Mike, 20231121
 		if (!bHasViewedTitle) {
 			titleImage.style.visibility="visible";
+			
+			mainImageMonster.style.visibility = "visible";
 
 			//added by Mike, 20231121
 			executeMouseClickAnimation();
+			
+			//added by Mike, 20231128
+			explosionEffectImage = document.getElementById("explosionEffectToMonsterImageId");
+	
+/*	
+			//textEnterDiv.innerHTML = "START";
+			//textEnterDiv.innerHTML = "<font color='red'>START</font>";
 
+			if (iTransitionScale<1) {
+				iTransitionScale+=0.2
+			}
+			else if (iTransitionScale>0) {
+				iTransitionScale-=0.2
+			}
+
+			textEnterDiv.style.transform = "scale("+iTransitionScale+","+iTransitionScale+")";	
+*/	
+			executeEnterClickAnimation();
+			
+			//alert(iMonsterExplosionEffectAnimationDelayCount);
+/*			
+			if (iMonsterExplosionEffectAnimationDelayCount>=iMonsterExplosionEffectAnimationDelayCountMax) {
+			}
+			else {
+*/
+if (explosionEffectImage.style.visibility=="hidden") {
+	if (iTitleExplosionEffectDelayCount<iTitleExplosionEffectDelayCountMax) {				
+		iTitleExplosionEffectDelayCount++;
+	}
+	else {	
+		//alert("HERE!!!: "+iTitleExplosionEffectDelayCount);
+		
+		var titleImage = document.getElementById("titleImageId");
+
+		var iTitleImageWidth = (titleImage.clientWidth);
+		var iTitleImageHeight = (titleImage.clientHeight);
+
+		//remove this; otherwise, error in output
+		//explosionEffectImage.style.visibility="visible";	
+		
+//		setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/2);
+	
+		setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/3);
+	
+		
+		iTitleExplosionEffectDelayCount=0;
+	}
+}
+
+			
 /* //removed by Mike, 20231121
 //TODO: -update: position; in TITLE SCREEN
 			//edited by Mike, 20231121
@@ -2810,6 +2941,21 @@ mainImageTileStepX=15; //2;
 			var sText = "The <font color='#393da2'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city.<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
 
 			//var sCurrText="";
+
+			//var textStatusBackgroundDiv = document.getElementById("textStatusBackgroundDivId");
+/*			
+  			textStatusBackgroundDiv.innerHTML = sText;
+		  	
+			var iTextStatusBackgroundDivWidth = (textStatusBackgroundDiv.clientWidth);
+  			var iTextStatusBackgroundDivHeight = textStatusBackgroundDiv.clientHeight);
+			
+			textStatusBackgroundDiv.innerHTML = "";
+			
+			textStatusBackgroundDiv.style.width=iTextStatusBackgroundDivWidth;
+			textStatusBackgroundDiv.style.height=iTextStatusBackgroundDivHeight;
+*/			
+			
+			
 			
 			iCurrTextCharacterCountMax=sText.length;
 			
@@ -2843,7 +2989,16 @@ mainImageTileStepX=15; //2;
   			
   			textStatusDiv.style.visibility="visible";
 			//added by Mike, 20231128
-			mainImageTileProjectile.visibility="hidden";
+			mainImageTileProjectile.style.visibility="hidden";
+			
+			//added by Mike, 20231128
+			textStatusBackgroundDiv.style.top=textStatusDiv.style.top;
+			textStatusBackgroundDiv.style.left=0+iStageMaxWidth*0.15;//textStatusDiv.style.left;//0;
+			textStatusBackgroundDiv.style.visibility="visible";
+			
+			textStatusBackgroundDiv.style.width=iStageMaxWidth*0.65;//23*16;//("The PEST was destroyed.").length;//textStatusDiv.style.width;
+			textStatusBackgroundDiv.style.height=iStageMaxHeight*0.6;//textStatusDiv.style.height;
+
       }
       else {
 	  		//added by Mike, 20231127
@@ -5741,7 +5896,9 @@ opting to put assets folder in "html_application" folder instead
 
 	
 	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
+	<div id="textStatusBackgroundDivId" class="DivTextStatusBackground"></div>
 
+	
 	<!-- PRESS ENTER; PRESS START -->
 	<div id="textEnterDivId" class="DivTextClickStart">START</div>
 
