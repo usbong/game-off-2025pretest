@@ -201,6 +201,8 @@
   		clip: rect(0px,64px,64px,0px);
 
 			visibility: hidden;
+			
+			z-index: 2;
 		}
 
     .ImageMonsterBoss {
@@ -212,6 +214,8 @@
       height: auto;
 
 			visibility: hidden;
+			
+			z-index: 2;
 		}
 
     .ImageMonster0 {
@@ -278,6 +282,23 @@
 			z-index: 10;
 		}
 
+		.ImageBossBattleBg {
+			position: absolute;
+
+			text-align: center;
+			line-height: 32px;
+
+			visibility: hidden;
+
+			width: 600px;
+			height: auto;
+
+			object-fit: contain;
+			
+			z-index: 1;
+		}
+
+		
 		.ButtonSet, .TextInputSet {
 			position: relative; /*absolute;*/
 			font-size: 20px;
@@ -2024,14 +2045,18 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 						var myCanvasTwo = document.getElementById("myCanvasTwoId");
 						var mainImageTile = document.getElementById("mainImageTileImageId");
 						var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+
+						var bossBattleBgImage = document.getElementById("bossBattleBgImageId");
+												
 						 
 						mainImageMonster.style.visibility = "hidden";
 						textScoreDivId.style.color="white";
 						myCanvasTwo.style.visibility="visible";
-						
-						
+												
 						mainImageTile.style.visibility = "visible";
 						mainImageTileTankBody.style.visibility = "visible";
+						
+						bossBattleBgImage.style.visibility = "visible";
 					  }
 					}
 					
@@ -2101,6 +2126,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		//added by Mike, 20230427
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
+		
+		//added by Mike, 20231128
+		var bossBattleBgImage = document.getElementById("bossBattleBgImageId");
 
 
     //added by Mike, 20231125
@@ -2317,6 +2345,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		myDivSnowEffect.style.visibility="visibility";		
 	}
 	
+	//added by Mike, 20231128
+	bossBattleBgImage.style.left=0+iHorizontalOffset+"px";
+	bossBattleBgImage.style.top=0+iVerticalOffsetInnerScreen+iStageMaxHeight*0.2+"px";	
 
 	
 /* //edited by Mike, 20231125
@@ -5893,6 +5924,7 @@ opting to put assets folder in "html_application" folder instead
 
 	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">
 
+	<img id="bossBattleBgImageId" class="ImageBossBattleBg" src="assets/images/bossBattleBg.png">
 
 	
 	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
