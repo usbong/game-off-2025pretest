@@ -552,16 +552,16 @@
 				background-color: #000000aa;
 */
 				background-color: #00000099;
-				color: #ffffff; /*#ffbd00;*/ /* gold */
+				color: #eeeeee; /*#ffffff;*/ /*#ffbd00;*/ /* gold */
 
-				border: 3px solid #ffffff;
+				/*
+				border: 3px solid #ffffff;				
 				border-radius: 4px;
-
-
+*/
 
 				/*opacity: 50%;*/
 
-				font-size: 16px;
+				font-size: 30px; /*16px;*/
 				font-weight: bold;
 
 /* //edited by Mike, 20230130
@@ -737,7 +737,7 @@ var bIsBossBattleDone=false;
 
 //added by Mike, 20231126
 var bIsMonsterBossHit=false;
-var iBossLife=50;
+var iBossLife=1;//50;
 
 //added by Mike, 20231111
 var bIsActionKeyPressed=false;
@@ -886,7 +886,10 @@ var iMouseInputImageWidth=64;
 var iMouseInputImageHeight=64;
 
 
-
+//added by Mike, 20231128
+var iCurrTextCharacterCount=0;
+var iCurrTextCharacterCountMax=0;
+var sCurrText="";
 
 
 /*
@@ -2797,13 +2800,34 @@ mainImageTileStepX=15; //2;
   			//alert("CONGRATULATIONS!");
 
   			//added by Mike, 20231111
-  			var sText = "CONGRATULATIONS!";
+  			//var sText = "CONGRATULATIONS!";
+			//OK
+  			//var sText = "CONGRATULATIONS!<br/>HALLO!";
+//  			var sText = "MISSION COMPLETE!<br/><br/>COMPLETION TIME:";
 
-  			textStatusDiv.innerHTML = sText;
+  			//var sText = "The <font color='purple'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city.<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
+			
+			var sText = "The <font color='#393da2'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city.<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
+
+			//var sCurrText="";
+			
+			iCurrTextCharacterCountMax=sText.length;
+			
+			//include last character
+//			if (iCurrTextCharacterCount<iCurrTextCharacterCountMax) {
+			if (iCurrTextCharacterCount<=iCurrTextCharacterCountMax) {
+				sCurrText=sText.substring(0,iCurrTextCharacterCount);
+			}
+			iCurrTextCharacterCount++;
+
+  			textStatusDiv.innerHTML = sCurrText;//sText;
 
   			//alert(sText.length);
   			var iTextStatusDivWidth = (textStatusDiv.clientWidth);
   			var iTextStatusDivHeight = (textStatusDiv.clientHeight);
+			
+			//added by Mike, 20231128
+			var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
 
   			//TODO: -update: this
@@ -2813,9 +2837,13 @@ mainImageTileStepX=15; //2;
   				//textStatusDiv.style.left = 0+iHorizontalOffset+iOffsetWidth+"px";
 
   			//iOffsetHeight
-  			textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px";
-
+  			//textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px";
+  			//textStatusDiv.style.top = 0+"px";
+			textStatusDiv.style.top = 0+(iStageMaxHeight*0.10)+"px";
+  			
   			textStatusDiv.style.visibility="visible";
+			//added by Mike, 20231128
+			mainImageTileProjectile.visibility="hidden";
       }
       else {
 	  		//added by Mike, 20231127
@@ -3018,17 +3046,30 @@ mainImageTileStepX=15; //2;
 
       if (iAnimationCount==1) {
         bIsMonsterBossHit=false;
-        iBossLife--;
+        
+		//edited by Mike, 20231128
+		//iBossLife--;
+		if (iScore==1) {
+			iBossLife--;
+		}
+		
 /*
 alert("iMonsterBossTileWidth: "+iMonsterBossTileWidth);
 alert("iMonsterBossTileHeight: "+iMonsterBossTileHeight);
 */
 //        setMonsterExplosionEffectPosition(parseInt(mainImageMonsterBoss.style.left)+iMonsterBossTileWidth/2,parseInt(mainImageMonsterBoss.style.top)+iMonsterBossTileHeight/2);
 //        setMonsterExplosionEffectPosition(parseInt(mainImageMonsterBoss.style.left)+32,parseInt(mainImageMonsterBoss.style.top)+32);
-        setMonsterExplosionEffectPosition(parseInt(mainImageMonsterBoss.style.left)+iMonsterBossTileWidth/4,parseInt(mainImageMonsterBoss.style.top)+iMonsterBossTileHeight/4);
+
+		//edited by Mike, 20231128
+//		if (mainImageMonsterBoss.style.visibility!="hidden") {
+		if (!bIsBossBattleDone) {
+			setMonsterExplosionEffectPosition(parseInt(mainImageMonsterBoss.style.left)+iMonsterBossTileWidth/4,parseInt(mainImageMonsterBoss.style.top)+iMonsterBossTileHeight/4);
+		}
 
         if (iBossLife<=0) {
             //alert("MISSION COMPLETE!");
+			mainImageMonsterBoss.style.visibility="hidden";
+			bIsBossBattleDone=true;
         }
       }
     }
@@ -3142,15 +3183,18 @@ mainImageTileProjectilePosY++;
       mainImageMonster.style.visibility="hidden";
     }
 
-    if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, parseInt(mainImageMonsterBoss.style.left),parseInt(mainImageMonsterBoss.style.top))) {
-//        alert("HIT!");
-      //mainImageMonsterBoss.style.visibility="hidden";
-      //added by Mike, 20231126
-      bIsMonsterBossHit=true;
+	//edited by Mike, 20231128
+	if (!bIsBossBattleDone) {
+		if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, parseInt(mainImageMonsterBoss.style.left),parseInt(mainImageMonsterBoss.style.top))) {
+	//        alert("HIT!");
+		  //mainImageMonsterBoss.style.visibility="hidden";
+		  //added by Mike, 20231126
+		  bIsMonsterBossHit=true;
 
-      //added by Mike, 20231126
-      resetProjectile();
-    }
+		  //added by Mike, 20231126
+		  resetProjectile();
+		}
+	}
 
 //-----------------
 
