@@ -225,6 +225,29 @@
 
       visibility: hidden;
     }
+	
+	 .ImageMainSoldier {
+			position: absolute;
+/*
+			width: 768px;
+			height: 256px;
+			
+			object-fit: contain;
+
+			clip: rect(0px,64px,64px,0px);
+*/
+			visibility: hidden;
+			
+			z-index: 2;
+		}
+
+	 .ImageBossBattleBgPart2 {
+			position: absolute;
+			visibility: hidden;
+			
+			z-index: 2;
+		}
+		
 
 		.ImageMouseInput {
 			position: absolute;
@@ -918,6 +941,8 @@ var iCurrSnowFlakeCountMax=20;
 var iCurrSnowFlakeCountPosX=0;
 var iCurrSnowFlakeCountPosY=0;
 
+//added by Mike, 20231129
+var iSoldierAnimationScale=0;
 
 //added by Mike, 20231124
 //note: acceleration
@@ -973,6 +998,11 @@ var iTitleExplosionEffectDelayCountMax=200;
 //added by Mike, 20231128
 var iTitlePressStartEffectDelayCount=0;
 var iTitlePressStartEffectDelayCountMax=5;
+
+//added by Mike, 20231129
+var ihowToPlayGuideImageFrame2DelayCount=0;
+var ihowToPlayGuideImageFrame2DelayCountMax=8;
+
 
 /*
 //added by Mike, 20221108
@@ -2177,13 +2207,20 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 					//added by Mike, 20231127
 					if (!bIsPuzzleDone) {
 						//used when transitioning to puzzle from how to play guide
-						var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");					
+						var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");		
+						//added by Mike, 20231129
+						var howToPlayGuideImageFrame2 = document.getElementById("howToPlayGuideImageFrame2Id");
+
+						
 						var mainImageMonster = document.getElementById("mainImageMonster0");
 						
 						//added by Mike, 20231128
 						var textScoreDiv = document.getElementById("textScoreDivId");
 						
 						howToPlayGuideImage.style.visibility = "hidden";
+						
+						//added by Mike, 20231129
+						howToPlayGuideImageFrame2.style.visibility = "hidden";
 									
 						mainImageMonster.style.visibility = "visible";
 						
@@ -2203,7 +2240,12 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 						//added by Mike, 20231129
 						var bossBattleBgImage = document.getElementById("bossBattleBgImageId");			
+
+						//added by Mike, 20231129
+						var bossBattleBgImagePart2 = document.getElementById("bossBattleBgImagePart2Id");		
+						var mainImageSoldier = document.getElementById("mainImageSoldierId");			
 												
+						mainImageSoldier.style.visibility = "hidden";
 						 
 						mainImageMonster.style.visibility = "hidden";
 						textScoreDivId.style.color="white";
@@ -2214,6 +2256,11 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 						
 						bossBattleBgImage.style.visibility = "visible";
+						bossBattleBgImagePart2.style.visibility = "visible";
+						
+						bossBattleBgImagePart2.style.left = 0+"px"; 
+						bossBattleBgImagePart2.style.top = 0+iStageMaxHeight-bossBattleBgImagePart2.clientHeight+"px";
+		
 						
 						//added by Mike, 20231129
 						//setCityExplosionEffectPosition(0,0);
@@ -2302,6 +2349,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
     var mainImageMonsterBoss = document.getElementById("mainImageMonsterBoss");
     var mainImageMonster = document.getElementById("mainImageMonster0");
 
+	//added by Mike, 20231129
+	 var mainImageSoldier = document.getElementById("mainImageSoldierId");
 
 
     	//added by Mike, 20231124
@@ -2330,6 +2379,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
 		//added by Mike, 20231122
 		var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
+
+		//added by Mike, 20231129
+		var howToPlayGuideImageFrame2 = document.getElementById("howToPlayGuideImageFrame2Id");
 
 
 		//added by Mike, 20231123
@@ -2892,7 +2944,24 @@ if (explosionEffectImage.style.visibility=="hidden") {
 				mouseInputImage.style.visibility="hidden";
 
 				howToPlayGuideImage.style.visibility = "visible";
+				
+				//added by Mike, 20231129
+				//howToPlayGuideImageFrame2.style.visibility = "visible";
 
+				if (ihowToPlayGuideImageFrame2DelayCount<ihowToPlayGuideImageFrame2DelayCountMax) {
+					ihowToPlayGuideImageFrame2DelayCount++;
+				}
+				else {
+					ihowToPlayGuideImageFrame2DelayCount=0;
+
+					if (howToPlayGuideImageFrame2.style.visibility == "visible") {
+						howToPlayGuideImageFrame2.style.visibility = "hidden";
+					}
+					else {
+						howToPlayGuideImageFrame2.style.visibility = "visible";
+					}
+				}
+				
 				var iHowToPlayGuideImageWidth = (howToPlayGuideImage.clientWidth);
 
 				var iHowToPlayGuideImageHeight = (howToPlayGuideImage.clientHeight);
@@ -2901,6 +2970,11 @@ if (explosionEffectImage.style.visibility=="hidden") {
 
 				howToPlayGuideImage.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iHowToPlayGuideImageWidth/2 +"px";
 
+				//added by Mike, 20231129
+				howToPlayGuideImageFrame2.style.top = howToPlayGuideImage.style.top;
+
+				howToPlayGuideImageFrame2.style.left = howToPlayGuideImage.style.left;
+				
 				return;
 
 /*
@@ -3267,12 +3341,19 @@ textStatusBackgroundDiv.style.width=iStageMaxWidth*0.75;//23*16;//("The PEST was
       }
 */	  
 
+        mainImageMonsterBoss.style.visibility = "visible";
+
+/*	//edited by Mike, 20231129
       if (mainImageMonsterBoss.style.visibility!="hidden") {
         mainImageMonsterBoss.style.visibility = "visible";
       }
-
-
-
+		
+	  //added by Mike, 20231129
+      if (mainImageSoldier.style.visibility!="hidden") {
+*/	  
+/*		
+      }
+*/
 
 /*	//removed by Mike, 20231125; TODO: -fix: at times, slow-moving projectile occurs
 	//added by Mike, 20231125
@@ -3715,7 +3796,7 @@ mainImageTileProjectilePosY++;
 */
       //added by Mike, 20231126
       myCanvas.style.visibility="visible";
-
+	  
       //added by Mike, 20231126
       if (iMonsterAnimationDelayCount==iMonsterAnimationDelayCountMax) {
         iMonsterAnimationCount=(iMonsterAnimationCount+1)%2; //iAnimationCountMax
@@ -3728,7 +3809,45 @@ mainImageTileProjectilePosY++;
       //alert(iAnimationCount);
       mainImageMonster.style.objectPosition = "-" + 64*(iMonsterAnimationCount) + "px -" + 0 + "px";
 
+	  
+	  if (bHasPressedStart) {
+	  	mainImageSoldier.style.visibility = "visible";
+		
+//		mainImageSoldier.style.objectPosition = "-" + 256 + "px -" + 0 + "px";
+/*
+		iSoldierAnimationScale=2.0;
+			
+		mainImageSoldier.style.transform = "scale("+iSoldierAnimationScale+","+iSoldierAnimationScale+")";			
+*/		
+/*
+		mainImageSoldier.style.left = 0+iStageMaxWidth-iImageFrameWidth*2+"px"; 
+		mainImageSoldier.style.top = (0+iStageMaxHeight-iImageFrameHeight*2)+"px";
+*/
 
+/*
+		mainImageSoldier.style.left = 0+iStageMaxWidth-iImageFrameWidth+"px"; 
+		mainImageSoldier.style.top = (0+iStageMaxHeight-iImageFrameHeight)+"px";
+*/
+		mainImageSoldier.style.left = 0+"px"; 
+		mainImageSoldier.style.top = 0+iStageMaxHeight-mainImageSoldier.clientHeight+"px";
+
+		//alert("DITO");
+		
+/*	
+//		mainImageSoldier.style.left = (0+iStageMaxWidth-iImageFrameWidth*2)+"px"; 
+		mainImageSoldier.style.left = 0+"px";//(0+iStageMaxWidth-iImageFrameWidth*2)+"px"; 
+	
+		mainImageSoldier.style.top = (0+iStageMaxHeight-iImageFrameHeight)+"px";
+*/			
+		
+
+			
+		//(0+iStageMaxWidth-mainImageSoldier.clientWidth)+"px";
+
+		//mainImageSoldier.style.top = (iVerticalOffsetInnerScreen+iStageMaxHeight-mainImageSoldier.clientHeight)+"px";
+
+		
+	  }
 
     	//added by Mike, 20221124; removed by Mike, 20221124
     	//iTileBgCount=0;
@@ -5468,8 +5587,16 @@ function autoUpdatePuzzleTileImage() {
 					}
 				}
 				else {
+				//edited by Mike, 20231129
+				//arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64) + "px -" + iRowCount*64 + "px";
+				
+					//alert("sCurrHitTile: "+sCurrHitTile);
+				
+					
+				}
 */
-						arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64) + "px -" + iRowCount*64 + "px";
+
+				arrayPuzzleTileCountId[iTileBgCount].style.objectPosition = "-" + (iColumnCount*64) + "px -" + iRowCount*64 + "px";
 /*
 				}
 */
@@ -6046,6 +6173,8 @@ opting to put assets folder in "html_application" folder instead
     <img id="mainImageMonsterBoss" class="ImageMonsterBoss" src="assets/images/inputImage.png">
     <img id="mainImageMonster0" class="ImageMonster0" src="assets/images/inputImage.png">
 
+	<!-- added by Mike, 20231129 -->
+	<img id="mainImageSoldierId" class="ImageMainSoldier" src="assets/images/puzzleStageBG.png">
 
 
 <!--
@@ -6122,10 +6251,15 @@ opting to put assets folder in "html_application" folder instead
 
 		
 	<img id="howToPlayGuideImageId" class="ImageHowToPlayGuide" src="assets/images/gameOff2023HowToPlay.png">
-
+		
+	<img id="howToPlayGuideImageFrame2Id" class="ImageHowToPlayGuide" src="assets/images/gameOff2023HowToPlayFrame2.png">
+	
+	
 	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">
 
 	<img id="bossBattleBgImageId" class="ImageBossBattleBg" src="assets/images/bossBattleBg.png">
+	
+	<img id="bossBattleBgImagePart2Id" class="ImageBossBattleBgPart2" src="assets/images/bossBattleBgPart2.png">	
 
 	
 	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
