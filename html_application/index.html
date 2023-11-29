@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231128; from 20231127
+' @date updated: 20231129; from 20231128
 ' @website: www.usbong.ph
 '
 '
@@ -246,6 +246,24 @@
 
 			visibility: hidden;
 
+			z-index: 10; /*4;*/
+		}
+		
+		
+		.ImageExplosionToCity {
+			position: absolute;
+
+			clip: rect(0px,128px,128px,0px);
+/*
+			width: 64px; 
+			height: auto;
+*/
+			object-fit: contain;
+			
+			visibility: hidden;
+/*			
+			scale: 0.5;
+*/
 			z-index: 10; /*4;*/
 		}
 
@@ -787,7 +805,8 @@ var bIsBossBattleDone=false;
 
 //added by Mike, 20231126
 var bIsMonsterBossHit=false;
-var iBossLife=1;//50;
+//edited by Mike, 20231129
+var iBossLife=3;//1;//50;
 
 //added by Mike, 20231111
 var bIsActionKeyPressed=false;
@@ -823,6 +842,11 @@ const sAudioEffectActionStart="assets/audio/usbongGameOff2023TapLoudEdited.mp3";
 
 //added by Mike, 20231114
 const sAudioEffectLowPower="assets/audio/voiceover/lowpower.mp3";
+
+//added by Mike, 20231129
+//TODO: -update: this
+const sAudioBGM="assets/audio/usbongGameOff2023BGM.mp3";
+
 
 //added by Mike, 20231115
 var iAnimationCount=-1;//0; start at -1
@@ -880,8 +904,8 @@ var iMouseAnimationDelayCountMax=4;//1;
 var iScore=10000;//0;
 var iTargetScore=10000;//0;
 
-//added by Mike, 20231124
-var bIsIncreasingScore=true;
+//added by Mike, 20231129; from 20231124
+var bIsIncreasingScore=false;//true;
 
 //added by Mike, 20231125
 var iTextScoreDivWidthOffset=5;
@@ -1306,6 +1330,47 @@ iVerticalOffsetInnerScreen=0;
 		iMouseInputImageHeight=64;
 */
 
+/* //audio play blocked by Firefox, Chrome browsers,
+// if no interaction yet with user;
+
+//reference#1: https://stackoverflow.com/questions/64446276/how-to-enable-audio-autoplay-on-a-site; last accessed: 20231129
+//answer by: sandeep joshi, 20201020T1716
+
+//reference#2: https://stackoverflow.com/questions/11652197/play-multiple-sound-at-the-same-time; last accessed: 20231129
+//answer by: Lasse Christiansen, 20120725T2157
+
+var snd1  = new Audio();
+var src1  = document.createElement("source");
+src1.type = "audio/mpeg"; //"audio/mpeg";
+src1.src  = sAudioBGM;//"audio/Dombra.mp3";
+snd1.appendChild(src1);
+
+var snd2  = new Audio();
+var src2  = document.createElement("source");
+src2.type = "audio/mpeg"; //"audio/mpeg";
+src2.src  = sAudioEffectActionStart;//"audio/(TESBIHAT).mp3";
+snd2.appendChild(src2);
+
+snd1.play();
+
+alert("HALLO");
+*/
+
+		//added by Mike, 20231129
+		//-----------		
+		var myAudio = document.getElementById("myAudioId");
+		
+        myAudio.setAttribute("src", sAudioBGM);
+
+        fMyAudioVolume=1.0;//0.4;
+        myAudio.volume=fMyAudioVolume;
+        myAudio.loop=true;		
+        myAudio.play();
+
+		//alert("DITO");	
+		//-----------	
+
+
 		//added by Mike, 20231121
 		var myCanvas = document.getElementById("myCanvasId");
 
@@ -1521,9 +1586,9 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
     mainImageMonsterPosX=iHorizontalOffset+iStageMaxWidth/2-iMonsterTileWidth;
 //    mainImageMonsterPosY=iVerticalOffsetInnerScreen+iStageMaxHeight/2-iMonsterTileWidth;
     mainImageMonsterPosY=iVerticalOffsetInnerScreen+0-iMonsterTileHeight;
-		
-		//added by Mike, 20231128
-		setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/2);
+
+		//removed by Mike, 20231129
+		//setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/3);
 	}
 
 	//added by Mike, 20231122
@@ -1783,6 +1848,31 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
     explosionEffectImage.style.top = iInputY-iImageExplosionEffectAnimationHeight/2;
   }
 
+  //added by Mike, 20231129
+  function setCityExplosionEffectPosition(iInputX, iInputY) {
+//    var explosionEffectImage = document.getElementById("explosionEffectImageId");
+    var explosionEffectImage = document.getElementById("explosionEffectToCityImageId");
+
+    //added by Mike, 20231126
+    if (explosionEffectImage.style.visibility=="visible") {
+      return;
+    }
+	
+	//edited by Mike, 20231127
+    //explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+    explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
+
+    explosionEffectImage.style.visibility="visible";
+
+    iMonsterExplosionEffectAnimationDelayCount=iMonsterExplosionEffectAnimationDelayCountMax;
+
+    iMonsterExplosionEffectAnimationCount=-1; //0;
+
+    explosionEffectImage.style.left = iInputX-iImageExplosionEffectAnimationWidth/2;
+
+    explosionEffectImage.style.top = iInputY-iImageExplosionEffectAnimationHeight/2;
+  }
+
   
   	//added by Mike, 20231128
 	function executeEnterClickAnimation() {	
@@ -1941,6 +2031,71 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 		}
 	}
 
+	function executeExplosionEffectToCity() {
+		var explosionEffectImage = document.getElementById("explosionEffectToCityImageId");
+
+/*		
+		if (iTransitionScale<1) {
+			iTransitionScale+=0.1
+		}
+		else if (iTransitionScale>0) {
+			iTransitionScale-=0.1
+		}
+*/
+		//iTransitionScale=0.5;
+		
+//		explosionEffectImage.style.transform = "scale("+iTransitionScale+","+iTransitionScale+")";	
+
+		//explosionEffectImage.style.transform = "scale("+0.5+","+0.5+")";	
+
+		if (explosionEffectImage.style.visibility=="hidden") {
+			return;
+		}
+
+		//alert("Dito");
+		
+		if (iMonsterExplosionEffectAnimationDelayCount==iMonsterExplosionEffectAnimationDelayCountMax) {
+	//	if (iExplosionEffectAnimationDelayCount>=iExplosionEffectAnimationDelayCountMax) {
+			iMonsterExplosionEffectAnimationCount=(iMonsterExplosionEffectAnimationCount+1)%5; //last hidden
+
+
+			iMonsterExplosionEffectAnimationDelayCount=0;
+			/*
+			explosionEffectImage.style.visibility="visible";
+			*/
+		}
+		else {
+			iMonsterExplosionEffectAnimationDelayCount++;
+
+	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+
+		}
+
+		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+
+		if (iMonsterExplosionEffectAnimationCount==0) { //%2
+			explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
+		}
+		else if (iMonsterExplosionEffectAnimationCount==1) {
+			explosionEffectImage.style.objectPosition = "-" + 128 + "px -" + 128 + "px";
+			//alert(">>>>");
+		}
+		else if (iMonsterExplosionEffectAnimationCount==2) {
+			explosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + 128 + "px";
+			//alert(">>>>");
+		}
+		else if (iMonsterExplosionEffectAnimationCount==3) {
+			explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 128 + "px";
+			//alert(">>>>");
+		}
+		else {
+			explosionEffectImage.style.visibility="hidden";
+			//added by Mike, 20231128
+			//iTitleExplosionEffectDelayCount=0;
+		}
+	}
+
+	
 	//added by Mike, 20231127
 	function resetTransitionEffect() {						
 		var myDivTransitionEffect = document.getElementById("divTransitionEffectId");
@@ -2046,7 +2201,8 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 						var mainImageTile = document.getElementById("mainImageTileImageId");
 						var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 
-						var bossBattleBgImage = document.getElementById("bossBattleBgImageId");
+						//added by Mike, 20231129
+						var bossBattleBgImage = document.getElementById("bossBattleBgImageId");			
 												
 						 
 						mainImageMonster.style.visibility = "hidden";
@@ -2055,8 +2211,19 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 												
 						mainImageTile.style.visibility = "visible";
 						mainImageTileTankBody.style.visibility = "visible";
+
 						
 						bossBattleBgImage.style.visibility = "visible";
+						
+						//added by Mike, 20231129
+						//setCityExplosionEffectPosition(0,0);
+						//setCityExplosionEffectPosition(parseInt(bossBattleBgImage.style.left)+bossBattleBgImage.clientWidth*0.3,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/2);
+						
+						setCityExplosionEffectPosition(parseInt(bossBattleBgImage.style.left)+bossBattleBgImage.clientWidth*0.1,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/3);
+
+						//setCityExplosionEffectPosition(0,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/5);
+	
+	
 					  }
 					}
 					
@@ -2422,6 +2589,10 @@ setAnimDelayText.value=iDelayAnimationCountMovementStepMax;
 
   //added by Mike 20231126
   executeExplosionEffectToMonsterBoss();
+  
+  //added by Mike, 20231129
+  executeExplosionEffectToCity();
+  
 
 /*	//removed by Mike, 20231121
 	//added by Mike, 20231121
@@ -2630,6 +2801,9 @@ mainImageTileStepX=15; //2;
 			
 			//added by Mike, 20231128
 			explosionEffectImage = document.getElementById("explosionEffectToMonsterImageId");
+	
+			//added by Mike, 20231129
+			explosionEffectToCityImage = document.getElementById("explosionEffectToCityImageId");	
 	
 /*	
 			//textEnterDiv.innerHTML = "START";
@@ -2969,8 +3143,12 @@ if (explosionEffectImage.style.visibility=="hidden") {
 
   			//var sText = "The <font color='purple'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city.<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
 			
-			var sText = "The <font color='#393da2'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city.<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
+			//var sText = "The <font color='#393da2'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city.<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
 
+			//var sText = "The <font color='#393da2'>CREATURE</font> was<br/> destroyed, but not without<br/> inflicting heavy damage<br/> to the city...We still have<br/> a lot to learn, and also to do.<br/> Thank you, and great work! Peace.";
+
+			var sText = "The <font color='#393da2'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city...<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
+						
 			//var sCurrText="";
 
 			//var textStatusBackgroundDiv = document.getElementById("textStatusBackgroundDivId");
@@ -3026,11 +3204,19 @@ if (explosionEffectImage.style.visibility=="hidden") {
 			textStatusBackgroundDiv.style.top=textStatusDiv.style.top;
 			textStatusBackgroundDiv.style.left=0+iStageMaxWidth*0.15;//textStatusDiv.style.left;//0;
 			textStatusBackgroundDiv.style.visibility="visible";
-			
-			textStatusBackgroundDiv.style.width=iStageMaxWidth*0.65;//23*16;//("The PEST was destroyed.").length;//textStatusDiv.style.width;
-			textStatusBackgroundDiv.style.height=iStageMaxHeight*0.6;//textStatusDiv.style.height;
 
-      }
+/*					textStatusBackgroundDiv.style.width=iStageMaxWidth*0.75;//23*16;//("The PEST was destroyed.").length;//textStatusDiv.style.width;
+			textStatusBackgroundDiv.style.height=iStageMaxHeight*0.6;//textStatusDiv.style.height;
+*/
+
+/*
+textStatusBackgroundDiv.style.width=iStageMaxWidth*0.75;//23*16;//("The PEST was destroyed.").length;//textStatusDiv.style.width;
+			textStatusBackgroundDiv.style.height=iStageMaxHeight*0.6;//textSt
+*/
+
+			textStatusBackgroundDiv.style.width=iStageMaxWidth*0.65;
+			textStatusBackgroundDiv.style.height=iStageMaxHeight*0.6;			
+	  }
       else {
 	  		//added by Mike, 20231127
 			if (bIsExecutingTransition) {
@@ -3193,7 +3379,9 @@ if (explosionEffectImage.style.visibility=="hidden") {
 					mainImageMonsterBoss.style.transform = "rotate("+iTransitionRotate+"deg)";	
 					mainImageMonsterBoss.style.transformOrigin = "12.5% 12.5%"; 
 				}
-			}
+
+			
+			}			
 		}
 /*		
 		else if (mainImageMonsterBossPosY<0) {
@@ -3211,6 +3399,17 @@ if (explosionEffectImage.style.visibility=="hidden") {
 			
 			//bIsExecutingShake=true;	
 		}
+		
+		//added by Mike, 20231129
+		var bossBattleBgImage = document.getElementById("bossBattleBgImageId");
+		//setCityExplosionEffectPosition(parseInt(bossBattleBgImage.style.left)+bossBattleBgImage.clientWidth*0.3,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/2);
+
+		setCityExplosionEffectPosition(parseInt(bossBattleBgImage.style.left)+bossBattleBgImage.clientWidth*0.1,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/3);
+				
+				//setCityExplosionEffectPosition(0,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/5);
+
+				
+				//setCityExplosionEffectPosition(0,0);		
 
     //ANIMATION;
 //    mainImageMonsterBoss.style.objectPosition = "-" + 128 + "px -" + 0 + "px";
@@ -5884,6 +6083,8 @@ opting to put assets folder in "html_application" folder instead
 	<img id="explosionEffectImageId" class="ImageExplosion" src="assets/images/effects.png">
   <img id="explosionEffectToMonsterImageId" class="ImageExplosion" src="assets/images/effects.png">
 
+    <img id="explosionEffectToCityImageId" class="ImageExplosionToCity" src="assets/images/effects.png">
+
 
 	<!-- added by Mike, 20221119 -->
 	<div id="divPuzzleTileImageTargetBorderId" class="Image32x32TileTargetBorder"></div>
@@ -5944,10 +6145,16 @@ opting to put assets folder in "html_application" folder instead
 	<div id="stepCountStatusDivId" class="DivStepCountStatus">0</div>
 -->
 
-
-  <audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2023TapLoudEdited.mp3" type="audio/x-m4a" controls loop>
+  <audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2023BGM.mp3" type="audio/x-m4a" controls loop>
 	  Your browser does not support the audio tag.
 	</audio><br/>
+
+<!--
+	<audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2023BGM.mp3" type="audio/x-m4a">
+	  Your browser does not support the audio tag.
+	</audio><br/>	
+-->	
+	
 
 	<audio id="myAudioEffectId" class="myAudio" src="assets/audio/usbongGameOff2023TapLoudEdited.mp3" type="audio/x-m4a">
 	  Your browser does not support the audio tag.
