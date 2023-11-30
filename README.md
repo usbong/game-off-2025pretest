@@ -10,11 +10,29 @@ Eliminate the fakes by identifying them from among our ranks, and defend the cit
 
 This is a work of fiction created for Game Off 2023 with the theme SCALE.
 
-## DEMO
+## PLAY on BROWSER
 
 1) https://masarapmabuhay.itch.io/battle-tactics
 
 2) http://store.usbong.ph/server/html_application/index.html
+
+<table>
+ <tr>
+  <td>
+<img src="https://github.com/usbong/game-off-2023/blob/main/webpage/usbongGameOff2023HowToPlay.png" width="100%">  
+  </td>
+  <td>
+<img src="https://github.com/usbong/game-off-2023/blob/main/webpage/usbongGameOff2023Gameplay.png" width="100%">   
+  </td>
+  <td>
+<img src="https://github.com/usbong/game-off-2023/blob/main/webpage/usbongGameOff2023Gameplay2.png" width="100%">
+  </td>
+ </tr>
+
+</table>
+
+
+
 
 ### ITCH.IO: PROTOTYPES
 
