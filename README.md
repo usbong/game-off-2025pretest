@@ -40,7 +40,6 @@ This is a work of fiction created for Game Off 2023 with the theme SCALE.
 
 2) https://masarapmabuhay.itch.io/game-off-2023-prototype2
 
-<img src="https://github.com/usbong/game-off-2023/blob/main/screenshots/usbongGameOff2023V20231120T1547.png" width="60%">
 
 3) https://masarapmabuhay.itch.io/game-off-2023-prototype3
 
