@@ -1,12 +1,22 @@
-# Game Off 2023
+# ITCH.IO Game Off 2023: BATTLE TACTICS
 
-## DEMO (work-in-progress)
+The city is under attack! The invaders are being led by an enormous bug who has chosen the cold winter month of December to carry out their assault.
 
-http://store.usbong.ph/server/html_application/index.html
+Reports from trusted sources reveal that the enemies have disguised themselves to infiltrate our security defense forces.
 
-### ITCH.IO
+Eliminate the fakes by identifying them from among our ranks, and defend the city from the invasion!
 
-#### PROTOTYPES
+***
+
+This is a work of fiction created for Game Off 2023 with the theme SCALE.
+
+## DEMO
+
+1) https://masarapmabuhay.itch.io/battle-tactics
+
+2) http://store.usbong.ph/server/html_application/index.html
+
+### ITCH.IO: PROTOTYPES
 
 1) https://masarapmabuhay.itch.io/game-off-2023-prototype
 
@@ -22,6 +32,10 @@ http://store.usbong.ph/server/html_application/index.html
 1) https://notepad-plus-plus.org/downloads/ (Windows)
  
 2) https://github.com/atom/atom (Mac)
+
+3) https://www.gbstudio.dev/
+
+4) https://www.audacityteam.org/
 
 ## Open Source Software License
 
