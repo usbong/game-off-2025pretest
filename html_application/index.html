@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20231129; from 20231128
+' @date updated: 20231130; from 20231129
 ' @website: www.usbong.ph
 '
 '
@@ -865,6 +865,10 @@ const sAudioEffectActionStart="assets/audio/usbongGameOff2023TapLoudEdited.mp3";
 
 //added by Mike, 20231114
 const sAudioEffectLowPower="assets/audio/voiceover/lowpower.mp3";
+
+//added by Mike, 20231130
+const sAudioEffectActionCannonFire ="assets/audio/usbongGameOff2023AudioEffectsCannon.mp3";
+
 
 //added by Mike, 20231129
 //TODO: -update: this
@@ -3221,7 +3225,8 @@ if (explosionEffectImage.style.visibility=="hidden") {
 
 			//var sText = "The <font color='#393da2'>CREATURE</font> was<br/> destroyed, but not without<br/> inflicting heavy damage<br/> to the city...We still have<br/> a lot to learn, and also to do.<br/> Thank you, and great work! Peace.";
 
-			var sText = "The <font color='#393da2'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city...<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
+			//edited by Mike, 20231130
+			var sText = "The <font color='#4a50d9'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city...<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
 						
 			//var sCurrText="";
 
@@ -4818,6 +4823,10 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 
   function processBossBattleResultFromInput(iXPos, iYPos) {
 
+	//added by Mike, 20231130
+  	if (bIsExecutingTransition) {
+		return;
+	}
 
     //iMainImageTileStepAngleTemp+=10;
     //iMainImageTileStepAngleTemp=90;
@@ -4905,7 +4914,12 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 	var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 	//removed by Mike, 20231128
 	//mainImageTileTankBody.style.visibility = "visible";
-
+	
+	//added by Mike, 20231130
+	var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
+	
+	
+	
 
     if (!bHasFired) {
 
@@ -5037,6 +5051,23 @@ arrayPuzzleTileCountId[iTileBgCountOfEmptyTile].style.visibility = "hidden";
 
 
     					bHasFired=true;
+						
+			//added by Mike, 20231130
+/*	//removed by Mike, 20231130			
+			if (!bIsExecutingTransition) {
+*/
+				var myAudioEffectCannonFire = document.getElementById("myAudioEffectCannonFireId");
+
+				myAudioEffectCannonFire.setAttribute("src", sAudioEffectActionCannonFire);
+
+				//fMyAudioEffectVolume=0.2;
+				fMyAudioEffectCannonFireVolume=1.0;
+				myAudioEffectCannonFire.volume=fMyAudioEffectCannonFireVolume;
+				myAudioEffectCannonFire.loop=false;
+				myAudioEffectCannonFire.play();
+/*				
+			}
+*/											
     }
 
     //added by Mike, 20231119
@@ -6294,6 +6325,9 @@ opting to put assets folder in "html_application" folder instead
 	  Your browser does not support the audio tag.
 	</audio><br/>
 
+	<audio id="myAudioEffectCannonFireId" class="myAudio" src="assets/audio/usbongGameOff2023AudioEffectsCannon.mp3" type="audio/x-m4a">
+	  Your browser does not support the audio tag.
+	</audio><br/>
 
 
   </body>
