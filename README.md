@@ -2,6 +2,8 @@
 
 https://itch.io/jam/game-off-2024
 
+<img src="https://github.com/masarapmabuhay/game-off-2024/blob/main/notes/art/catLunge.png" width="10%">   
+
 ## Select Software Development Productivity Tools
 
 1) MS Paint
