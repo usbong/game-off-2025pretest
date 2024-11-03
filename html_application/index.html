@@ -937,6 +937,12 @@ var iMouseAnimationCountMax=5;
 var iMouseAnimationDelayCount=0;
 var iMouseAnimationDelayCountMax=2;//1;
 
+//added by Mike, 20241103
+var iHeroAnimationCount=-1; //0; //due to immediately +1 in execution;
+var iHeroAnimationCountMax=5;
+var iHeroAnimationDelayCount=0;
+var iHeroAnimationDelayCountMax=2;//1;
+
 //edited by Mike, 20231124; from 20231123
 var iScore=10000;//0;
 var iTargetScore=10000;//0;
@@ -961,11 +967,11 @@ var iSoldierAnimationScale=0;
 //added by Mike, 20231124
 //note: acceleration
 
-var mainImageTileProjectileStepYMax=20;//20;
-var mainImageTileProjectileStepXMax=20;//20;
+var mainImageTileProjectileStepYMax=4;//20;//20;
+var mainImageTileProjectileStepXMax=4;//20;//20;
 
-var mainImageTileProjectileVelocityY=20;//4;//1;
-var mainImageTileProjectileVelocityX=20;//4;//1;
+var mainImageTileProjectileVelocityY=4;//20;//4;//1;
+var mainImageTileProjectileVelocityX=4;//20;//4;//1;
 
 var mainImageTileProjectileStepYMin=mainImageTileProjectileVelocityY;//4;//12;
 var mainImageTileProjectileStepXMin=mainImageTileProjectileVelocityX;//4;//12;
@@ -1212,6 +1218,8 @@ var iOffsetHeight=0;
 	
 	var iPrevMouseXPos=-1;
 	var iPrevMouseYPos=-1;
+	
+	var bIsHeroFacingLeft=false;
 
 /*	//removed by Mike, 20231124
 	//edited by Mike, 20230418
@@ -1356,6 +1364,17 @@ function closeFullscreen() {
 
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+
+		var iFrameY=0;
+		//destination to the left of hero projectile		
+		if (newMainImageTileProjectilePosX<0) {
+			iFrameY=64*2;//128;
+		}
+		else {
+			iFrameY=64*3;//192;
+		}
+		
 /*	//edited by Mike, 20231125
 		//added by Mike, 20230427
 		mainImageTileProjectilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
@@ -1394,6 +1413,9 @@ function closeFullscreen() {
 
 		bHasReachedDestinationY=false;
 		bHasReachedDestinationX=false;
+		
+		iHeroAnimationCount=0; 
+		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
 
 		//alert("dito");
 	}
@@ -1715,6 +1737,45 @@ alert(iImageFrameWidth);
 		}
 		else {
 			mouseInputImage.style.objectPosition = "-" + 64*2 + "px -" + 192 + "px";
+		}
+	}
+	
+	//added by Mike, 20241103
+	function executeHeroWalkingAnimation() {
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		mainImageTileTankBody.style.visibility="visible";
+
+		if (iHeroAnimationDelayCount==iHeroAnimationDelayCountMax) {
+			iHeroAnimationCount=(iHeroAnimationCount+1)%3; //last hidden
+
+			iHeroAnimationDelayCount=0;
+		}
+		else {
+			iHeroAnimationDelayCount++;
+
+	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+		}
+
+		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+
+		var iFrameY=0;
+		//destination to the left of hero projectile
+		//if (newMainImageTileProjectilePosX<0) {
+		if (bIsHeroFacingLeft) {
+			iFrameY=64*2;//128;
+		}
+		else {
+			iFrameY=64*3;//192;
+		}
+
+		if (iHeroAnimationCount==0) { 
+			mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+		}
+		else if (iHeroAnimationCount==1) { 
+			mainImageTileTankBody.style.objectPosition = "-" + 64 + "px -" + iFrameY + "px";
+		}
+		else {
+			mainImageTileTankBody.style.objectPosition = "-" + 64*2 + "px -" + iFrameY + "px";
 		}
 	}
 
@@ -2524,6 +2585,7 @@ executeExplosionEffectToMonsterBoss();
       //bIsMonsterBossHit=false;
     }
 
+	//edited by Mike, 20241103
 	//alert("iAnimationCount: "+iAnimationCount);
 	if (iAnimationDelayCount==iAnimationDelayCountMax) {
 		//edited by Mike, 20231116
@@ -2587,7 +2649,8 @@ executeExplosionEffectToMonsterBoss();
 			//movement
 			if (bHasFired) {
 
-			  	mainImageTileProjectile.style.visibility = "visible";
+			  	//mainImageTileProjectile.style.visibility = "visible";
+			  	mainImageTileProjectile.style.visibility = "hidden";
 
 
 mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTileProjectilePosY;
@@ -2601,9 +2664,15 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 
 		mainImageTileProjectile.style.top = mainImageTileProjectilePosY+"px";
 
-
-		mainImageTilePosX=mainImageTileProjectilePosX;
+		if ((mainImageTilePosX==mainImageTileProjectilePosX) && (mainImageTilePosY==mainImageTileProjectilePosY)) {
+			resetProjectile();
+			return;
+		}
+		
+		mainImageTilePosX=mainImageTileProjectilePosX;		
 		mainImageTilePosY=mainImageTileProjectilePosY;
+		
+		executeHeroWalkingAnimation();
 
 //-----------------
 
@@ -2660,74 +2729,86 @@ alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDes
 			var bHasReachedDestinationX=false;
 			var bHasReachedDestinationY=false;
 */			
-			//destination to the left of hero projectile
-			if (newMainImageTileProjectilePosX<0) {
-			//iImageFrameWidth
-			//newMainImageTileProjectilePosX
-				if (mainImageTileProjectilePosX+iImageFrameWidth/2<=mainImageTileProjectileStepDestinationX) {
-			
-			//alert("DITO!");
-			
-				//if hero project already passed destination
-				//if (mainImageTileProjectilePosX+iImageFrameWidth<=mainImageTileProjectileStepDestinationX) {
-						
-				  mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX-iImageFrameWidth/2;
-				  bHasReachedDestinationX=true;
-				  //resetProjectile();
-				}
-				else {
-				  bHasReachedDestinationX=false;
-				}
+
+/*
+			if ((mainImageTileProjectilePosX==mainImageTileProjectileStepDestinationX) && (mainImageTileProjectilePosY==mainImageTileProjectileStepDestinationY)){
+				resetProjectile();
 			}
-			//destination to the right of hero projectile
 			else {
-				if (mainImageTileProjectilePosX+iImageFrameWidth/2>=mainImageTileProjectileStepDestinationX) {
-					mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX-iImageFrameWidth/2;
-					bHasReachedDestinationX=true;
-					//resetProjectile();
-				}		
+*/
+
+				//destination to the left of hero projectile
+				//if (newMainImageTileProjectilePosX<0) {
+				if (bIsHeroFacingLeft) {
+				//iImageFrameWidth
+				//newMainImageTileProjectilePosX
+					if (mainImageTileProjectilePosX+iImageFrameWidth/2<=mainImageTileProjectileStepDestinationX) {
+				
+				//alert("DITO!");
+				
+					//if hero project already passed destination
+					//if (mainImageTileProjectilePosX+iImageFrameWidth<=mainImageTileProjectileStepDestinationX) {
+							
+					  mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX-iImageFrameWidth/2;
+					  bHasReachedDestinationX=true;
+					  //resetProjectile();
+					}
+					else {
+					  bHasReachedDestinationX=false;
+					}
+				}
+				//destination to the right of hero projectile
 				else {
-				  bHasReachedDestinationX=false;
-				}				
-			}
+					if (mainImageTileProjectilePosX+iImageFrameWidth/2>=mainImageTileProjectileStepDestinationX) {
+						mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX-iImageFrameWidth/2;
+						bHasReachedDestinationX=true;
+						//resetProjectile();
+					}		
+					else {
+					  bHasReachedDestinationX=false;
+					}				
+				}
 			
-			//alert("newMainImageTileProjectilePosY: "+newMainImageTileProjectilePosY);
+				//alert("newMainImageTileProjectilePosY: "+newMainImageTileProjectilePosY);
 
 
-			//destination to the top of hero projectile
-			if (newMainImageTileProjectilePosY<0) {
-			//iImageFrameWidth
-				if (mainImageTileProjectilePosY+iImageFrameHeight/2<=mainImageTileProjectileStepDestinationY) {
-			
-			//alert("DITO!");
-			
-				//if hero project already passed destination
-				//if (mainImageTileProjectilePosX+iImageFrameWidth<=mainImageTileProjectileStepDestinationX) {
-						
-				mainImageTileProjectilePosY=mainImageTileProjectileStepDestinationY-iImageFrameHeight/2;
-				bHasReachedDestinationY=true;
-				//resetProjectile();
-				}
-				else {
-				  bHasReachedDestinationY=false;
-				}				
-			}
-			//destination to the bottom of hero projectile
-			else {
-				if (mainImageTileProjectilePosY+iImageFrameHeight/2>=mainImageTileProjectileStepDestinationY) {
+				//destination to the top of hero projectile
+				if (newMainImageTileProjectilePosY<0) {
+				//iImageFrameWidth
+					if (mainImageTileProjectilePosY+iImageFrameHeight/2<=mainImageTileProjectileStepDestinationY) {
+				
+				//alert("DITO!");
+				
+					//if hero project already passed destination
+					//if (mainImageTileProjectilePosX+iImageFrameWidth<=mainImageTileProjectileStepDestinationX) {
+							
 					mainImageTileProjectilePosY=mainImageTileProjectileStepDestinationY-iImageFrameHeight/2;
 					bHasReachedDestinationY=true;
 					//resetProjectile();
-				}			
+					}
+					else {
+					  bHasReachedDestinationY=false;
+					}				
+				}
+				//destination to the bottom of hero projectile
 				else {
-				  bHasReachedDestinationY=false;
-				}								
-			}			
-			
-			if ((bHasReachedDestinationX) && (bHasReachedDestinationY)) {
-				resetProjectile();				
+					if (mainImageTileProjectilePosY+iImageFrameHeight/2>=mainImageTileProjectileStepDestinationY) {
+						mainImageTileProjectilePosY=mainImageTileProjectileStepDestinationY-iImageFrameHeight/2;
+						bHasReachedDestinationY=true;
+						//resetProjectile();
+					}			
+					else {
+					  bHasReachedDestinationY=false;
+					}								
+				}			
+				
+				if ((bHasReachedDestinationX) && (bHasReachedDestinationY)) {
+					resetProjectile();				
+				}
+				
+/*				
 			}
-			
+*/			
 			
 
 		if (mainImageTileProjectilePosX+iImageFrameWidth>iStageMaxWidth+iHorizontalOffset) {
@@ -2888,7 +2969,15 @@ alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDes
 				myAudioEffectCannonFire.volume=fMyAudioEffectCannonFireVolume;
 				myAudioEffectCannonFire.loop=false;
 				myAudioEffectCannonFire.play();
-										
+
+
+
+		if (newMainImageTileProjectilePosX<0) {
+			bIsHeroFacingLeft=true;
+		}
+		else {
+			bIsHeroFacingLeft=false;
+		}										
     }
 
     //added by Mike, 20231119
