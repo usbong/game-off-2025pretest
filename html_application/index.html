@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241103; from 20241102
+' @date updated: 20241104; from 20241103
 ' @website: www.usbong.ph
 '
 '
@@ -341,7 +341,7 @@
 
 			visibility: hidden;
 
-			width: 600px;
+			width: 360px; /*600*/
 			height: auto;
 
 			object-fit: contain;
@@ -1366,6 +1366,7 @@ function closeFullscreen() {
 
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 
+/*
 		var iFrameY=0;
 		//destination to the left of hero projectile		
 		if (newMainImageTileProjectilePosX<0) {
@@ -1374,6 +1375,7 @@ function closeFullscreen() {
 		else {
 			iFrameY=64*3;//192;
 		}
+*/
 		
 /*	//edited by Mike, 20231125
 		//added by Mike, 20230427
@@ -1415,6 +1417,14 @@ function closeFullscreen() {
 		bHasReachedDestinationX=false;
 		
 		iHeroAnimationCount=0; 
+
+		if (bIsHeroFacingLeft) {
+			iFrameY=64*2;//128;
+		}
+		else {
+			iFrameY=64*3;//192;
+		}
+		
 		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
 
 		//alert("dito");
@@ -2004,6 +2014,7 @@ alert(iImageFrameWidth);
 			bossBattleBgImagePart2.style.visibility = "visible";
 			
 			bossBattleBgImagePart2.style.left = 0+"px"; 
+			
 			bossBattleBgImagePart2.style.top = 0+iStageMaxHeight-bossBattleBgImagePart2.clientHeight+"px";
 
 			
@@ -2033,8 +2044,11 @@ alert(iImageFrameWidth);
    }
 */
 
-/*iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
-*/
+//iHorizontalOffset=(screen.width-iStageMaxWidth)/2;
+//using square for main dungeon
+iHorizontalOffset=(640-iStageMaxHeight)/2;
+
+
 //iHorizontalOffset=0;
 
 
@@ -2195,7 +2209,8 @@ alert(iImageFrameWidth);
 	
 	//added by Mike, 20231128
 	bossBattleBgImage.style.left=0+iHorizontalOffset+"px";
-	bossBattleBgImage.style.top=0+iVerticalOffsetInnerScreen+iStageMaxHeight*0.2+"px";	
+	//bossBattleBgImage.style.top=0+iVerticalOffsetInnerScreen+iStageMaxHeight*0.2+"px";	
+	bossBattleBgImage.style.top=0+iVerticalOffsetInnerScreen+"px";	
 
 	
 
@@ -2738,8 +2753,8 @@ alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDes
 */
 
 				//destination to the left of hero projectile
-				//if (newMainImageTileProjectilePosX<0) {
-				if (bIsHeroFacingLeft) {
+				if (newMainImageTileProjectilePosX<0) {
+				//if (bIsHeroFacingLeft) {
 				//iImageFrameWidth
 				//newMainImageTileProjectilePosX
 					if (mainImageTileProjectilePosX+iImageFrameWidth/2<=mainImageTileProjectileStepDestinationX) {
@@ -2881,10 +2896,16 @@ alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDes
 		resetProjectile();				
 	}	
 */
-	//no change
-	if ((iXPos==iPrevMouseXPos) && (iYPos==iPrevMouseYPos)) {
-		return;
-	}
+		
+	if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, parseInt(mainImageTileTankBody.style.left),parseInt(mainImageTileTankBody.style.top))) {
+        //alert("HIT!");
+		//no change
+		//if ((bHasReachedDestinationX) && (bHasReachedDestinationY)) {
+			if ((iXPos==iPrevMouseXPos) && (iYPos==iPrevMouseYPos)) {	
+				return;
+			}
+		//}	
+    }
 
 	iPrevMouseXPos=iXPos;
 	iPrevMouseYPos=iYPos;
@@ -2970,14 +2991,27 @@ alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDes
 				myAudioEffectCannonFire.loop=false;
 				myAudioEffectCannonFire.play();
 
-
-
-		if (newMainImageTileProjectilePosX<0) {
+/*
+		if (newMainImageTileProjectilePosX+iImageFrameWidth/2<0) {
 			bIsHeroFacingLeft=true;
 		}
-		else {
+		else if (newMainImageTileProjectilePosX>0) {
 			bIsHeroFacingLeft=false;
-		}										
+		}
+		else {// if (newMainImageTileProjectilePosX==0) {
+			//bIsHeroFacingLeft=true;
+			//keep current facing direction
+		}
+*/		
+		if (iDeltaX<0) {
+			bIsHeroFacingLeft=true;
+		}
+		else if (iDeltaX>0) {
+			bIsHeroFacingLeft=false;
+		}
+		else {
+			//bIsHeroFacingLeft=false;
+		}						
     }
 
     //added by Mike, 20231119
@@ -3270,8 +3304,8 @@ function initTouchInput() {
   	let mdo2XPos = iXPos2;
   	let mdo2YPos = iYPos2;
 
-  	let mdo2Width = iPuzzleTileWidth;
-  	let mdo2Height = iPuzzleTileHeight;
+  	let mdo2Width = iImageFrameWidth; //iPuzzleTileWidth;
+  	let mdo2Height = iImageFrameHeight; //iPuzzleTileHeight;
 
   	let iOffsetXPosAsPixel = 0;
   	let iOffsetYPosAsPixel = 0;
@@ -3505,7 +3539,7 @@ opting to put assets folder in "html_application" folder instead
 	
 	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">
 
-	<img id="bossBattleBgImageId" class="ImageBossBattleBg" src="assets/images/bossBattleBg.png">
+	<img id="bossBattleBgImageId" class="ImageBossBattleBg" src="assets/images/bgImageCave.png?lastmod=20241104">
 	
 	<img id="bossBattleBgImagePart2Id" class="ImageBossBattleBgPart2" src="assets/images/bossBattleBgPart2.png">	
 
