@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241102; from 20231130
+' @date updated: 20241103; from 20241102
 ' @website: www.usbong.ph
 '
 '
@@ -202,6 +202,16 @@
 
 			visibility: hidden;
 			
+			z-index: 2;
+		}
+		
+		.ImageHeroFrame1 {
+			position: absolute;
+
+			clip: rect(0px,128px,128px,0px);
+
+			visibility: hidden;
+						
 			z-index: 2;
 		}
 
@@ -925,7 +935,7 @@ var bIsTransitionFirstPartDone=false;
 var iMouseAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iMouseAnimationCountMax=5;
 var iMouseAnimationDelayCount=0;
-var iMouseAnimationDelayCountMax=4;//1;
+var iMouseAnimationDelayCountMax=2;//1;
 
 //edited by Mike, 20231124; from 20231123
 var iScore=10000;//0;
@@ -962,6 +972,11 @@ var mainImageTileProjectileStepXMin=mainImageTileProjectileVelocityX;//4;//12;
 
 var mainImageTileProjectileStepY=mainImageTileProjectileStepYMin;//20;
 var mainImageTileProjectileStepX=mainImageTileProjectileStepYMin;//20;
+
+//added by Mike, 20241103
+var mainImageTileProjectileStepDestinationY=0;
+var mainImageTileProjectileStepDestinationX=0;
+
 
 //added by Mike, 20231125
 var mainImageMonsterPosX=0;
@@ -1208,8 +1223,14 @@ var iOffsetHeight=0;
 	var iStageMaxWidth=448; //640;
 	var iStageMaxHeight=402; //576;
 */
+
+/*
 	var iStageMaxWidth=640;
 	var iStageMaxHeight=360; //480
+*/
+	var iStageMaxWidth=640;
+	var iStageMaxHeight=360;
+
 
 //	var iHorizontalOffset=0;
 	var iVerticalOffset=0;
@@ -1285,6 +1306,43 @@ iVerticalOffsetInnerScreen=0;
 	}
 */
 
+//added by Mike, 20241102
+//https://www.w3schools.com/howto/howto_js_fullscreen.asp; last accessed: 20241102
+
+/* Get the documentElement (<html>) to display the page in fullscreen */
+var elem = document.documentElement;
+
+/* View in fullscreen */
+function openFullscreen() {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { /* Safari */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE11 */
+    elem.msRequestFullscreen();
+  }
+/*  
+  	var iStageMaxWidth=640*2;
+	var iStageMaxHeight=360*2;
+	
+
+var scale = 'scale(1)';
+document.body.style.webkitTransform =  scale;    // Chrome, Opera, Safari
+ document.body.style.msTransform =   scale;       // IE 9
+ document.body.style.transform = scale;   
+ */
+}
+
+/* Close fullscreen */
+function closeFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) { /* Safari */
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) { /* IE11 */
+    document.msExitFullscreen();
+  }
+}
 
 	//added by Mike, 20230427
 	function resetProjectile() {
@@ -1307,23 +1365,14 @@ iVerticalOffsetInnerScreen=0;
 		//alert("mainImageTileProjectilePosX: "+mainImageTileProjectilePosX);
 		//alert("mainImageTileProjectilePosY: "+mainImageTileProjectilePosY);
 
+/*		
 		//TO-DO: -update: newMainImage... step
 		newMainImageTileProjectilePosX=0; //mainImageTileProjectilePosX;
 		newMainImageTileProjectilePosY=0; //mainImageTileProjectilePosY;
-
-//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);
-
-/*		//removed by Mike, 20231125
-		//added by Mike, 20231125
-		mainImageTileProjectileVelocityY=4;
-		mainImageTileProjectileVelocityX=4;
 */
+		newMainImageTileProjectilePosX=parseInt(mainImageTileProjectilePosX);
+		newMainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY);
 
-/*	//removed by Mike, 20231125
-		mainImageTileProjectile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
-
-		mainImageTileProjectile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
-*/
 		mainImageTileProjectile.style.left = mainImageTileProjectilePosX;
 		mainImageTileProjectile.style.top = mainImageTileProjectilePosY;
 
@@ -1383,6 +1432,9 @@ iVerticalOffsetInnerScreen=0;
     };
 */
 
+	//removed by Mike, 20241102
+	//iHorizontalOffset=(screen.width-iStageMaxWidth)/2;
+
     //added by Mike, 20231126
     var myCanvasTwo = document.getElementById("myCanvasTwoId");
 
@@ -1433,6 +1485,7 @@ iVerticalOffsetInnerScreen=0;
 		textScoreShadowDiv.style.top = textScoreDiv.style.top;
 
 		mainImageTile.style.visibility = "hidden";
+
 		mainImageTileTankBody.style.visibility = "hidden";
 
 		mainImageTileProjectile.style.visibility = "hidden";
@@ -1447,15 +1500,26 @@ iVerticalOffsetInnerScreen=0;
     //edited by Mike, 20231126
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
 
+		
 		//added by Mike, 20231124
 		mainImageTileTankBody.style.left = mainImageTile.style.left;
 		mainImageTileTankBody.style.top = mainImageTile.style.top;
 
-		//added by Mike, 20231124
-		//tank body
-		mainImageTileTankBody.style.objectPosition = "-" + 128 + "px -" + 192 + "px";
-//		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+		//cat body
+		//mainImageTileTankBody.style.objectPosition = "-" + 128 + "px -" + 192 + "px";
+		//mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
 
+		//mainImageTileTankBody.style.transform = "scale(0.25,0.25)";
+/*		
+		mainImageTileTankBody.style.left = mainImageTile.style.left;
+		mainImageTileTankBody.style.top = mainImageTile.style.top;
+		
+alert(parseInt(mainImageTile.style.left));
+alert(iImageFrameWidth);
+*/
+
+		
 		mainImageTile.style.objectPosition = "-" + 192 + "px -" + 192 + "px";
 
 		//added by Mike, 20231124
@@ -1465,8 +1529,6 @@ iVerticalOffsetInnerScreen=0;
 		mainImageTileProjectilePosX = mainImageTile.style.left;
 		mainImageTileProjectilePosY = mainImageTile.style.top;
 
-		mainImageTileProjectile.style.left = mainImageTileProjectilePosX;
-		mainImageTileProjectile.style.top = mainImageTileProjectilePosY;
 
 		//added by Mike, 20231121
 
@@ -1615,7 +1677,7 @@ iVerticalOffsetInnerScreen=0;
     mouseInputImage.style.visibility="visible";
 
 		if (iMouseAnimationDelayCount==iMouseAnimationDelayCountMax) {
-			iMouseAnimationCount=(iMouseAnimationCount+1)%5; //last hidden
+			iMouseAnimationCount=(iMouseAnimationCount+1)%3; //last hidden
 
 
 			iMouseAnimationDelayCount=0;
@@ -1634,11 +1696,14 @@ iVerticalOffsetInnerScreen=0;
 
 		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
 
-		if (iMouseAnimationCount==0) { //%2
+		if (iMouseAnimationCount==0) { 
 			mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
 		}
-		else {
+		else if (iMouseAnimationCount==1) { 
 			mouseInputImage.style.objectPosition = "-" + 64 + "px -" + 192 + "px";
+		}
+		else {
+			mouseInputImage.style.objectPosition = "-" + 64*2 + "px -" + 192 + "px";
 		}
 	}
 
@@ -1856,7 +1921,10 @@ iVerticalOffsetInnerScreen=0;
 			textScoreDivId.style.color="white";
 			myCanvasTwo.style.visibility="visible";
 									
-			mainImageTile.style.visibility = "visible";
+			//edited by Mike, 20241103
+			//mainImageTile.style.visibility = "visible";
+			mainImageTile.style.visibility = "hidden";
+
 			mainImageTileTankBody.style.visibility = "visible";
 
 			
@@ -2514,6 +2582,19 @@ executeExplosionEffectToMonsterBoss();
 mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTileProjectilePosY;
 
 					mainImageTileProjectilePosX=parseInt(mainImageTileProjectilePosX)+newMainImageTileProjectilePosX;
+			
+			//TODO: -update: this
+
+			if (Math.abs(mainImageTileProjectilePosY)>=Math.abs(mainImageTileProjectileStepDestinationY)) {
+				//mainImageTileProjectilePosY=mainImageTileProjectileStepDestinationY;
+				//resetProjectile();
+			}
+
+			if (Math.abs(mainImageTileProjectilePosX)>=Math.abs(mainImageTileProjectileStepDestinationX)) {
+				//mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX;
+				//resetProjectile();
+			}
+
 
 
 		mainImageTileProjectile.style.left = mainImageTileProjectilePosX+"px";
@@ -2521,6 +2602,8 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 		mainImageTileProjectile.style.top = mainImageTileProjectilePosY+"px";
 
 
+		mainImageTilePosX=mainImageTileProjectilePosX;
+		mainImageTilePosY=mainImageTileProjectilePosY;
 
 //-----------------
 
@@ -2637,7 +2720,9 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
     var iDeltaX=(iXPos-iHorizontalOffset)-(mainImageTilePosX+iImageFrameWidth/2);
     var iDeltaY=(iYPos-iVerticalOffset)-(mainImageTilePosY+iImageFrameHeight/2);
 
-
+	//added by Mike, 20241103
+	mainImageTileProjectileStepDestinationX=iDeltaX;
+	mainImageTileProjectileStepDestinationY=iDeltaY;
 
 
     /*
@@ -2692,15 +2777,6 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
     //added by Mike, 20231119
     //reached this part
     bIsPuzzleTileTargetHit=false;
-
-
-    					//reference: https://stackoverflow.com/questions/8388440/converting-a-double-to-an-int-in-javascript-without-rounding; last accessed: 20230425
-    					//answer by: kubetz, 20111205T1630
-    					//edited by: Rooke, 20160329T1858
-
-    					//identify the quadrant; start @1
-    					var iQuadrant = parseInt(iMainImageTileStepAngle/90,10)+1;
-    					//alert(iQuadrant);
   
   }
 
@@ -3061,6 +3137,18 @@ function initTouchInput() {
   }
 }
 
+/*
+//note:
+alert("window.innerWidth: "+window.innerWidth); //1408
+alert("window.innerHeight: "+window.innerHeight); //601
+
+alert("screen.width: "+screen.width); //1408
+alert("screen.height: "+screen.height); //792
+
+	iStageMaxWidth=640*2;
+	iStageMaxHeight=360*2;
+*/
+
 
 		init();
 
@@ -3110,8 +3198,12 @@ incorrect output on Safari; macOS;
 
 opting to put assets folder in "html_application" folder instead
 -->
+
 		<img id="mainImageTileImageTankBodyId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
+<!--
+		<img id="mainImageTileImageTankBodyId" class="ImageHeroFrame1" src="assets/images/tile.png">
+-->
 		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
 		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
@@ -3248,6 +3340,9 @@ opting to put assets folder in "html_application" folder instead
 	  Your browser does not support the audio tag.
 	</audio><br/>
 
+<!--
+<button onclick="openFullscreen();">Open Fullscreen</button>
+-->
 
   </body>
 </html>
