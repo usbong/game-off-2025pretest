@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241104; from 20241103
+' @date updated: 20241105; from 20241104
 ' @website: www.usbong.ph
 '
 '
@@ -58,7 +58,7 @@
   </head>
 
   <title>
-    Usbong Game Off 2023
+    Usbong Game Off 2024
   </title>
 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -197,8 +197,9 @@
 		.ImageTileFrame1 {
 			position: absolute;
 
-		/*added by Mike, 20231105*/
-  		clip: rect(0px,64px,64px,0px);
+		/*edited by Mike, 20241104; from 20231105; clip: rect(0px,64px,64px,0px);*/
+  		
+  		clip: rect(0px,32px,32px,0px);
 			
 			visibility: hidden;
 			
@@ -208,7 +209,10 @@
 		.ImageHeroFrame1 {
 			position: absolute;
 
-			clip: rect(0px,128px,128px,0px);
+/*			clip: rect(0px,128px,128px,0px);*/
+
+			clip: rect(0px,32px,32px,0px);
+			
 
 			visibility: hidden;
 						
@@ -263,7 +267,9 @@
 			position: absolute;
 
 			clip: rect(0px,64px,64px,0px);
-
+/*
+			clip: rect(0px,32px,32px,0px);
+*/
 			visibility: hidden; /*visible;*/
 		}
 
@@ -941,7 +947,7 @@ var iMouseAnimationDelayCountMax=2;//1;
 var iHeroAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iHeroAnimationCountMax=5;
 var iHeroAnimationDelayCount=0;
-var iHeroAnimationDelayCountMax=2;//1;
+var iHeroAnimationDelayCountMax=5;//2;//1; //TODO: -add: dust effect if target walking distance is far
 
 //edited by Mike, 20231124; from 20231123
 var iScore=10000;//0;
@@ -967,11 +973,12 @@ var iSoldierAnimationScale=0;
 //added by Mike, 20231124
 //note: acceleration
 
-var mainImageTileProjectileStepYMax=4;//20;//20;
-var mainImageTileProjectileStepXMax=4;//20;//20;
+//min 2; not 1
+var mainImageTileProjectileStepYMax=2;//4;//20;//20;
+var mainImageTileProjectileStepXMax=2;//4;//20;//20;
 
-var mainImageTileProjectileVelocityY=4;//20;//4;//1;
-var mainImageTileProjectileVelocityX=4;//20;//4;//1;
+var mainImageTileProjectileVelocityY=2;//4;//20;//4;//1;
+var mainImageTileProjectileVelocityX=2;//4;//20;//4;//1;
 
 var mainImageTileProjectileStepYMin=mainImageTileProjectileVelocityY;//4;//12;
 var mainImageTileProjectileStepXMin=mainImageTileProjectileVelocityX;//4;//12;
@@ -1003,8 +1010,8 @@ var iDefaultAnimationImageY=0;//-32; //default y
 var iTotalAnimImageFrameCount=2;
 
 //edited by Mike, 20230322
-var iImageFrameWidth=64;// 32; //0;
-var iImageFrameHeight=64;// 32;
+var iImageFrameWidth=32;//64;// 32; //0;
+var iImageFrameHeight=32;//64;// 32;
 
 //added by Mike, 20231121
 var iMouseInputImageWidth=64;
@@ -1421,10 +1428,10 @@ function closeFullscreen() {
 		iHeroAnimationCount=0; 
 
 		if (bIsHeroFacingLeft) {
-			iFrameY=64*2;//128;
+			iFrameY=iImageFrameHeight*2;//64*2; 128;
 		}
 		else {
-			iFrameY=64*3;//192;
+			iFrameY=iImageFrameHeight*3;//64*3; 192;
 		}
 		
 		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
@@ -1550,7 +1557,10 @@ function closeFullscreen() {
 		//cat body
 		//mainImageTileTankBody.style.objectPosition = "-" + 128 + "px -" + 192 + "px";
 		//mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
-		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
+		//mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
+
+		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + iImageFrameHeight*3 + "px";
+
 
 		//mainImageTileTankBody.style.transform = "scale(0.25,0.25)";
 /*		
@@ -1562,7 +1572,10 @@ alert(iImageFrameWidth);
 */
 
 		
-		mainImageTile.style.objectPosition = "-" + 192 + "px -" + 192 + "px";
+		//mainImageTile.style.objectPosition = "-" + 192 + "px -" + 192 + "px";
+		
+		mainImageTile.style.objectPosition = "-" + iImageFrameWidth*3 + "px -" + iImageFrameHeight*3 + "px";
+
 
 		//added by Mike, 20231124
 		mainImageTileProjectile.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
@@ -1741,14 +1754,16 @@ alert(iImageFrameWidth);
 
 		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
 
+	    //iImageFrameWidth*2; inputImageLarge
+
 		if (iMouseAnimationCount==0) { 
 			mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
 		}
 		else if (iMouseAnimationCount==1) { 
-			mouseInputImage.style.objectPosition = "-" + 64 + "px -" + 192 + "px";
+			mouseInputImage.style.objectPosition = "-" + (iImageFrameWidth*2) + "px -" + 192 + "px";
 		}
 		else {
-			mouseInputImage.style.objectPosition = "-" + 64*2 + "px -" + 192 + "px";
+			mouseInputImage.style.objectPosition = "-" + (iImageFrameWidth*2)*2 + "px -" + 192 + "px";
 		}
 	}
 	
@@ -1774,20 +1789,20 @@ alert(iImageFrameWidth);
 		//destination to the left of hero projectile
 		//if (newMainImageTileProjectilePosX<0) {
 		if (bIsHeroFacingLeft) {
-			iFrameY=64*2;//128;
+			iFrameY=iImageFrameHeight*2;//64*2; 128;
 		}
 		else {
-			iFrameY=64*3;//192;
+			iFrameY=iImageFrameHeight*3;//64*3; 192;
 		}
 
 		if (iHeroAnimationCount==0) { 
 			mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
 		}
 		else if (iHeroAnimationCount==1) { 
-			mainImageTileTankBody.style.objectPosition = "-" + 64 + "px -" + iFrameY + "px";
+			mainImageTileTankBody.style.objectPosition = "-" + iImageFrameWidth + "px -" + iFrameY + "px";
 		}
 		else {
-			mainImageTileTankBody.style.objectPosition = "-" + 64*2 + "px -" + iFrameY + "px";
+			mainImageTileTankBody.style.objectPosition = "-" + iImageFrameWidth*2 + "px -" + iFrameY + "px";
 		}
 	}
 
@@ -2644,14 +2659,15 @@ executeExplosionEffectToMonsterBoss();
 		}
 */		
 
+/*	//removed by Mike, 20241104
     if (mainImageMonsterBossPosY+iMonsterBossTileHeight>iStageMaxHeight) {
 			mainImageMonsterBossPosY=iStageMaxHeight-iMonsterBossTileHeight;
 
-/*			
+			
 			//edited by Mike, 20231127
-			iScore=1;
-			iTargetScore=1;
-*/			
+////			iScore=1;
+////			iTargetScore=1;
+			
 			iTargetScore=1;
 			bIsIncreasingScore=false;
 		    //setMonsterExplosionEffectPosition(0+iHorizontalOffset+iStageMaxHeight-iMonsterBossTileWidth/2,mainImageMonsterBossPosY+iMonsterBossTileHeight/2);
@@ -2688,6 +2704,7 @@ executeExplosionEffectToMonsterBoss();
 			
 			//bIsExecutingShake=true;	
 		}
+*/		
 		
 		//added by Mike, 20231129
 		var bossBattleBgImage = document.getElementById("bossBattleBgImageId");
@@ -3601,11 +3618,11 @@ opting to put assets folder in "html_application" folder instead
 		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
 
 		<!-- added by Mike, 20231121 -->
-		<img id="mouseInputImageId" class="ImageMouseInput" src="assets/images/inputImage.png">
+		<img id="mouseInputImageId" class="ImageMouseInput" src="assets/images/inputImageLarge.png">
 
     <!-- added by Mike, 20231125 -->
-    <img id="mainImageMonsterBoss" class="ImageMonsterBoss" src="assets/images/inputImage.png">
-    <img id="mainImageMonster0" class="ImageMonster0" src="assets/images/inputImage.png">
+    <img id="mainImageMonsterBoss" class="ImageMonsterBoss" src="assets/images/inputImageLarge.png">
+    <img id="mainImageMonster0" class="ImageMonster0" src="assets/images/inputImageLarge.png">
 
 	<!-- added by Mike, 20231129 -->
 	<img id="mainImageSoldierId" class="ImageMainSoldier" src="assets/images/puzzleStageBG.png">
