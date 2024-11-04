@@ -197,9 +197,9 @@
 		.ImageTileFrame1 {
 			position: absolute;
 
-      /*added by Mike, 20231105*/
+		/*added by Mike, 20231105*/
   		clip: rect(0px,64px,64px,0px);
-
+			
 			visibility: hidden;
 			
 			z-index: 2;
@@ -1416,6 +1416,8 @@ function closeFullscreen() {
 		bHasReachedDestinationY=false;
 		bHasReachedDestinationX=false;
 		
+		//TODO: -add: idle animation
+		
 		iHeroAnimationCount=0; 
 
 		if (bIsHeroFacingLeft) {
@@ -2520,15 +2522,127 @@ executeExplosionEffectToMonsterBoss();
 		else if (mainImageTilePosX<0) {
 			mainImageTilePosX=0;
 		}
+		
+		//added by Mike, 20241104
+		//INNER STAGE; MAX
+		//iHorizontalOffset=(640-iStageMaxHeight)/2;
+		var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
+		var iInnerVerticalOffset=iImageFrameHeight/4;//2;
+
+		//reminder: innerStageWidth uses iStageMaxHeight
+
+		//TODO: -add: map; to identify door position;
+
+/*
+		//WALL
+		//right-most
+		if (mainImageTilePosX+iImageFrameWidth>iInnerHorizontalOffset+iStageMaxHeight) {
+			//OK;
+			mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
+			
+			//OK; wraps around; TODO: -add door
+			//mainImageTilePosX=0+iInnerHorizontalOffset;
+			
+			//alert("mainImageTilePosX: "+mainImageTilePosX);				
+			resetProjectile();			
+		}
+		//left-most
+		else if (mainImageTilePosX<0+iInnerHorizontalOffset) {
+			//OK;
+			mainImageTilePosX=0+iInnerHorizontalOffset;
+
+			//OK; wraps around; TODO: -add door
+			//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
+
+			resetProjectile();
+		}		
+*/
+		
+		//DOOR
+		//right-most
+		if (mainImageTilePosX+iImageFrameWidth>iInnerHorizontalOffset+iStageMaxHeight) {
+			//OK;
+			//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
+			
+			//OK; wraps around; TODO: -add door
+			mainImageTilePosX=0+iInnerHorizontalOffset;
+			
+			//alert("mainImageTilePosX: "+mainImageTilePosX);				
+			resetProjectile();			
+		}
+		//left-most
+		else if (mainImageTilePosX<0+iInnerHorizontalOffset) {
+			//OK;
+			//mainImageTilePosX=0+iInnerHorizontalOffset;
+
+			//OK; wraps around; TODO: -add door
+			mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
+
+			resetProjectile();
+		}		
+		
 
 		if (mainImageTilePosY+iImageFrameHeight>iStageMaxHeight) {
-      //edited by Mike, 20231126
+			//edited by Mike, 20231126
 			//mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
-      mainImageTilePosY=iStageMaxHeight-iImageFrameHeight-iImageFrameHeight*0.25;
+			mainImageTilePosY=iStageMaxHeight-iImageFrameHeight-iImageFrameHeight*0.25;
 		}
 		else if (mainImageTilePosY<0) {
 			mainImageTilePosY=0;
 		}
+		
+/*		
+		//WALL
+		//added by Mike, 20241104
+		if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset) {
+			//OK
+			mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
+			//OK; wraps around; TODO: -add door
+			//mainImageTilePosY=0;
+			//mainImageTilePosY=0+iInnerVerticalOffset;
+
+			//alert("mainImageTilePosX: "+mainImageTilePosX);				
+			resetProjectile();			
+		}
+		else if (mainImageTilePosY<0+iInnerVerticalOffset) {
+			//OK
+			mainImageTilePosY=0+iInnerVerticalOffset;
+			//OK; wraps around; TODO: -add door
+			//mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
+			
+			resetProjectile();
+		}			
+*/
+		
+		//DOOR
+		//added by Mike, 20241104
+/*		
+		if ((mainImageTilePosX+iImageFrameWidth>=iInnerHorizontalOffset+iStageMaxWidth/2) && (mainImageTilePosX<=iInnerHorizontalOffset+iStageMaxWidth/2+iImageFrameWidth)) {
+	
+	//alert("DITO!!!");
+	
+		//if (isPointsOfRectIntersectingPointsOfRect(mainImageTilePosX,mainImageTilePosY, iInnerHorizontalOffset+iStageMaxWidth/2,iInnerHorizontalOffset+iStageMaxWidth/2)) {
+*/				
+			if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset) {
+				//OK				//mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
+				//OK; wraps around; TODO: -add door
+				//mainImageTilePosY=0;
+				mainImageTilePosY=0+iInnerVerticalOffset;
+
+				//alert("mainImageTilePosX: "+mainImageTilePosX);				
+				resetProjectile();			
+			}
+			else if (mainImageTilePosY<0+iInnerVerticalOffset) {
+				//OK
+				//mainImageTilePosY=0;
+				//OK; wraps around; TODO: -add door
+				mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
+				
+				resetProjectile();
+			}		
+/*			
+		}
+*/		
 
     if (mainImageMonsterBossPosY+iMonsterBossTileHeight>iStageMaxHeight) {
 			mainImageMonsterBossPosY=iStageMaxHeight-iMonsterBossTileHeight;
@@ -2896,17 +3010,50 @@ alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDes
 		resetProjectile();				
 	}	
 */
+
 		
 	if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, parseInt(mainImageTileTankBody.style.left),parseInt(mainImageTileTankBody.style.top))) {
         //alert("HIT!");
 		//no change
 		//if ((bHasReachedDestinationX) && (bHasReachedDestinationY)) {
 			if ((iXPos==iPrevMouseXPos) && (iYPos==iPrevMouseYPos)) {	
+				//TODO: -add: hit wall animation;
 				return;
 			}
 		//}	
     }
 
+	
+	//added by Mike, 20241104
+	if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, iPrevMouseXPos,iPrevMouseYPos)) {
+		//TODO: -add: hit wall animation;
+		//return;
+		
+		//do this only if at the borders of the inner stage
+	
+		//INNER STAGE; MAX
+		//iHorizontalOffset=(640-iStageMaxHeight)/2;
+		var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
+		var iInnerVerticalOffset=iImageFrameHeight/2;
+
+		//reminder: innerStageWidth uses iStageMaxHeight
+	
+		if (mainImageTilePosX+iImageFrameWidth>=iInnerHorizontalOffset+iStageMaxHeight) {
+			return;
+		}
+		else if (mainImageTilePosX<=0+iInnerHorizontalOffset) {
+			return;
+		}		
+		
+		if (mainImageTilePosY+iImageFrameHeight>=0+iStageMaxHeight-iInnerVerticalOffset) {
+			return;
+		}
+		else if (mainImageTilePosY<=0) {
+			return;
+		}	
+    }
+	
+		
 	iPrevMouseXPos=iXPos;
 	iPrevMouseYPos=iYPos;
 
@@ -2980,6 +3127,11 @@ alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDes
 	
 
     					bHasFired=true;
+						
+						//added by Mike, 20241104
+						//start at second frame; due to at present, no idle animation yet;
+						//need to also display movement in animation;
+						iHeroAnimationCount=1;
 				
 				var myAudioEffectCannonFire = document.getElementById("myAudioEffectCannonFireId");
 
