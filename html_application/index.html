@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241105; from 20241104
+' @date updated: 20241106; from 20241105
 ' @website: www.usbong.ph
 '
 '
@@ -1251,7 +1251,12 @@ var iOffsetHeight=0;
 	var iPrevMouseXPos=-1;
 	var iPrevMouseYPos=-1;
 	
+	//TODO: -do code refactoring; there's also iFacingDirection
 	var bIsHeroFacingLeft=false;
+	
+	//added by Mike, 20241106
+	var iCurrMapLocation=0;
+		
 
 /*	//removed by Mike, 20231124
 	//edited by Mike, 20230418
@@ -1525,6 +1530,9 @@ function closeFullscreen() {
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
+		
+		var doorImageRight = document.getElementById("doorImageRightId");
+		doorImageRight.style.visibility="hidden";
 
 		//added by Mike, 20231121
 		var mouseInputImage = document.getElementById("mouseInputImageId");
@@ -2623,6 +2631,193 @@ executeDustEffect();
 		//TO-DO: -add: function; AI; Artificial Intelligence
 		//combination of forward, diagonal movements
 
+		
+		//added by Mike, 20241104
+		//INNER STAGE; MAX
+		//iHorizontalOffset=(640-iStageMaxHeight)/2;
+		var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
+		
+		var iInnerVerticalOffset=iImageFrameHeight/4;//2;
+
+		//reminder: innerStageWidth uses iStageMaxHeight
+
+		//TODO: -add: map; to identify door position;
+		//iCurrMapLocation=0;
+		switch(iCurrMapLocation) {
+			case 0:					
+				//DOOR
+				//right-most					
+				var doorImageRight = document.getElementById("doorImageRightId");
+				doorImageRight.style.visibility="visible";
+				doorImageRight.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
+				doorImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth) +"px";			
+				
+				//WALL
+				//right-most
+				//square rooms; hence, iStageMaxHeight
+				//wall with door at center
+				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+					/*
+						//OK;
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						resetProjectile();			
+					*/
+					
+					//if (mainImageTilePosX+iImageFrameWidth>iInnerHorizontalOffset+iStageMaxHeight) {
+					//+iInnerVerticalOffset)
+					
+					//TODO: -verify: door clicking					
+					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
+						//OK;
+						//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
+						
+						//OK; wraps around
+						mainImageTilePosX=0+iInnerHorizontalOffset;
+						
+						//alert("mainImageTilePosX: "+mainImageTilePosX);				
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=1;
+					}			
+					else {
+						//OK;
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						resetProjectile();						
+					}					
+				}
+				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
+					//OK;
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+
+					//OK; wraps around; TODO: -add door
+					//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
+
+					resetProjectile();
+				}	
+/*				
+				//DOOR
+				//right-most
+				if (mainImageTilePosX+iImageFrameWidth>iInnerHorizontalOffset+iStageMaxHeight) {
+					//OK;
+					//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
+					
+					//OK; wraps around; TODO: -add door
+					mainImageTilePosX=0+iInnerHorizontalOffset;
+					
+					//alert("mainImageTilePosX: "+mainImageTilePosX);				
+					resetProjectile();			
+				}
+				//left-most
+				else if (mainImageTilePosX<0+iInnerHorizontalOffset) {
+					//OK;
+					//mainImageTilePosX=0+iInnerHorizontalOffset;
+
+					//OK; wraps around; TODO: -add door
+					mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
+
+					resetProjectile();
+				}
+*/				
+/*
+				//bottom-most
+				if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset) {
+					//OK				//mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
+					//OK; wraps around; TODO: -add door
+					//mainImageTilePosY=0;
+					mainImageTilePosY=0+iInnerVerticalOffset;
+
+					//alert("mainImageTilePosX: "+mainImageTilePosX);				
+					resetProjectile();			
+				}
+				//top-most
+				else if (mainImageTilePosY<0+iInnerVerticalOffset) {
+					//OK
+					//mainImageTilePosY=0;
+					//OK; wraps around; TODO: -add door
+					mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
+					
+					iCurrMapLocation=1;
+										
+					resetProjectile();
+				}	
+*/				
+				//WALL
+				//added by Mike, 20241104
+				if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+					//OK
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+					//OK; wraps around; TODO: -add door
+					//mainImageTilePosY=0;
+					//mainImageTilePosY=0+iInnerVerticalOffset;
+
+					//alert("mainImageTilePosX: "+mainImageTilePosX);				
+					resetProjectile();			
+				}
+				else if (mainImageTilePosY<0+iInnerVerticalOffset) {
+					//OK
+					mainImageTilePosY=0+iInnerVerticalOffset;
+					//OK; wraps around; TODO: -add door
+					//mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
+					
+					resetProjectile();
+				}		
+				break;
+			case 1:
+				//alert("HALLO");
+				
+				//clear all doors
+				var doorImageRight = document.getElementById("doorImageRightId");
+				doorImageRight.style.visibility="hidden";
+			
+				//WALL
+				//right-most
+				//square rooms; hence, iStageMaxHeight
+				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+					//OK;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					
+					//OK; wraps around; TODO: -add door
+					//mainImageTilePosX=0+iInnerHorizontalOffset;
+					
+					//alert("mainImageTilePosX: "+mainImageTilePosX);				
+					resetProjectile();			
+				}
+				//left-most
+				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
+					//OK;
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+
+					//OK; wraps around; TODO: -add door
+					//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
+
+					resetProjectile();
+				}		
+	
+				//WALL
+				//added by Mike, 20241104
+				if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+					//OK
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+					//OK; wraps around; TODO: -add door
+					//mainImageTilePosY=0;
+					//mainImageTilePosY=0+iInnerVerticalOffset;
+
+					//alert("mainImageTilePosX: "+mainImageTilePosX);				
+					resetProjectile();			
+				}
+				else if (mainImageTilePosY<0+iInnerVerticalOffset) {
+					//OK
+					mainImageTilePosY=0+iInnerVerticalOffset;
+					//OK; wraps around; TODO: -add door
+					//mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
+					
+					resetProjectile();
+				}			
+				break;
+		}
+
+
 		//STAGE; MAX
 		if (mainImageTilePosX+iImageFrameWidth>iStageMaxWidth) {
 			mainImageTilePosX=iStageMaxWidth-iImageFrameWidth;
@@ -2631,64 +2826,7 @@ executeDustEffect();
 			mainImageTilePosX=0;
 		}
 		
-		//added by Mike, 20241104
-		//INNER STAGE; MAX
-		//iHorizontalOffset=(640-iStageMaxHeight)/2;
-		var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
-		var iInnerVerticalOffset=iImageFrameHeight/4;//2;
 
-		//reminder: innerStageWidth uses iStageMaxHeight
-
-		//TODO: -add: map; to identify door position;
-
-/*
-		//WALL
-		//right-most
-		if (mainImageTilePosX+iImageFrameWidth>iInnerHorizontalOffset+iStageMaxHeight) {
-			//OK;
-			mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
-			
-			//OK; wraps around; TODO: -add door
-			//mainImageTilePosX=0+iInnerHorizontalOffset;
-			
-			//alert("mainImageTilePosX: "+mainImageTilePosX);				
-			resetProjectile();			
-		}
-		//left-most
-		else if (mainImageTilePosX<0+iInnerHorizontalOffset) {
-			//OK;
-			mainImageTilePosX=0+iInnerHorizontalOffset;
-
-			//OK; wraps around; TODO: -add door
-			//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
-
-			resetProjectile();
-		}		
-*/
-		
-		//DOOR
-		//right-most
-		if (mainImageTilePosX+iImageFrameWidth>iInnerHorizontalOffset+iStageMaxHeight) {
-			//OK;
-			//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
-			
-			//OK; wraps around; TODO: -add door
-			mainImageTilePosX=0+iInnerHorizontalOffset;
-			
-			//alert("mainImageTilePosX: "+mainImageTilePosX);				
-			resetProjectile();			
-		}
-		//left-most
-		else if (mainImageTilePosX<0+iInnerHorizontalOffset) {
-			//OK;
-			//mainImageTilePosX=0+iInnerHorizontalOffset;
-
-			//OK; wraps around; TODO: -add door
-			mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
-
-			resetProjectile();
-		}		
-		
 
 		if (mainImageTilePosY+iImageFrameHeight>iStageMaxHeight) {
 			//edited by Mike, 20231126
@@ -2699,28 +2837,7 @@ executeDustEffect();
 			mainImageTilePosY=0;
 		}
 		
-/*		
-		//WALL
-		//added by Mike, 20241104
-		if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset) {
-			//OK
-			mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
-			//OK; wraps around; TODO: -add door
-			//mainImageTilePosY=0;
-			//mainImageTilePosY=0+iInnerVerticalOffset;
 
-			//alert("mainImageTilePosX: "+mainImageTilePosX);				
-			resetProjectile();			
-		}
-		else if (mainImageTilePosY<0+iInnerVerticalOffset) {
-			//OK
-			mainImageTilePosY=0+iInnerVerticalOffset;
-			//OK; wraps around; TODO: -add door
-			//mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
-			
-			resetProjectile();
-		}			
-*/
 		
 		//DOOR
 		//added by Mike, 20241104
@@ -2731,23 +2848,7 @@ executeDustEffect();
 	
 		//if (isPointsOfRectIntersectingPointsOfRect(mainImageTilePosX,mainImageTilePosY, iInnerHorizontalOffset+iStageMaxWidth/2,iInnerHorizontalOffset+iStageMaxWidth/2)) {
 */				
-			if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset) {
-				//OK				//mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
-				//OK; wraps around; TODO: -add door
-				//mainImageTilePosY=0;
-				mainImageTilePosY=0+iInnerVerticalOffset;
-
-				//alert("mainImageTilePosX: "+mainImageTilePosX);				
-				resetProjectile();			
-			}
-			else if (mainImageTilePosY<0+iInnerVerticalOffset) {
-				//OK
-				//mainImageTilePosY=0;
-				//OK; wraps around; TODO: -add door
-				mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
 				
-				resetProjectile();
-			}		
 /*			
 		}
 */		
@@ -3755,6 +3856,8 @@ opting to put assets folder in "html_application" folder instead
 	<!-- added by Mike, 20231129 -->
 	<img id="mainImageSoldierId" class="ImageMainSoldier" src="assets/images/puzzleStageBG.png">
 
+
+	<img id="doorImageRightId" class="Image32x32Tile" src="assets/images/tile.png">
 
 <!--
 		<img id="explosionEffectImageId" class="ImageExplosion" src="assets/images/effects.png">
