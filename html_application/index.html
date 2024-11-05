@@ -306,6 +306,16 @@
 			z-index: 10; /*4;*/
 		}
 
+		.ImageDust {
+			position: absolute;
+
+			clip: rect(0px,32px,32px,0px);
+
+			visibility: hidden;
+
+			z-index: 10; /*4;*/
+		}
+		
 		.ImageHowToPlayGuide {
 			position: absolute;
 
@@ -916,6 +926,12 @@ var iMonsterExplosionEffectAnimationDelayCount=0;
 //edited by Mike, 20231128
 var iMonsterExplosionEffectAnimationDelayCountMax=2;//4;//1;
 
+//added by Mike, 20241105
+var iDustEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
+var iDustEffectAnimationCountMax=5;
+var iDustEffectAnimationDelayCount=0;
+var iDustEffectAnimationDelayCountMax=4;//1;
+
 //added by Mike, 20231128
 var iTransitionFromPuzzleToBossDelayCount=0;
 var iTransitionFromPuzzleToBossDelayCountMax=150;//100;
@@ -927,6 +943,10 @@ var iMonsterBossAttackDelayCountMax=120;
 //added by Mike, 20231120
 var iImageExplosionEffectAnimationWidth=64;
 var iImageExplosionEffectAnimationHeight=64;
+
+//added by Mike, 20241105
+var iImageDustEffectAnimationWidth=32;
+var iImageDustEffectAnimationHeight=32;
 
 //added by Mike, 20231127
 var iTransitionRotate=0;
@@ -1706,6 +1726,28 @@ alert(iImageFrameWidth);
     explosionEffectImage.style.top = iInputY-iImageExplosionEffectAnimationHeight/2;
   }
 
+	//added by Mike, 20240511
+	function setDustEffectPosition(iInputX, iInputY) {
+		var dustEffectImage = document.getElementById("dustEffectImageId");
+
+		if (dustEffectImage.style.visibility=="visible") {
+		  return;
+		}
+
+		dustEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+
+		dustEffectImage.style.visibility="visible";
+
+		iDustEffectAnimationDelayCount=iDustEffectAnimationDelayCountMax;
+
+		iDustEffectAnimationCount=-1; //0;
+/*
+alert("iInputX: "+iInputX);
+alert("iInputY: "+iInputY);
+*/
+		dustEffectImage.style.left = iInputX;//+iImageDustEffectAnimationWidth/2;
+		dustEffectImage.style.top = iInputY+iImageDustEffectAnimationHeight/4; //near feet
+	}
   
   	//added by Mike, 20231128
 	function executeEnterClickAnimation() {	
@@ -1972,6 +2014,48 @@ alert(iImageFrameWidth);
 		}
 	}
 
+	//added by Mike, 20241105
+	function executeDustEffect() {
+		var dustEffectImage = document.getElementById("dustEffectImageId");
+
+		if (dustEffectImage.style.visibility=="hidden") {
+			return;
+		}
+
+		if (iDustEffectAnimationDelayCount==iDustEffectAnimationDelayCountMax) {
+			iDustEffectAnimationCount=(iDustEffectAnimationCount+1)%4;//5; //last hidden
+
+			iDustEffectAnimationDelayCount=0;
+		}
+		else {
+			iDustEffectAnimationDelayCount++;
+
+	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+		}
+		
+		//dustEffectImage.style.objectPosition = "-" + 0 + "px -" + 256 + "px";
+
+		//alert("iDustEffectAnimationCount: "+iDustEffectAnimationCount);
+
+		if (iDustEffectAnimationCount==0) { //%2
+			dustEffectImage.style.objectPosition = "-" + 0 + "px -" + 256 + "px";
+		}
+		else if (iDustEffectAnimationCount==1) {
+			dustEffectImage.style.objectPosition = "-" + iImageDustEffectAnimationWidth + "px -" + 256 + "px";
+			//alert(">>>>");
+		}
+		else if (iDustEffectAnimationCount==2) {
+			dustEffectImage.style.objectPosition = "-" + iImageDustEffectAnimationWidth*2 + "px -" + 256 + "px";
+			//alert(">>>>");
+		}
+////		else if (iExplosionEffectAnimationCount==3) {
+////			explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 0 + "px";
+////			//alert(">>>>");
+////		}	
+		else {
+			dustEffectImage.style.visibility="hidden";
+		}		
+	}
 	
 	//added by Mike, 20231127
 	function resetTransitionEffect() {						
@@ -2492,6 +2576,8 @@ executeExplosionEffectToCity();
 
 executeExplosionEffectToMonsterBoss();
 
+//added by Mike, 20241105
+executeDustEffect();
 
 
 	//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);
@@ -3219,6 +3305,9 @@ alert(Date.now()-iMouseClickStartTime);
 		else {
 			//bIsHeroFacingLeft=false;
 		}					
+				
+		//added by Mike, 20241105
+		setDustEffectPosition(mainImageTilePosX,mainImageTilePosY);
 /*		
     }
 */
@@ -3703,6 +3792,8 @@ opting to put assets folder in "html_application" folder instead
   <img id="explosionEffectToMonsterImageId" class="ImageExplosion" src="assets/images/effects.png">
 
     <img id="explosionEffectToCityImageId" class="ImageExplosionToCity" src="assets/images/effects.png">
+
+	<img id="dustEffectImageId" class="ImageDust" src="assets/images/effectsSmall.png">
 
 
 	<!-- added by Mike, 20221119 -->
