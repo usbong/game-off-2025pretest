@@ -943,6 +943,11 @@ var iMouseAnimationCountMax=5;
 var iMouseAnimationDelayCount=0;
 var iMouseAnimationDelayCountMax=2;//1;
 
+//added by Mike, 20241105
+var iMouseClickStartTime=0;
+var iMouseClickMaxElapsedTime=250; //1/4 second
+var bIsHeroDash=false;
+
 //added by Mike, 20241103
 var iHeroAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iHeroAnimationCountMax=5;
@@ -974,8 +979,8 @@ var iSoldierAnimationScale=0;
 //note: acceleration
 
 //min 2; not 1
-var mainImageTileProjectileStepYMax=2;//4;//20;//20;
-var mainImageTileProjectileStepXMax=2;//4;//20;//20;
+var mainImageTileProjectileStepYMax=6;//10;//4;//20;//20;
+var mainImageTileProjectileStepXMax=6;//10;//4;//20;//20;
 
 var mainImageTileProjectileVelocityY=2;//4;//20;//4;//1;
 var mainImageTileProjectileVelocityX=2;//4;//20;//4;//1;
@@ -1412,6 +1417,8 @@ function closeFullscreen() {
 
 		mainImageTileProjectile.style.visibility="hidden";
 		bHasFired=false;
+		
+		bIsHeroDash=false;
 
 		//added by Mike, 20230428
 		iMainImageTileStepAngle=0;
@@ -3006,6 +3013,13 @@ alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDes
   	if (bIsExecutingTransition) {
 		return;
 	}
+		
+		
+/*
+if (iMouseClickStartTime!=0) {
+alert(Date.now()-iMouseClickStartTime);
+}
+*/
 
 	//added by Mike, 20231124
 	var mainImageTile = document.getElementById("mainImageTileImageId");
@@ -3020,15 +3034,18 @@ alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDes
 	//added by Mike, 20231130
 	var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 	
-	//added by Mike, 20241103
+	//edited by Mike, 20241105; 20241103
+	bHasFiredTemp = bHasFired;
+	
+	//note: resets also bHasFired;
 	resetProjectile();
 /*	
 	if ((!bHasReachedDestinationX) || (!bHasReachedDestinationY)) {
 		resetProjectile();				
 	}	
 */
+	
 
-		
 	if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, parseInt(mainImageTileTankBody.style.left),parseInt(mainImageTileTankBody.style.top))) {
         //alert("HIT!");
 		//no change
@@ -3074,16 +3091,37 @@ alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDes
 	iPrevMouseXPos=iXPos;
 	iPrevMouseYPos=iYPos;
 
+	//--------------------------------
+	bIsHeroDash=false;
 
-    if (!bHasFired) {
+	if ((Date.now()-iMouseClickStartTime)<=iMouseClickMaxElapsedTime) {
+		//alert(Date.now()-iMouseClickStartTime);
+		bIsHeroDash=true;
+	}
+	
+	iMouseClickStartTime=Date.now(); //in milliseconds
+	//--------------------------------
+
+	//resetProjectile() sets bHasFired to false;
+	//if (!bHasFired) {
+	//becomes DASH attack;
+	//TODO: -add: elapsed time to be pressed rapidly to execute;
+	if (bHasFiredTemp) {
+		//quick double mouse click; within 1/4 second
+		if (bIsHeroDash) {
+			mainImageTileProjectileStepY=mainImageTileProjectileStepYMax;
+			mainImageTileProjectileStepX=mainImageTileProjectileStepXMax;
+		}
+	}
+	else {
 
 /*	//edited by Mike, 20231125
     mainImageTileStepY=10;
     mainImageTileStepX=10;
 */
-	mainImageTileProjectileStepY=mainImageTileProjectileVelocityY;
-    mainImageTileProjectileStepX=mainImageTileProjectileVelocityX;
-
+		mainImageTileProjectileStepY=mainImageTileProjectileVelocityY;
+		mainImageTileProjectileStepX=mainImageTileProjectileVelocityX;
+	}
 
     //reference: https://stackoverflow.com/questions/15994194/how-to-convert-x-y-coordinates-to-an-angle; last accessed: 20230428;
     //--> answer by: Mohsen, 20130413T2357; from 20150322T2246;
@@ -3180,9 +3218,10 @@ alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDes
 		}
 		else {
 			//bIsHeroFacingLeft=false;
-		}						
+		}					
+/*		
     }
-
+*/
     //added by Mike, 20231119
     //reached this part
     //bIsPuzzleTileTargetHit=false;
