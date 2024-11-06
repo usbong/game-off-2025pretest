@@ -972,7 +972,7 @@ var bIsHeroDash=false;
 var iHeroAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iHeroAnimationCountMax=5;
 var iHeroAnimationDelayCount=0;
-var iHeroAnimationDelayCountMax=5;//2;//1; //TODO: -add: dust effect if target walking distance is far
+var iHeroAnimationDelayCountMax=5;//2;//1; //TODO: -add: more dust effect if target walking distance is far
 
 //edited by Mike, 20231124; from 20231123
 var iScore=10000;//0;
@@ -1255,7 +1255,7 @@ var iOffsetHeight=0;
 	var bIsHeroFacingLeft=false;
 	
 	//added by Mike, 20241106
-	var iCurrMapLocation=0;
+	var iCurrMapLocation=12;//0;
 		
 
 /*	//removed by Mike, 20231124
@@ -1533,6 +1533,15 @@ function closeFullscreen() {
 		
 		var doorImageRight = document.getElementById("doorImageRightId");
 		doorImageRight.style.visibility="hidden";
+		
+		var doorImageLeft = document.getElementById("doorImageLeftId");
+		doorImageLeft.style.visibility="hidden";
+		
+		var doorImageTop = document.getElementById("doorImageTopId");
+		doorImageTop.style.visibility="hidden";
+		
+		var doorImageBottom = document.getElementById("doorImageBottomId");
+		doorImageBottom.style.visibility="hidden";
 
 		//added by Mike, 20231121
 		var mouseInputImage = document.getElementById("mouseInputImageId");
@@ -1578,7 +1587,7 @@ function closeFullscreen() {
 		mainImageTilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
     //edited by Mike, 20231126
     //mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
-    mainImageTilePosY=iStageMaxHeight-iImageFrameHeight-iImageFrameHeight*0.25;
+    mainImageTilePosY=iStageMaxHeight/2-iImageFrameHeight;//-iImageFrameHeight-iImageFrameHeight*0.25;
 
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
     //edited by Mike, 20231126
@@ -2632,6 +2641,17 @@ executeDustEffect();
 		//combination of forward, diagonal movements
 
 		
+		//added by Mike, 20241106
+		var doorImageRight = document.getElementById("doorImageRightId");
+		doorImageRight.style.visibility="hidden";		
+		var doorImageLeft = document.getElementById("doorImageLeftId");
+		doorImageLeft.style.visibility="hidden";
+		var doorImageTop = document.getElementById("doorImageTopId");
+		doorImageTop.style.visibility="hidden";		
+		var doorImageBottom = document.getElementById("doorImageBottomId");
+		doorImageBottom.style.visibility="hidden";
+
+		
 		//added by Mike, 20241104
 		//INNER STAGE; MAX
 		//iHorizontalOffset=(640-iStageMaxHeight)/2;
@@ -2644,41 +2664,142 @@ executeDustEffect();
 		//TODO: -add: map; to identify door position;
 		//iCurrMapLocation=0;
 		switch(iCurrMapLocation) {
-			case 0:					
+			//OK; BOTTOM DOOR; REST of the sides WALLS
+			case 12:				
 				//DOOR
-				//right-most					
-				var doorImageRight = document.getElementById("doorImageRightId");
-				doorImageRight.style.visibility="visible";
-				doorImageRight.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
-				doorImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth) +"px";			
-				
+				//bottom-most					
+				doorImageBottom.style.visibility="visible";
+				doorImageBottom.style.top = 0+iStageMaxHeight-iImageFrameWidth+"px";
+				doorImageBottom.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
+
+				//WALL
+				//square rooms; hence, iStageMaxHeight				
+				//top wall with door at center
+				if (mainImageTilePosY<0+iInnerVerticalOffset) {		
+					//OK
+					mainImageTilePosY=0+iInnerVerticalOffset;					
+					resetProjectile();				
+				}
+				//bottom wall
+				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
+											
+						//OK; wraps around
+						mainImageTilePosY=0+iInnerVerticalOffset;
+						
+						resetProjectile();			
+												
+						//DOOR
+						iCurrMapLocation=1;
+					}			
+					else {
+						//OK;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						resetProjectile();						
+					}						
+				}
+								
 				//WALL
 				//right-most
 				//square rooms; hence, iStageMaxHeight
-				//wall with door at center
 				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
-					/*
-						//OK;
-						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
-						resetProjectile();			
-					*/
-					
-					//if (mainImageTilePosX+iImageFrameWidth>iInnerHorizontalOffset+iStageMaxHeight) {
-					//+iInnerVerticalOffset)
-					
+					//OK;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					resetProjectile();			
+				}
+				//left-most
+				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
+					//OK;
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+					resetProjectile();
+				}					
+				break;		
+				
+			//OK; TOP DOOR; REST of the sides WALLS
+			case 0:				
+				//DOOR
+				//top-most					
+				doorImageTop.style.visibility="visible";
+				doorImageTop.style.top = 0-iImageFrameWidth+"px";
+				doorImageTop.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
+				
+				//WALL
+				//square rooms; hence, iStageMaxHeight				
+				//top wall with door at center
+				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
 					//TODO: -verify: door clicking					
-					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
-						//OK;
-						//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
-						
+					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
+											
 						//OK; wraps around
-						mainImageTilePosX=0+iInnerHorizontalOffset;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
 						
-						//alert("mainImageTilePosX: "+mainImageTilePosX);				
 						resetProjectile();			
 						
 						//DOOR
 						iCurrMapLocation=1;
+					}			
+					else {
+						//OK;
+						mainImageTilePosY=0+iInnerVerticalOffset;
+						resetProjectile();						
+					}					
+				}
+				//bottom wall
+				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+					//OK;
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+					
+					//alert("mainImageTilePosX: "+mainImageTilePosX);				
+					resetProjectile();
+				}
+								
+				//WALL
+				//right-most
+				//square rooms; hence, iStageMaxHeight
+				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+					//OK;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					resetProjectile();			
+				}
+				//left-most
+				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
+					//OK;
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+					resetProjectile();
+				}					
+				break;		
+		
+			//right wall door (commented out); left wall doors;
+			case 10:				
+				//DOOR
+/*				
+				//right-most					
+				//var doorImageRight = document.getElementById("doorImageRightId");
+				doorImageRight.style.visibility="visible";
+				doorImageRight.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
+				doorImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth) +"px";
+*/
+				//left-most					
+				doorImageLeft.style.visibility="visible";
+				doorImageLeft.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
+				doorImageLeft.style.left = 0+(iInnerHorizontalOffset-iImageFrameWidth) +"px";
+				
+				//WALL
+				//right-most				
+				//square rooms; hence, iStageMaxHeight
+/*				
+				//right wall with door at center
+				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {					
+					//TODO: -verify: door clicking					
+					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
+											
+						//OK; wraps around
+						mainImageTilePosX=0+iInnerHorizontalOffset;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=4;
 					}			
 					else {
 						//OK;
@@ -2695,6 +2816,75 @@ executeDustEffect();
 
 					resetProjectile();
 				}	
+*/
+				
+				//left wall with door at center
+				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {					
+					//TODO: -verify: door clicking					
+					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
+											
+						//OK; wraps around
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=1;
+					}			
+					else {
+						//OK;
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+						resetProjectile();						
+					}					
+				}
+				//right wall only
+				else if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+					//OK;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					
+					//alert("mainImageTilePosX: "+mainImageTilePosX);				
+					resetProjectile();			
+				}		
+				
+			
+/*	//OK; DOOR right only			
+				//DOOR
+				//right-most					
+				//var doorImageRight = document.getElementById("doorImageRightId");
+				doorImageRight.style.visibility="visible";
+				doorImageRight.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
+				doorImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth) +"px";							
+				//WALL
+				//right-most
+				//square rooms; hence, iStageMaxHeight
+				//right wall with door at center
+				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {					
+					//TODO: -verify: door clicking					
+					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
+											
+						//OK; wraps around
+						mainImageTilePosX=0+iInnerHorizontalOffset;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=4;
+					}			
+					else {
+						//OK;
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						resetProjectile();						
+					}					
+				}
+				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
+					//OK;
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+
+					resetProjectile();
+				}	
+*/
+				
+				
 /*				
 				//DOOR
 				//right-most
@@ -3856,8 +4046,10 @@ opting to put assets folder in "html_application" folder instead
 	<!-- added by Mike, 20231129 -->
 	<img id="mainImageSoldierId" class="ImageMainSoldier" src="assets/images/puzzleStageBG.png">
 
-
 	<img id="doorImageRightId" class="Image32x32Tile" src="assets/images/tile.png">
+	<img id="doorImageLeftId" class="Image32x32Tile" src="assets/images/tile.png">
+	<img id="doorImageTopId" class="Image32x32Tile" src="assets/images/tile.png">
+	<img id="doorImageBottomId" class="Image32x32Tile" src="assets/images/tile.png">
 
 <!--
 		<img id="explosionEffectImageId" class="ImageExplosion" src="assets/images/effects.png">
