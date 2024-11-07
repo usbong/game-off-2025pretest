@@ -2664,8 +2664,146 @@ executeDustEffect();
 		//TODO: -add: map; to identify door position;
 		//iCurrMapLocation=0;
 		switch(iCurrMapLocation) {
-			//OK; BOTTOM DOOR; REST of the sides WALLS
+			//OK; TOP DOOR; REST of the sides WALLS
 			case 12:				
+				//DOOR
+				//top-most					
+				doorImageTop.style.visibility="visible";
+				doorImageTop.style.top = 0-iImageFrameWidth+"px";
+				doorImageTop.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
+				
+				//WALL
+				//square rooms; hence, iStageMaxHeight				
+				//top wall with door at center
+				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
+					//TODO: -verify: door clicking					
+					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
+											
+						//OK; wraps around
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=11;
+					}			
+					else {
+						//OK;
+						mainImageTilePosY=0+iInnerVerticalOffset;
+						resetProjectile();						
+					}					
+				}
+				//bottom wall
+				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+					//OK;
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+					
+					//alert("mainImageTilePosX: "+mainImageTilePosX);				
+					resetProjectile();
+				}
+								
+				//WALL
+				//right-most
+				//square rooms; hence, iStageMaxHeight
+				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+					//OK;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					resetProjectile();			
+				}
+				//left-most
+				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
+					//OK;
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+					resetProjectile();
+				}					
+				break;		
+			//OK; TOP, LEFT, BOTTOM DOORS; REST of the sides WALLS
+			case 11:				
+				//DOOR; top-most					
+				doorImageTop.style.visibility="visible";
+				doorImageTop.style.top = 0-iImageFrameWidth+"px";
+				doorImageTop.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
+
+				//DOOR; bottom-most					
+				doorImageBottom.style.visibility="visible";
+				doorImageBottom.style.top = 0+iStageMaxHeight-iImageFrameWidth+"px";
+				doorImageBottom.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
+
+				//DOOR; left-most					
+				doorImageLeft.style.visibility="visible";
+				doorImageLeft.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
+				doorImageLeft.style.left = 0+(iInnerHorizontalOffset-iImageFrameWidth) +"px";
+				
+				//WALL
+				//square rooms; hence, iStageMaxHeight				
+				//top wall with door at center
+				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
+					//TODO: -verify: door clicking					
+					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
+											
+						//OK; wraps around
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=1; //TODO: -update: this
+					}			
+					else {
+						//OK;
+						mainImageTilePosY=0+iInnerVerticalOffset;
+						resetProjectile();						
+					}					
+				}
+				//bottom wall
+				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
+											
+						//OK; wraps around
+						mainImageTilePosY=0+iInnerVerticalOffset;
+						
+						resetProjectile();			
+												
+						//DOOR
+						iCurrMapLocation=12;
+					}			
+					else {
+						//OK;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						resetProjectile();						
+					}						
+				}			
+				
+				//left wall with door at center
+				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {					
+					//TODO: -verify: door clicking					
+					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
+											
+						//OK; wraps around
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=1; //TODO: -update: this
+					}			
+					else {
+						//OK;
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+						resetProjectile();						
+					}					
+				}
+				//right wall only
+				else if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+					//OK;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					
+					//alert("mainImageTilePosX: "+mainImageTilePosX);				
+					resetProjectile();			
+				}		
+				break;						
+			//OK; BOTTOM DOOR; REST of the sides WALLS
+			case -1:				
 				//DOOR
 				//bottom-most					
 				doorImageBottom.style.visibility="visible";
@@ -4027,14 +4165,14 @@ incorrect output on Safari; macOS;
 opting to put assets folder in "html_application" folder instead
 -->
 
-		<img id="mainImageTileImageTankBodyId" class="ImageTileFrame1" src="assets/images/inputImage.png">
+		<img id="mainImageTileImageTankBodyId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
 
 <!--
 		<img id="mainImageTileImageTankBodyId" class="ImageHeroFrame1" src="assets/images/tile.png">
 -->
-		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
+		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
 
-		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png">
+		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
 
 		<!-- added by Mike, 20231121 -->
 		<img id="mouseInputImageId" class="ImageMouseInput" src="assets/images/inputImageLarge.png">
