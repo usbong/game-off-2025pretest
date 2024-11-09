@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241108; from 20241107
+' @date updated: 20241109; from 20241108
 ' @website: www.usbong.ph
 '
 '
@@ -2445,6 +2445,7 @@ if (explosionEffectImage.style.visibility=="hidden") {
 		
 //		setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/2);
 	
+	
 		setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/3);
 	
 		
@@ -2588,11 +2589,18 @@ howToPlayGuideImageFrame2.style.visibility = "hidden";
         mainImageMonsterBoss.style.visibility = "visible";
 
 
-executeExplosionEffect();
+//executeExplosionEffect();
 
-executeExplosionEffectToCity();
+//TODO: -update: this
+if (iCurrMapLocation==53) {
+	executeExplosionEffectToCity();
+}
+else {
+  var explosionEffectImage = document.getElementById("explosionEffectToCityImageId");
+  explosionEffectImage.style.visibility="hidden";
+}
 
-executeExplosionEffectToMonsterBoss();
+//executeExplosionEffectToMonsterBoss();
 
 //added by Mike, 20241105
 executeDustEffect();
@@ -2678,8 +2686,30 @@ executeDustEffect();
 				//top wall with door at center
 				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
 					//TODO: -verify: door clicking					
-					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
-											
+					//if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 
+					
+					var iDoorPosStartX=0+iStageMaxWidth/2-iImageFrameWidth*1;//1;
+					var iDoorPosEndX=0+iStageMaxWidth/2+iImageFrameWidth*1;//1;
+					
+					var iDoorPosStartY=0+iInnerVerticalOffset;
+					//var iDoorPosEndY=0+iInnerVerticalOffset;
+					
+					//OK; TODO: -apply to all doors
+					if (isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidth/2,mainImageTilePosY+iImageFrameWidth/2, iDoorPosStartX,iDoorPosStartY, iImageFrameWidth*2, iImageFrameHeight)) {
+						//alert ("HALLO");
+						//OK; wraps around
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+
+						mainImageTilePosX=iDoorPosStartX+iImageFrameWidth/2;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=43;						
+					}
+					
+					
+					if (((mainImageTilePosX>=iDoorPosStartX) && (mainImageTilePosX+iImageFrameWidth<=iDoorPosEndX))) { /*|| (isPointsOfRectIntersectingPointsOfRect(mainImageTilePosX,mainImageTilePosY, iDoorPosX,iDoorPosY))) {*/
 						//OK; wraps around
 						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
 						
@@ -3604,8 +3634,9 @@ executeDustEffect();
 		var bossBattleBgImage = document.getElementById("bossBattleBgImageId");
 		//setCityExplosionEffectPosition(parseInt(bossBattleBgImage.style.left)+bossBattleBgImage.clientWidth*0.3,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/2);
 
+/*	//removed by Mike, 20241109
 		setCityExplosionEffectPosition(parseInt(bossBattleBgImage.style.left)+bossBattleBgImage.clientWidth*0.1,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/3);
-				
+*/				
 				//setCityExplosionEffectPosition(0,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/5);
 
 				
@@ -4404,6 +4435,45 @@ function initTouchInput() {
 
   	let mdo2Width = iImageFrameWidth; //iPuzzleTileWidth;
   	let mdo2Height = iImageFrameHeight; //iPuzzleTileHeight;
+
+  	let iOffsetXPosAsPixel = 0;
+  	let iOffsetYPosAsPixel = 0;
+
+  	//alert("mdo1XPos: "+mdo1XPos);
+
+  /*
+  	alert("mdo1XPos: "+mdo1XPos+"; "+"mdo1Width: "+mdo1Width);
+  	alert("mdo2XPos: "+mdo2XPos+"; "+"mdo2Width: "+mdo2Width);
+  */
+
+  	if ((mdo2YPos+mdo2Height < mdo1YPos+iOffsetYPosAsPixel) || //is the bottom of mdo2 above the top of mdo1?
+  		(mdo2YPos > mdo1YPos+mdo1Height-iOffsetYPosAsPixel) || //is the top of mdo2 below the bottom of mdo1?
+  		(mdo2XPos+mdo2Width < mdo1XPos+iOffsetXPosAsPixel) || //is the right of mdo2 to the left of mdo1?
+  		(mdo2XPos > mdo1XPos+mdo1Width-iOffsetXPosAsPixel)) //is the left of mdo2 to the right of mdo1?
+  	{
+  		//no collision
+  		return false;
+  	}
+
+  	return true;
+  }
+
+  //added by Mike, 20241109
+  //@return bool
+  function isPointsOfRectIntersectingPointsOfRectDoor(iXPos1, iYPos1, iXPos2, iYPos2, iDoorImageFrameWidth, iDoorImageFrameHeight) {
+  	let mdo1XPos = iXPos1;
+  	let mdo1YPos = iYPos1;
+
+  	//edited by Mike, 20230524
+  	//set as a point; not a tile
+  	let mdo1Width = 1;//iPuzzleTileWidth;
+  	let mdo1Height = 1;//iPuzzleTileHeight;
+
+  	let mdo2XPos = iXPos2;
+  	let mdo2YPos = iYPos2;
+
+  	let mdo2Width = iDoorImageFrameWidth; //iImageFrameWidth; //iPuzzleTileWidth;
+  	let mdo2Height = iDoorImageFrameHeight; //iImageFrameHeight; //iPuzzleTileHeight;
 
   	let iOffsetXPosAsPixel = 0;
   	let iOffsetYPosAsPixel = 0;
