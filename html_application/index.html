@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241110; from 20241109
+' @date updated: 20241111; from 20241110
 ' @website: www.usbong.ph
 '
 '
@@ -918,8 +918,14 @@ var iAnimationDelayCountMax=10;
 //added by Mike, 20231127
 var iMonsterAnimationCount=-1;//0; start at -1
 var iMonsterAnimationCountMax=5;
-var iMonsterAnimationDelayCount=10; //0
-var iMonsterAnimationDelayCountMax=10;
+var iMonsterAnimationDelayCount=10; //bat; //0
+var iMonsterAnimationDelayCountMax=6;
+
+var iBossMonsterAnimationCount=-1;//0; start at -1
+var iBossMonsterAnimationCountMax=5;
+var iBossMonsterAnimationDelayCount=10; //0
+var iBossMonsterAnimationDelayCountMax=10;
+
 
 //added by Mike, 20231119
 var iExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
@@ -1266,6 +1272,13 @@ var iOffsetHeight=0;
 	
 	//TODO: -do code refactoring; there's also iFacingDirection
 	var bIsHeroFacingLeft=false;
+		
+	//added by Mike, 20241111
+	//TODO: -put in array;
+	var batMonsterImageTilePosX=0;
+	var batMonsterImageTilePosY=0;
+	var batMonsterTileStepX=2;
+	var batMonsterTileStepY=2;
 	
 	//added by Mike, 20241106
 	var iCurrMapLocation=53;//12;//0;
@@ -1963,10 +1976,10 @@ alert("iInputY: "+iInputY);
 		var batMonsterImageTile = document.getElementById("batMonsterImageId");
 		batMonsterImageTile.style.visibility="visible";
 
-iMonsterAnimationDelayCountMax=15;
+		//iMonsterAnimationDelayCountMax=15;
 
 		if (iMonsterAnimationDelayCount>=iMonsterAnimationDelayCountMax) {
-			iMonsterAnimationCount=(iMonsterAnimationCount+1)%3; //last hidden
+			iMonsterAnimationCount=(iMonsterAnimationCount+1)%2; //3; //last hidden
 
 			iMonsterAnimationDelayCount=0;
 		}
@@ -1991,16 +2004,18 @@ iMonsterAnimationDelayCountMax=15;
 			iFrameY=iImageFrameHeight*3;//64*3; 192;
 		}
 */
-
+		//currently two frames only
 		if (iMonsterAnimationCount==0) { 
 			batMonsterImageTile.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
 		}
 		else if (iMonsterAnimationCount==1) { 
 			batMonsterImageTile.style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
 		}
+/*		
 		else {
 			batMonsterImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*2 + "px -" + iFrameY + "px";
 		}
+*/		
 	}
 	
 	
@@ -2288,6 +2303,20 @@ iMonsterAnimationDelayCountMax=15;
 
 			//setCityExplosionEffectPosition(0,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/5);
 		  }
+	}
+	
+	function verifyHeroCollideWithMonsters() {
+		var batMonsterImageTile = document.getElementById("batMonsterImageId");
+		
+		if (batMonsterImageTile.style.visibility!=="hidden") {						
+			//+iImageFrameWidthDefault/2; iImageFrameHeightDefault/2
+			if (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTilePosX,mainImageTilePosY, batMonsterImageTilePosX,batMonsterImageTilePosY, iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {			
+				alert("HALLO"); 	
+
+				//Usbong SFZ
+				//TODO: -add: hitBy(...)
+			}
+		}
 	}
 	
 	function myUpdateFunction() {
@@ -2896,18 +2925,28 @@ executeDustEffect();
 				}					
 				break;		
 			//OK; TOP, LEFT, BOTTOM DOORS; REST of the sides WALLS
-			case 43:
-				executeMonsterWalkingAnimation();
-			
+			case 43:			
 				doorImageTop.style.visibility="visible";
 				doorImageBottom.style.visibility="visible";
 				doorImageLeft.style.visibility="visible";
 
 				//TODO: -add: hasInitRoom
 				batMonsterImageTile.style.visibility="visible";
-			
+/*			
 				batMonsterImageTile.style.top = 0+iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameHeightDefault+"px";
 				batMonsterImageTile.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault) +"px";
+*/				
+				//TilePosX; width; square based on iStageMaxHeight
+				batMonsterImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+				batMonsterImageTilePosY=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameHeightDefault/2;
+
+				batMonsterImageTile.style.top = 0+batMonsterImageTilePosY+"px"; //iInnerVerticalOffset
+				batMonsterImageTile.style.left = 0+batMonsterImageTilePosX+"px"; //iInnerHorizontalOffset
+		
+				executeMonsterWalkingAnimation();
+				
+				verifyHeroCollideWithMonsters();
+
 				
 				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
 
@@ -3747,14 +3786,15 @@ executeDustEffect();
 
     //alert(iAnimationDelayCount);
 
-    if (iMonsterAnimationDelayCount==iMonsterAnimationDelayCountMax) {
-      iMonsterAnimationCount=(iMonsterAnimationCount+1)%2; //iAnimationCountMax
-      iMonsterAnimationDelayCount=0;
+    if (iBossMonsterAnimationDelayCount==iBossMonsterAnimationDelayCountMax) {
+      iBossMonsterAnimationCount=(iBossMonsterAnimationCount+1)%2; //iAnimationCountMax
+      iBossMonsterAnimationDelayCount=0;
     }
     else {
-      iMonsterAnimationDelayCount++;
+      iBossMonsterAnimationDelayCount++;
       //bIsMonsterBossHit=false;
     }
+	
 
 	//edited by Mike, 20241103
 	//alert("iAnimationCount: "+iAnimationCount);
@@ -3771,7 +3811,7 @@ executeDustEffect();
 
     if (bIsMonsterBossHit) {
       //alert(iAnimationCount);
-      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iMonsterAnimationCount) + "px -" + 128 + "px";
+      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iBossMonsterAnimationCount) + "px -" + 128 + "px";
 
       if (iAnimationCount==1) {
         bIsMonsterBossHit=false;
@@ -3797,7 +3837,7 @@ executeDustEffect();
       }
     }
     else {
-      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iMonsterAnimationCount) + "px -" + 0 + "px";
+      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iBossMonsterAnimationCount) + "px -" + 0 + "px";
     }
 
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
@@ -4544,9 +4584,12 @@ function initTouchInput() {
 
   //added by Mike, 20241109
   //@return bool
+  //TODO: -add: iImageFrameWidth; iImageFrameWidthLarge
   function isPointsOfRectIntersectingPointsOfRectDoor(iXPos1, iYPos1, iXPos2, iYPos2, iDoorImageFrameWidth, iDoorImageFrameHeight) {
   	let mdo1XPos = iXPos1;
   	let mdo1YPos = iYPos1;
+
+	//TODO: -update: this
 
   	//edited by Mike, 20230524
   	//set as a point; not a tile
@@ -4581,6 +4624,44 @@ function initTouchInput() {
   	return true;
   }
 
+  //added by Mike, 20221123
+  //@return bool
+  function isPointsOfRectIntersectingPointsOfRectMonster(iXPos1, iYPos1, iXPos2, iYPos2, iImageFrameWidth1, iImageFrameHeight1, iImageFrameWidth2, iImageFrameHeight2) {
+  	let mdo1XPos = iXPos1;
+  	let mdo1YPos = iYPos1;
+
+  	//edited by Mike, 20230524
+  	//set as a point; not a tile
+  	let mdo1Width = iImageFrameWidth1; //1;//iPuzzleTileWidth;
+  	let mdo1Height = iImageFrameHeight1; //1;//iPuzzleTileHeight;
+
+  	let mdo2XPos = iXPos2;
+  	let mdo2YPos = iYPos2;
+
+  	let mdo2Width = iImageFrameWidth2; //iPuzzleTileWidth;
+  	let mdo2Height = iImageFrameHeight2; //iPuzzleTileHeight;
+
+  	let iOffsetXPosAsPixel = 0;
+  	let iOffsetYPosAsPixel = 0;
+
+  	//alert("mdo1XPos: "+mdo1XPos);
+
+  /*
+  	alert("mdo1XPos: "+mdo1XPos+"; "+"mdo1Width: "+mdo1Width);
+  	alert("mdo2XPos: "+mdo2XPos+"; "+"mdo2Width: "+mdo2Width);
+  */
+
+  	if ((mdo2YPos+mdo2Height < mdo1YPos+iOffsetYPosAsPixel) || //is the bottom of mdo2 above the top of mdo1?
+  		(mdo2YPos > mdo1YPos+mdo1Height-iOffsetYPosAsPixel) || //is the top of mdo2 below the bottom of mdo1?
+  		(mdo2XPos+mdo2Width < mdo1XPos+iOffsetXPosAsPixel) || //is the right of mdo2 to the left of mdo1?
+  		(mdo2XPos > mdo1XPos+mdo1Width-iOffsetXPosAsPixel)) //is the left of mdo2 to the right of mdo1?
+  	{
+  		//no collision
+  		return false;
+  	}
+
+  	return true;
+  }
 
 
 	function onLoad() {
