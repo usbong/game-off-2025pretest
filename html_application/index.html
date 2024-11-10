@@ -1587,6 +1587,9 @@ function closeFullscreen() {
 		var doorImageBottom = document.getElementById("doorImageBottomId");
 		doorImageBottom.style.visibility="hidden";
 
+		var batMonsterImageTile = document.getElementById("batMonsterImageId");
+		batMonsterImageTile.style.visibility="hidden";
+
 		//added by Mike, 20231121
 		var mouseInputImage = document.getElementById("mouseInputImageId");
 
@@ -1956,6 +1959,51 @@ alert("iInputY: "+iInputY);
 		}
 	}	
 
+	function executeMonsterWalkingAnimation() {
+		var batMonsterImageTile = document.getElementById("batMonsterImageId");
+		batMonsterImageTile.style.visibility="visible";
+
+iMonsterAnimationDelayCountMax=15;
+
+		if (iMonsterAnimationDelayCount>=iMonsterAnimationDelayCountMax) {
+			iMonsterAnimationCount=(iMonsterAnimationCount+1)%3; //last hidden
+
+			iMonsterAnimationDelayCount=0;
+		}
+		else {
+			iMonsterAnimationDelayCount++;
+
+	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+		}
+
+		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+
+		//var iFrameY=0;
+		var iFrameY=iImageFrameHeight*2;//64*2; 128;
+
+/*		
+		//destination to the left of hero projectile
+		//if (newMainImageTileProjectilePosX<0) {
+		if (bIsHeroFacingLeft) {
+			iFrameY=iImageFrameHeight*2;//64*2; 128;
+		}
+		else {
+			iFrameY=iImageFrameHeight*3;//64*3; 192;
+		}
+*/
+
+		if (iMonsterAnimationCount==0) { 
+			batMonsterImageTile.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+		}
+		else if (iMonsterAnimationCount==1) { 
+			batMonsterImageTile.style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
+		}
+		else {
+			batMonsterImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*2 + "px -" + iFrameY + "px";
+		}
+	}
+	
+	
 	function executeExplosionEffect() {
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
 
@@ -2284,9 +2332,12 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
     var mainImageMonsterBoss = document.getElementById("mainImageMonsterBoss");
     var mainImageMonster = document.getElementById("mainImageMonster0");
 
+
+		var batMonsterImageTile = document.getElementById("batMonsterImageId");
+
+
 	//added by Mike, 20231129
 	 var mainImageSoldier = document.getElementById("mainImageSoldierId");
-
 
     	//added by Mike, 20231124
     	var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
@@ -2788,12 +2839,14 @@ executeDustEffect();
 		var iDoorImageBottomPosEndX=iDoorImageTopPosEndX;
 		var iDoorImageBottomPosStartY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 		
+		batMonsterImageTile.style.visibility="hidden";
+
 		//reminder: innerStageWidth uses iStageMaxHeight
 
 		//iCurrMapLocation=0;
 		switch(iCurrMapLocation) {
 			//OK; TOP DOOR; REST of the sides WALLS
-			case 53:				
+			case 53:			
 				//DOOR
 				//top-most					
 				doorImageTop.style.visibility="visible";
@@ -2843,10 +2896,18 @@ executeDustEffect();
 				}					
 				break;		
 			//OK; TOP, LEFT, BOTTOM DOORS; REST of the sides WALLS
-			case 43:			
+			case 43:
+				executeMonsterWalkingAnimation();
+			
 				doorImageTop.style.visibility="visible";
 				doorImageBottom.style.visibility="visible";
 				doorImageLeft.style.visibility="visible";
+
+				//TODO: -add: hasInitRoom
+				batMonsterImageTile.style.visibility="visible";
+			
+				batMonsterImageTile.style.top = 0+iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameHeightDefault+"px";
+				batMonsterImageTile.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault) +"px";
 				
 				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
 
@@ -4642,6 +4703,8 @@ opting to put assets folder in "html_application" folder instead
 		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
 
 		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
+
+		<img id="batMonsterImageId" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241110">
 
 		<!-- added by Mike, 20231121 -->
 		<img id="mouseInputImageId" class="ImageMouseInput" src="assets/images/inputImageLarge.png">
