@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241109; from 20241108
+' @date updated: 20241110; from 20241109
 ' @website: www.usbong.ph
 '
 '
@@ -197,10 +197,7 @@
 		.ImageTileFrame1 {
 			position: absolute;
 
-		/*edited by Mike, 20241104; from 20231105; clip: rect(0px,64px,64px,0px);*/
-  		
-  		clip: rect(0px,32px,32px,0px);
-			
+			clip: rect(0px,32px,32px,0px);
 			visibility: hidden;
 			
 			z-index: 3; /*2;*/
@@ -209,15 +206,22 @@
 		.ImageHeroFrame1 {
 			position: absolute;
 
-/*			clip: rect(0px,128px,128px,0px);*/
-
 			clip: rect(0px,32px,32px,0px);
 			
-
 			visibility: hidden;
 						
-			z-index: 2;
+			z-index: 3;
 		}
+
+		.ImageTankFrame1 {
+			position: absolute;
+
+			clip: rect(0px,64px,64px,0px);
+			visibility: hidden;
+			
+			z-index: 3;
+		}
+		
 
     .ImageMonsterBoss {
 			position: absolute;
@@ -853,6 +857,9 @@ var bHasClosedPuzzle=false;
 //added by Mike, 20231124
 var bIsBossBattleDone=false;
 
+var bIsHeroInTank=false;
+
+
 //added by Mike, 20231126
 var bIsMonsterBossHit=false;
 //edited by Mike, 20231129
@@ -1035,9 +1042,14 @@ var iDefaultAnimationImageY=0;//-32; //default y
 //iTotalAnimImageFrameCount=4;//2;
 var iTotalAnimImageFrameCount=2;
 
-//edited by Mike, 20230322
-var iImageFrameWidth=32;//64;// 32; //0;
-var iImageFrameHeight=32;//64;// 32;
+var iImageFrameWidth=32;// 64; //0;
+var iImageFrameHeight=32;// 64;
+
+var iImageFrameWidthLarge=64;
+var iImageFrameHeightLarge=64;
+
+var iImageFrameWidthDefault=32;
+var iImageFrameHeightDefault=32;
 
 //added by Mike, 20231121
 var iMouseInputImageWidth=64;
@@ -1403,6 +1415,7 @@ function closeFullscreen() {
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
 
 /*
 		var iFrameY=0;
@@ -1460,14 +1473,42 @@ function closeFullscreen() {
 		
 		iHeroAnimationCount=0; 
 
+/*
 		if (bIsHeroFacingLeft) {
 			iFrameY=iImageFrameHeight*2;//64*2; 128;
 		}
 		else {
 			iFrameY=iImageFrameHeight*3;//64*3; 192;
 		}
-		
+*/
+
+		mainImageTileTankBody.style.visibility="hidden";
+		mainImageTileHeroBody.style.visibility="hidden";
+
+		if (bIsHeroInTank) {
+			if (bIsHeroFacingLeft) {
+				iFrameY=iImageFrameHeightLarge*2;//64*2; 128;
+			}
+			else {
+				iFrameY=iImageFrameHeightLarge*3;//64*3; 192;
+			}
+			
+			mainImageTileTankBody.style.visibility="visible";
+		}
+		else {
+			if (bIsHeroFacingLeft) {
+				iFrameY=iImageFrameHeight*2;//64*2; 128;
+			}
+			else {
+				iFrameY=iImageFrameHeight*3;//64*3; 192;
+			}
+
+			mainImageTileHeroBody.style.visibility="visible";
+		}
+			
 		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+
+		mainImageTileHeroBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
 
 		//alert("dito");
 	}
@@ -1530,6 +1571,8 @@ function closeFullscreen() {
 
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
+
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 		
 		var doorImageRight = document.getElementById("doorImageRightId");
@@ -1575,52 +1618,54 @@ function closeFullscreen() {
 
 		textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
 
-
 		textScoreShadowDiv.style.top = textScoreDiv.style.top;
 
 		mainImageTile.style.visibility = "hidden";
 
 		mainImageTileTankBody.style.visibility = "hidden";
 
+		mainImageTileHeroBody.style.visibility = "hidden";
+
 		mainImageTileProjectile.style.visibility = "hidden";
 
-		//added by Mike, 20231125
+		if (bIsHeroInTank) {
+			iImageFrameWidth=iImageFrameWidthLarge;
+		}
+		else {
+			iImageFrameWidth=iImageFrameWidthDefault;
+		}
+		
 		mainImageTilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
-    //edited by Mike, 20231126
-    //mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
-    mainImageTilePosY=iStageMaxHeight/2-iImageFrameHeight;//-iImageFrameHeight-iImageFrameHeight*0.25;
+		mainImageTilePosY=iStageMaxHeight/2-iImageFrameHeight;
 
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
-    //edited by Mike, 20231126
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
-
 		
 		//added by Mike, 20231124
 		mainImageTileTankBody.style.left = mainImageTile.style.left;
 		mainImageTileTankBody.style.top = mainImageTile.style.top;
+
+		//added by Mike, 20231124
+		mainImageTileHeroBody.style.left = mainImageTile.style.left;
+		mainImageTileHeroBody.style.top = mainImageTile.style.top;
 
 		//cat body
 		//mainImageTileTankBody.style.objectPosition = "-" + 128 + "px -" + 192 + "px";
 		//mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
 		//mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
 
-		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + iImageFrameHeight*3 + "px";
+		mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + iImageFrameHeightLarge*3 + "px";
+		mainImageTileHeroBody.style.objectPosition = "-" + 0 + "px -" + iImageFrameHeight*3 + "px";
 
-
-		//mainImageTileTankBody.style.transform = "scale(0.25,0.25)";
-/*		
-		mainImageTileTankBody.style.left = mainImageTile.style.left;
-		mainImageTileTankBody.style.top = mainImageTile.style.top;
+		//mainImageTile.style.objectPosition = "-" + iImageFrameWidth*3 + "px -" + iImageFrameHeight*3 + "px";
 		
-alert(parseInt(mainImageTile.style.left));
-alert(iImageFrameWidth);
-*/
-
+		if (bIsHeroInTank) {
+			mainImageTile.style.objectPosition = "-" + iImageFrameWidthLarge*3 + "px -" + iImageFrameHeightLarge*3 + "px";
+		}
+		else {
+			mainImageTile.style.objectPosition = "-" + iImageFrameWidth*3 + "px -" + iImageFrameHeight*3 + "px";
+		}
 		
-		//mainImageTile.style.objectPosition = "-" + 192 + "px -" + 192 + "px";
-		
-		mainImageTile.style.objectPosition = "-" + iImageFrameWidth*3 + "px -" + iImageFrameHeight*3 + "px";
-
 
 		//added by Mike, 20231124
 		mainImageTileProjectile.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
@@ -1836,8 +1881,8 @@ alert("iInputY: "+iInputY);
 	
 	//added by Mike, 20241103
 	function executeHeroWalkingAnimation() {
-		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
-		mainImageTileTankBody.style.visibility="visible";
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
+		mainImageTileHeroBody.style.visibility="visible";
 
 		if (iHeroAnimationDelayCount==iHeroAnimationDelayCountMax) {
 			iHeroAnimationCount=(iHeroAnimationCount+1)%3; //last hidden
@@ -1863,15 +1908,53 @@ alert("iInputY: "+iInputY);
 		}
 
 		if (iHeroAnimationCount==0) { 
+			mainImageTileHeroBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+		}
+		else if (iHeroAnimationCount==1) { 
+			mainImageTileHeroBody.style.objectPosition = "-" + iImageFrameWidth + "px -" + iFrameY + "px";
+		}
+		else {
+			mainImageTileHeroBody.style.objectPosition = "-" + iImageFrameWidth*2 + "px -" + iFrameY + "px";
+		}
+	}
+	
+	function executeTankWalkingAnimation() {
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		mainImageTileTankBody.style.visibility="visible";
+
+		if (iHeroAnimationDelayCount==iHeroAnimationDelayCountMax) {
+			iHeroAnimationCount=(iHeroAnimationCount+1)%3; //last hidden
+
+			iHeroAnimationDelayCount=0;
+		}
+		else {
+			iHeroAnimationDelayCount++;
+
+	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+		}
+
+		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+
+		var iFrameY=0;
+		//destination to the left of hero projectile
+		//if (newMainImageTileProjectilePosX<0) {
+		if (bIsHeroFacingLeft) {
+			iFrameY=iImageFrameHeightLarge*2;//64*2; 128;
+		}
+		else {
+			iFrameY=iImageFrameHeightLarge*3;//64*3; 192;
+		}
+		
+		if (iHeroAnimationCount==0) { 
 			mainImageTileTankBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
 		}
 		else if (iHeroAnimationCount==1) { 
-			mainImageTileTankBody.style.objectPosition = "-" + iImageFrameWidth + "px -" + iFrameY + "px";
+			mainImageTileTankBody.style.objectPosition = "-" + iImageFrameWidthLarge + "px -" + iFrameY + "px";
 		}
 		else {
-			mainImageTileTankBody.style.objectPosition = "-" + iImageFrameWidth*2 + "px -" + iFrameY + "px";
+			mainImageTileTankBody.style.objectPosition = "-" + iImageFrameWidthLarge*2 + "px -" + iFrameY + "px";
 		}
-	}
+	}	
 
 	function executeExplosionEffect() {
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
@@ -2115,6 +2198,7 @@ alert("iInputY: "+iInputY);
 			var myCanvasTwo = document.getElementById("myCanvasTwoId");
 			var mainImageTile = document.getElementById("mainImageTileImageId");
 			var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+			var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
 
 			//added by Mike, 20231129
 			var bossBattleBgImage = document.getElementById("bossBattleBgImageId");			
@@ -2133,8 +2217,12 @@ alert("iInputY: "+iInputY);
 			//mainImageTile.style.visibility = "visible";
 			mainImageTile.style.visibility = "hidden";
 
-			mainImageTileTankBody.style.visibility = "visible";
-
+			if (bIsHeroInTank) {
+				mainImageTileTankBody.style.visibility = "visible";			
+			}
+			else {
+				mainImageTileHeroBody.style.visibility = "visible";
+			}
 			
 			bossBattleBgImage.style.visibility = "visible";
 			bossBattleBgImagePart2.style.visibility = "visible";
@@ -2182,6 +2270,8 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
 
 		//added by Mike, 20231124
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
 
 		//added by Mike, 20230427
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
@@ -2393,9 +2483,6 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
 		textScoreDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextScoreDivWidth+"px";
 		textScoreDiv.style.top= (0)+"px";
 
-
-
- //removed by Mike, 20230424
 		//edited by Mike, 20230423; from 20230321
 		mainImageTile.style.clip = "rect(0px "+iImageFrameWidth+"px "+iImageFrameHeight+"px 0px)";
 
@@ -2646,31 +2733,63 @@ executeDustEffect();
 */
 
 
-		//TO-DO: -add: function; AI; Artificial Intelligence
-		//combination of forward, diagonal movements
+//TODO: -add: in own function
+//--------------------------------------
 
-		
-		//added by Mike, 20241106
-		var doorImageRight = document.getElementById("doorImageRightId");
-		doorImageRight.style.visibility="hidden";		
-		var doorImageLeft = document.getElementById("doorImageLeftId");
-		doorImageLeft.style.visibility="hidden";
-		var doorImageTop = document.getElementById("doorImageTopId");
-		doorImageTop.style.visibility="hidden";		
-		var doorImageBottom = document.getElementById("doorImageBottomId");
-		doorImageBottom.style.visibility="hidden";
 
-		
 		//added by Mike, 20241104
 		//INNER STAGE; MAX
 		//iHorizontalOffset=(640-iStageMaxHeight)/2;
-		var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
-		
+		var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;		
 		var iInnerVerticalOffset=iImageFrameHeight/4;//2;
+		
 
+
+		//added by Mike, 20241106
+		var doorImageRight = document.getElementById("doorImageRightId");
+		doorImageRight.style.top = 0+(iStageMaxHeight/2-iImageFrameHeightDefault)+"px";
+		doorImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidthDefault) +"px";
+		doorImageRight.style.visibility="hidden";		
+		
+		var iDoorImageRightPosStartY=0+iStageMaxHeight/2-iImageFrameHeightDefault*1;
+		var iDoorImageRightPosEndY=0+iStageMaxHeight/2+iImageFrameWidthDefault*1+iImageFrameHeightDefault/2; //+iImageFrameHeightDefault/2 is for feet
+		var iDoorImageRightPosStartX=0+(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight;		
+
+		//## --
+
+		var doorImageLeft = document.getElementById("doorImageLeftId");		
+		doorImageLeft.style.top = 0+(iStageMaxHeight/2-iImageFrameHeightDefault)+"px";
+		doorImageLeft.style.left = 0+(iInnerHorizontalOffset-iImageFrameWidthDefault) +"px";
+		doorImageLeft.style.visibility="hidden";
+
+		var iDoorImageLeftPosStartY=iDoorImageRightPosStartY;
+		var iDoorImageLeftPosEndY=iDoorImageRightPosEndY; 
+		var iDoorImageLeftPosStartX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+																						
+		//## --
+
+		var doorImageTop = document.getElementById("doorImageTopId");
+		doorImageTop.style.top = 0+iInnerVerticalOffset-iImageFrameHeightDefault+"px";
+		doorImageTop.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault) +"px";
+		doorImageTop.style.visibility="hidden";		
+
+		var iDoorImageTopPosStartX=0+iStageMaxWidth/2-iImageFrameWidthDefault*1;
+		var iDoorImageTopPosEndX=0+iStageMaxWidth/2+iImageFrameWidthDefault*1;
+		var iDoorImageTopPosStartY=0+iInnerVerticalOffset;
+
+		//## --
+
+		var doorImageBottom = document.getElementById("doorImageBottomId");
+		doorImageBottom.style.top = 0+iStageMaxHeight-iImageFrameHeightDefault+"px";
+		doorImageBottom.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault) +"px";
+		doorImageBottom.style.visibility="hidden";
+
+		var iDoorImageBottomPosStartX=iDoorImageTopPosStartX;
+		var iDoorImageBottomPosEndX=iDoorImageTopPosEndX;
+		var iDoorImageBottomPosStartY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
+		
 		//reminder: innerStageWidth uses iStageMaxHeight
 
-		//TODO: -add: map; to identify door position;
 		//iCurrMapLocation=0;
 		switch(iCurrMapLocation) {
 			//OK; TOP DOOR; REST of the sides WALLS
@@ -2678,40 +2797,15 @@ executeDustEffect();
 				//DOOR
 				//top-most					
 				doorImageTop.style.visibility="visible";
-				doorImageTop.style.top = 0-iImageFrameWidth+"px";
-				doorImageTop.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
-				
-				//WALL
-				//square rooms; hence, iStageMaxHeight				
-				//top wall with door at center
+	
 				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
-					//TODO: -verify: door clicking					
-					//if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 
-					
-					var iDoorPosStartX=0+iStageMaxWidth/2-iImageFrameWidth*1;//1;
-					var iDoorPosEndX=0+iStageMaxWidth/2+iImageFrameWidth*1;//1;
-					
-					var iDoorPosStartY=0+iInnerVerticalOffset;
-					//var iDoorPosEndY=0+iInnerVerticalOffset;
-					
-					//OK; TODO: -apply to all doors
-					if (isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidth/2,mainImageTilePosY+iImageFrameWidth/2, iDoorPosStartX,iDoorPosStartY, iImageFrameWidth*2, iImageFrameHeight)) {
-						//alert ("HALLO");
-						//OK; wraps around
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
 
-						mainImageTilePosX=iDoorPosStartX+iImageFrameWidth/2;
-						
-						resetProjectile();			
-						
-						//DOOR
-						iCurrMapLocation=43;						
-					}
-					
-					
-					if (((mainImageTilePosX>=iDoorPosStartX) && (mainImageTilePosX+iImageFrameWidth<=iDoorPosEndX))) { /*|| (isPointsOfRectIntersectingPointsOfRect(mainImageTilePosX,mainImageTilePosY, iDoorPosX,iDoorPosY))) {*/
+					if (((mainImageTilePosX>=iDoorImageTopPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageTopPosEndX)) || 					
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageTopPosStartX,iDoorImageTopPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
 						//OK; wraps around
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
+						
+						mainImageTilePosX=iDoorImageTopPosStartX+iImageFrameWidthDefault/2;
 						
 						resetProjectile();			
 						
@@ -2725,9 +2819,9 @@ executeDustEffect();
 					}					
 				}
 				//bottom wall
-				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
 					//OK;
-					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 					
 					//alert("mainImageTilePosX: "+mainImageTilePosX);				
 					resetProjectile();
@@ -2736,49 +2830,37 @@ executeDustEffect();
 				//WALL
 				//right-most
 				//square rooms; hence, iStageMaxHeight
-				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+				if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
 					//OK;
-					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
 					resetProjectile();			
 				}
 				//left-most
-				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
+				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
 					//OK;
-					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
 					resetProjectile();
 				}					
 				break;		
 			//OK; TOP, LEFT, BOTTOM DOORS; REST of the sides WALLS
 			case 43:			
-				//DOOR; top-most					
 				doorImageTop.style.visibility="visible";
-				doorImageTop.style.top = 0-iImageFrameWidth+"px";
-				doorImageTop.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
-
-				//DOOR; bottom-most					
 				doorImageBottom.style.visibility="visible";
-				doorImageBottom.style.top = 0+iStageMaxHeight-iImageFrameWidth+"px";
-				doorImageBottom.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
-
-				//DOOR; left-most					
 				doorImageLeft.style.visibility="visible";
-				doorImageLeft.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
-				doorImageLeft.style.left = 0+(iInnerHorizontalOffset-iImageFrameWidth) +"px";
 				
-				//WALL
-				//square rooms; hence, iStageMaxHeight				
-				//top wall with door at center
 				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
-					//TODO: -verify: door clicking					
-					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
-											
+
+					if (((mainImageTilePosX>=iDoorImageTopPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageTopPosEndX)) || 					
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageTopPosStartX,iDoorImageTopPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
 						//OK; wraps around
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 						
-						resetProjectile();			
+						mainImageTilePosX=iDoorImageTopPosStartX+iImageFrameWidthDefault/2;
+						
+						resetProjectile();		
 						
 						//DOOR
-						iCurrMapLocation=33; //TODO: -update: this
+						iCurrMapLocation=33;
 					}			
 					else {
 						//OK;
@@ -2786,12 +2868,15 @@ executeDustEffect();
 						resetProjectile();						
 					}					
 				}
-				//bottom wall
-				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
-					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
-											
+				//bottom door
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+						
+					if ((((mainImageTilePosX>=iDoorImageBottomPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageBottomPosEndX))) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageBottomPosStartX,iDoorImageBottomPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
 						//OK; wraps around
 						mainImageTilePosY=0+iInnerVerticalOffset;
+						
+						mainImageTilePosX=iDoorImageBottomPosStartX+iImageFrameWidthDefault/2;
 						
 						resetProjectile();			
 												
@@ -2800,18 +2885,21 @@ executeDustEffect();
 					}			
 					else {
 						//OK;
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 						resetProjectile();						
 					}						
-				}			
+				}							
 				
-				//left wall with door at center
-				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {					
-					//TODO: -verify: door clicking					
-					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
+				//left wall with door at center				
+				if (mainImageTilePosX<iDoorImageLeftPosStartX) {					
+
+					if (((mainImageTilePosY>=iDoorImageLeftPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageLeftPosEndY)) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageLeftPosStartX,iDoorImageLeftPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
 											
 						//OK; wraps around
-						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+						
+						mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
 						
 						resetProjectile();			
 						
@@ -2820,14 +2908,14 @@ executeDustEffect();
 					}			
 					else {
 						//OK;
-						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
 						resetProjectile();						
 					}					
 				}
 				//right wall only
-				else if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+				else if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
 					//OK;
-					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
 					
 					//alert("mainImageTilePosX: "+mainImageTilePosX);				
 					resetProjectile();			
@@ -2835,25 +2923,17 @@ executeDustEffect();
 				break;		
 			//OK; TOP, BOTTOM DOORS; REST of the sides WALLS
 			case 33:
-				//DOOR; top-most					
 				doorImageTop.style.visibility="visible";
-				doorImageTop.style.top = 0-iImageFrameWidth+"px";
-				doorImageTop.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
-
-				//DOOR; bottom-most					
 				doorImageBottom.style.visibility="visible";
-				doorImageBottom.style.top = 0+iStageMaxHeight-iImageFrameWidth+"px";
-				doorImageBottom.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
 				
-				//WALL
-				//square rooms; hence, iStageMaxHeight				
-				//top wall with door at center
 				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
-					//TODO: -verify: door clicking					
-					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
-											
+
+					if (((mainImageTilePosX>=iDoorImageTopPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageTopPosEndX)) || 					
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageTopPosStartX,iDoorImageTopPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
 						//OK; wraps around
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
+						
+						mainImageTilePosX=iDoorImageTopPosStartX+iImageFrameWidthDefault/2;
 						
 						resetProjectile();			
 						
@@ -2866,12 +2946,15 @@ executeDustEffect();
 						resetProjectile();						
 					}					
 				}
-				//bottom wall
-				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
-					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
-											
+				//bottom door
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+						
+					if ((((mainImageTilePosX>=iDoorImageBottomPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageBottomPosEndX))) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageBottomPosStartX,iDoorImageBottomPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
 						//OK; wraps around
 						mainImageTilePosY=0+iInnerVerticalOffset;
+						
+						mainImageTilePosX=iDoorImageBottomPosStartX+iImageFrameWidthDefault/2;
 						
 						resetProjectile();			
 												
@@ -2880,52 +2963,44 @@ executeDustEffect();
 					}			
 					else {
 						//OK;
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 						resetProjectile();						
 					}						
-				}			
-				
+				}	
+
 				//left wall with door at center
-				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
+				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
 					//OK;
-					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
 					resetProjectile();
 				}
 				//WALL
 				//right wall only
 				//square rooms; hence, iStageMaxHeight
-				else if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+				else if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
 					//OK;
-					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
 					resetProjectile();			
 				}
 				break;
 			//OK; TOP, BOTTOM DOORS; REST of the sides WALLS
 			case 23: //SECRET PASSAGE
-				//DOOR; top-most					
 				doorImageTop.style.visibility="visible";
-				doorImageTop.style.top = 0-iImageFrameWidth+"px";
-				doorImageTop.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
-
-				//DOOR; bottom-most					
 				doorImageBottom.style.visibility="visible";
-				doorImageBottom.style.top = 0+iStageMaxHeight-iImageFrameWidth+"px";
-				doorImageBottom.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
-				
-				//WALL
-				//square rooms; hence, iStageMaxHeight				
-				//top wall with door at center
+			
 				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
-					//TODO: -verify: door clicking					
-					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
-											
+
+					if (((mainImageTilePosX>=iDoorImageTopPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageTopPosEndX)) || 					
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageTopPosStartX,iDoorImageTopPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
 						//OK; wraps around
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
+						
+						mainImageTilePosX=iDoorImageTopPosStartX+iImageFrameWidthDefault/2;
 						
 						resetProjectile();			
 						
 						//DOOR
-						iCurrMapLocation=13; 
+						iCurrMapLocation=13;
 					}			
 					else {
 						//OK;
@@ -2933,12 +3008,15 @@ executeDustEffect();
 						resetProjectile();						
 					}					
 				}
-				//bottom wall
-				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
-					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
-											
+				//bottom door
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+						
+					if ((((mainImageTilePosX>=iDoorImageBottomPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageBottomPosEndX))) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageBottomPosStartX,iDoorImageBottomPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
 						//OK; wraps around
 						mainImageTilePosY=0+iInnerVerticalOffset;
+						
+						mainImageTilePosX=iDoorImageBottomPosStartX+iImageFrameWidthDefault/2;
 						
 						resetProjectile();			
 												
@@ -2947,37 +3025,30 @@ executeDustEffect();
 					}			
 					else {
 						//OK;
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 						resetProjectile();						
 					}						
-				}			
+				}					
 				
-				//left wall with door at center
-				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
+				//left wall
+				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
 					//OK;
-					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
 					resetProjectile();
 				}
 				//WALL
 				//right wall only
 				//square rooms; hence, iStageMaxHeight
-				else if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+				else if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
 					//OK;
-					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
 					resetProjectile();			
 				}
 				break;		
 			//OK; LEFT, BOTTOM DOORS; REST of the sides WALLS
 			case 13: //SECRET PASSAGE			
-				//DOOR; bottom-most					
-				doorImageBottom.style.visibility="visible";
-				doorImageBottom.style.top = 0+iStageMaxHeight-iImageFrameWidth+"px";
-				doorImageBottom.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
-
-				//DOOR; left-most					
 				doorImageLeft.style.visibility="visible";
-				doorImageLeft.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
-				doorImageLeft.style.left = 0+(iInnerHorizontalOffset-iImageFrameWidth) +"px";
+				doorImageBottom.style.visibility="visible";
 				
 				//WALL
 				//square rooms; hence, iStageMaxHeight				
@@ -2988,11 +3059,14 @@ executeDustEffect();
 					resetProjectile();
 				}							
 				//bottom wall
-				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
-					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
-											
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+						
+					if ((((mainImageTilePosX>=iDoorImageBottomPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageBottomPosEndX))) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageBottomPosStartX,iDoorImageBottomPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
 						//OK; wraps around
 						mainImageTilePosY=0+iInnerVerticalOffset;
+						
+						mainImageTilePosX=iDoorImageBottomPosStartX+iImageFrameWidthDefault/2;
 						
 						resetProjectile();			
 												
@@ -3001,34 +3075,37 @@ executeDustEffect();
 					}			
 					else {
 						//OK;
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 						resetProjectile();						
 					}						
-				}			
+				}							
 				
-				//left wall with door at center
-				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {					
-					//TODO: -verify: door clicking					
-					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
+				//left wall with door at center				
+				if (mainImageTilePosX<iDoorImageLeftPosStartX) {					
+
+					if (((mainImageTilePosY>=iDoorImageLeftPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageLeftPosEndY)) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageLeftPosStartX,iDoorImageLeftPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
 											
 						//OK; wraps around
-						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+						
+						mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
 						
 						resetProjectile();			
 						
 						//DOOR
-						iCurrMapLocation=1; //TODO: -update: this
+						iCurrMapLocation=12;
 					}			
 					else {
 						//OK;
-						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
 						resetProjectile();						
 					}					
-				}
+				}				
 				//right wall only
-				else if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+				else if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
 					//OK;
-					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
 					
 					//alert("mainImageTilePosX: "+mainImageTilePosX);				
 					resetProjectile();			
@@ -3037,46 +3114,39 @@ executeDustEffect();
 			//OK; ALL of the sides WALLS
 			case 12: //SECRET ROOM; BEST ENDING
 				//WALL
+				//square rooms; hence, iStageMaxHeight				
+				//top wall
+				if (mainImageTilePosY<0+iInnerVerticalOffset) {
+					//OK
+					mainImageTilePosY=0+iInnerVerticalOffset;
+					resetProjectile();
+				}			
+				//bottom wall
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+					//OK;
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
+					resetProjectile();
+				}
+										
+				//WALL
 				//right-most
 				//square rooms; hence, iStageMaxHeight
-				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+				if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
 					//OK;
-					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
 					resetProjectile();			
 				}
 				//left-most
-				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
+				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
 					//OK;
-					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
 					resetProjectile();
-				}		
-	
-				//WALL
-				//added by Mike, 20241104
-				//bottom
-				if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
-					//OK
-					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
-					resetProjectile();			
 				}
-				//top
-				else if (mainImageTilePosY<0+iInnerVerticalOffset) {
-					//OK
-					mainImageTilePosY=0+iInnerVerticalOffset;					
-					resetProjectile();
-				}					
 				break;			
 			//OK; LEFT, RIGHT DOORS; REST of the sides WALLS
 			case 42:			
-				//right-most					
 				doorImageRight.style.visibility="visible";
-				doorImageRight.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
-				doorImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth) +"px";
-			
-				//DOOR; left-most					
 				doorImageLeft.style.visibility="visible";
-				doorImageLeft.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
-				doorImageLeft.style.left = 0+(iInnerHorizontalOffset-iImageFrameWidth) +"px";
 				
 				//WALL
 				//square rooms; hence, iStageMaxHeight				
@@ -3087,19 +3157,22 @@ executeDustEffect();
 					resetProjectile();
 				}	
 				//bottom wall
-				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
 					//OK;
-					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 					resetProjectile();
 				}	
 										
 				//left wall with door at center
-				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {					
-					//TODO: -verify: door clicking					
-					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
+				if (mainImageTilePosX<iDoorImageLeftPosStartX) {					
+
+					if (((mainImageTilePosY>=iDoorImageLeftPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageLeftPosEndY)) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageLeftPosStartX,iDoorImageLeftPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
 											
 						//OK; wraps around
-						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+						
+						mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
 						
 						resetProjectile();			
 						
@@ -3108,18 +3181,21 @@ executeDustEffect();
 					}			
 					else {
 						//OK;
-						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
 						resetProjectile();						
 					}					
 				}
-				//right-most
 				//square rooms; hence, iStageMaxHeight
 				//right wall with door at center
-				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {					
-					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
-											
+				else if (mainImageTilePosX+iImageFrameWidthDefault>iDoorImageRightPosStartX) {					
+					
+					if (((mainImageTilePosY>=iDoorImageRightPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageRightPosEndY)) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageRightPosStartX,iDoorImageRightPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
+						
 						//OK; wraps around
-						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+						
+						mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
 						
 						resetProjectile();			
 						
@@ -3128,65 +3204,64 @@ executeDustEffect();
 					}			
 					else {
 						//OK;
-						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
 						resetProjectile();						
 					}					
 				}	
 				break;				
 			//OK; TOP, RIGHT DOORS; REST of the sides WALLS
 			case 41:			
-				//right-most					
-				doorImageRight.style.visibility="visible";
-				doorImageRight.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
-				doorImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth) +"px";
-			
-				//top-most					
 				doorImageTop.style.visibility="visible";
-				doorImageTop.style.top = 0-iImageFrameWidth+"px";
-				doorImageTop.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";				
+				doorImageRight.style.visibility="visible";
+
 				//square rooms; hence, iStageMaxHeight				
 				//top wall with door at center
 				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
-					//TODO: -verify: door clicking					
-					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
-											
+
+					if (((mainImageTilePosX>=iDoorImageTopPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageTopPosEndX)) || 					
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageTopPosStartX,iDoorImageTopPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
 						//OK; wraps around
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
+						
+						mainImageTilePosX=iDoorImageTopPosStartX+iImageFrameWidthDefault/2;
 						
 						resetProjectile();			
 						
 						//DOOR
-						iCurrMapLocation=1;
+						iCurrMapLocation=31;
 					}			
 					else {
 						//OK;
 						mainImageTilePosY=0+iInnerVerticalOffset;
 						resetProjectile();						
 					}					
-				}
+				}				
 				//bottom wall
-				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
 					//OK;
-					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 					
 					//alert("mainImageTilePosX: "+mainImageTilePosX);				
 					resetProjectile();
 				}
 										
 				//left-most wall				
-				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
+				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
 					//OK;
-					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
 					resetProjectile();
-				}					
-				//right-most
+				}			
 				//square rooms; hence, iStageMaxHeight
 				//right wall with door at center
-				else if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {					
-					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
-											
+				else if (mainImageTilePosX+iImageFrameWidthDefault>iDoorImageRightPosStartX) {					
+					
+					if (((mainImageTilePosY>=iDoorImageRightPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageRightPosEndY)) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageRightPosStartX,iDoorImageRightPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
+						
 						//OK; wraps around
-						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+						
+						mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
 						
 						resetProjectile();			
 						
@@ -3195,86 +3270,158 @@ executeDustEffect();
 					}			
 					else {
 						//OK;
-						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
 						resetProjectile();						
 					}					
-				}			
-				break;			
-
-				
-			//OK; BOTTOM DOOR; REST of the sides WALLS
-			case -1:				
-				//DOOR
-				//bottom-most					
+				}				
+				break;
+			//OK; TOP, BOTTOM, RIGHT DOORS; REST of the sides WALLS
+			case 31:
+				doorImageTop.style.visibility="visible";
 				doorImageBottom.style.visibility="visible";
-				doorImageBottom.style.top = 0+iStageMaxHeight-iImageFrameWidth+"px";
-				doorImageBottom.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
+				doorImageRight.style.visibility="visible";
+				
+				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
 
-				//WALL
-				//square rooms; hence, iStageMaxHeight				
-				//top wall with door at center
-				if (mainImageTilePosY<0+iInnerVerticalOffset) {		
-					//OK
-					mainImageTilePosY=0+iInnerVerticalOffset;					
-					resetProjectile();				
+					if (((mainImageTilePosX>=iDoorImageTopPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageTopPosEndX)) || 					
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageTopPosStartX,iDoorImageTopPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault*2))) { 
+						//OK; wraps around
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
+						
+						mainImageTilePosX=iDoorImageTopPosStartX+iImageFrameWidthDefault/2;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=21;
+					}			
+					else {
+						//OK;
+						mainImageTilePosY=0+iInnerVerticalOffset;
+						resetProjectile();						
+					}					
 				}
 				//bottom door
-				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
-					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
-											
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+						
+					if ((((mainImageTilePosX>=iDoorImageBottomPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageBottomPosEndX))) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageBottomPosStartX,iDoorImageBottomPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
 						//OK; wraps around
 						mainImageTilePosY=0+iInnerVerticalOffset;
+						
+						mainImageTilePosX=iDoorImageBottomPosStartX+iImageFrameWidthDefault/2;
 						
 						resetProjectile();			
 												
 						//DOOR
-						iCurrMapLocation=1;
+						iCurrMapLocation=41;
 					}			
 					else {
 						//OK;
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 						resetProjectile();						
 					}						
-				}
-								
-				//WALL
-				//right-most
-				//square rooms; hence, iStageMaxHeight
-				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+				}	
+
+				//left wall with door at center
+				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
 					//OK;
-					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
-					resetProjectile();			
-				}
-				//left-most
-				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
-					//OK;
-					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
 					resetProjectile();
-				}					
-				break;		
-				
-			//OK; TOP DOOR; REST of the sides WALLS
-			case 0:				
-				//DOOR
-				//top-most					
-				doorImageTop.style.visibility="visible";
-				doorImageTop.style.top = 0-iImageFrameWidth+"px";
-				doorImageTop.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth) +"px";
-				
-				//WALL
-				//square rooms; hence, iStageMaxHeight				
-				//top wall with door at center
-				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
-					//TODO: -verify: door clicking					
-					if ((mainImageTilePosX>=0+iStageMaxWidth/2-iImageFrameWidth*1) && (mainImageTilePosX+iImageFrameWidth<=0+iStageMaxWidth/2+iImageFrameWidth*1)) { 	
-											
+				}				
+				//square rooms; hence, iStageMaxHeight
+				//right wall with door at center
+				else if (mainImageTilePosX+iImageFrameWidthDefault>iDoorImageRightPosStartX) {					
+					
+					if (((mainImageTilePosY>=iDoorImageRightPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageRightPosEndY)) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageRightPosStartX,iDoorImageRightPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
+						
 						//OK; wraps around
-						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+						
+						mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
 						
 						resetProjectile();			
 						
 						//DOOR
-						iCurrMapLocation=1;
+						iCurrMapLocation=32;
+					}			
+					else {
+						//OK;
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+						resetProjectile();						
+					}					
+				}	
+				break;
+			//OK; LEFT DOOR, REST of the sides WALLS
+			case 32: //BOSS ROOM; BOSS KEY NECESSARY
+				doorImageLeft.style.visibility="visible";
+			
+				//WALL
+				//square rooms; hence, iStageMaxHeight				
+				//top wall
+				if (mainImageTilePosY<0+iInnerVerticalOffset) {
+					//OK
+					mainImageTilePosY=0+iInnerVerticalOffset;
+					resetProjectile();
+				}			
+				//bottom wall
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+					//OK;
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
+					resetProjectile();
+				}
+										
+				//WALL
+				//right-most
+				//square rooms; hence, iStageMaxHeight
+				if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
+					//OK;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+					resetProjectile();			
+				}
+				//left wall with door at center
+				else if (mainImageTilePosX<iDoorImageLeftPosStartX) {					
+
+					if (((mainImageTilePosY>=iDoorImageLeftPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageLeftPosEndY)) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageLeftPosStartX,iDoorImageLeftPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
+											
+						//OK; wraps around
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+						
+						mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=31;
+					}			
+					else {
+						//OK;
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+						resetProjectile();						
+					}					
+				}				
+				break;		
+			//OK; TOP, BOTTOM, RIGHT DOORS; REST of the sides WALLS
+			case 21:
+				doorImageTop.style.visibility="visible";
+				doorImageBottom.style.visibility="visible";
+				doorImageRight.style.visibility="visible";
+				
+				if (mainImageTilePosY<0+iInnerVerticalOffset) {					
+
+					if (((mainImageTilePosX>=iDoorImageTopPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageTopPosEndX)) || 					
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageTopPosStartX,iDoorImageTopPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault*2))) { 
+						//OK; wraps around
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
+						
+						mainImageTilePosX=iDoorImageTopPosStartX+iImageFrameWidthDefault/2;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=11;
 					}			
 					else {
 						//OK;
@@ -3282,275 +3429,163 @@ executeDustEffect();
 						resetProjectile();						
 					}					
 				}
-				//bottom wall
-				else if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
-					//OK;
-					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
-					
-					//alert("mainImageTilePosX: "+mainImageTilePosX);				
-					resetProjectile();
-				}
-								
-				//WALL
-				//right-most
-				//square rooms; hence, iStageMaxHeight
-				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
-					//OK;
-					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
-					resetProjectile();			
-				}
-				//left-most
-				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
-					//OK;
-					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
-					resetProjectile();
-				}					
-				break;		
-		
-			//right wall door (commented out); left wall doors;
-			case -2:				
-				//DOOR
-/*				
-				//right-most					
-				//var doorImageRight = document.getElementById("doorImageRightId");
-				doorImageRight.style.visibility="visible";
-				doorImageRight.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
-				doorImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth) +"px";
-*/
-				//left-most					
-				doorImageLeft.style.visibility="visible";
-				doorImageLeft.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
-				doorImageLeft.style.left = 0+(iInnerHorizontalOffset-iImageFrameWidth) +"px";
-				
-				//WALL
-				//right-most				
-				//square rooms; hence, iStageMaxHeight
-/*				
-				//right wall with door at center
-				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {					
-					//TODO: -verify: door clicking					
-					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
-											
+				//bottom door
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+						
+					if ((((mainImageTilePosX>=iDoorImageBottomPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageBottomPosEndX))) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageBottomPosStartX,iDoorImageBottomPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
 						//OK; wraps around
-						mainImageTilePosX=0+iInnerHorizontalOffset;
+						mainImageTilePosY=0+iInnerVerticalOffset;
+						
+						mainImageTilePosX=iDoorImageBottomPosStartX+iImageFrameWidthDefault/2;
 						
 						resetProjectile();			
-						
+												
 						//DOOR
-						iCurrMapLocation=4;
+						iCurrMapLocation=31;
 					}			
 					else {
 						//OK;
-						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 						resetProjectile();						
-					}					
-				}
-				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
-					//OK;
-					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
-
-					//OK; wraps around; TODO: -add door
-					//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
-
-					resetProjectile();
+					}						
 				}	
-*/
-				
+
 				//left wall with door at center
-				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {					
-					//TODO: -verify: door clicking					
-					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
-											
-						//OK; wraps around
-						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
-						
-						resetProjectile();			
-						
-						//DOOR
-						iCurrMapLocation=1;
-					}			
-					else {
-						//OK;
-						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
-						resetProjectile();						
-					}					
-				}
-				//right wall only
-				else if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
+				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
 					//OK;
-					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
-					
-					//alert("mainImageTilePosX: "+mainImageTilePosX);				
-					resetProjectile();			
-				}		
-				
-			
-/*	//OK; DOOR right only			
-				//DOOR
-				//right-most					
-				//var doorImageRight = document.getElementById("doorImageRightId");
-				doorImageRight.style.visibility="visible";
-				doorImageRight.style.top = 0+(iStageMaxHeight/2-iImageFrameHeight)+"px";
-				doorImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth) +"px";							
-				//WALL
-				//right-most
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+					resetProjectile();
+				}				
 				//square rooms; hence, iStageMaxHeight
 				//right wall with door at center
-				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {					
-					//TODO: -verify: door clicking					
-					if ((mainImageTilePosY>=0+iStageMaxHeight/2-iImageFrameHeight*1) && (mainImageTilePosY+iImageFrameWidth<=0+iStageMaxHeight/2+iImageFrameHeight*1+iImageFrameHeight/2)) { //+iImageFrameHeight/2 is for feet
-											
+				else if (mainImageTilePosX+iImageFrameWidthDefault>iDoorImageRightPosStartX) {					
+					
+					if (((mainImageTilePosY>=iDoorImageRightPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageRightPosEndY)) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageRightPosStartX,iDoorImageRightPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
+						
 						//OK; wraps around
-						mainImageTilePosX=0+iInnerHorizontalOffset;
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+						
+						mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
 						
 						resetProjectile();			
 						
 						//DOOR
-						iCurrMapLocation=4;
+						iCurrMapLocation=22;
 					}			
 					else {
 						//OK;
-						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
 						resetProjectile();						
 					}					
-				}
-				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
-					//OK;
-					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
-
-					resetProjectile();
 				}	
-*/
-				
-				
-/*				
-				//DOOR
-				//right-most
-				if (mainImageTilePosX+iImageFrameWidth>iInnerHorizontalOffset+iStageMaxHeight) {
-					//OK;
-					//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
-					
-					//OK; wraps around; TODO: -add door
-					mainImageTilePosX=0+iInnerHorizontalOffset;
-					
-					//alert("mainImageTilePosX: "+mainImageTilePosX);				
-					resetProjectile();			
-				}
-				//left-most
-				else if (mainImageTilePosX<0+iInnerHorizontalOffset) {
-					//OK;
-					//mainImageTilePosX=0+iInnerHorizontalOffset;
-
-					//OK; wraps around; TODO: -add door
-					mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
-
-					resetProjectile();
-				}
-*/				
-/*
-				//bottom-most
-				if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset) {
-					//OK				//mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
-					//OK; wraps around; TODO: -add door
-					//mainImageTilePosY=0;
-					mainImageTilePosY=0+iInnerVerticalOffset;
-
-					//alert("mainImageTilePosX: "+mainImageTilePosX);				
-					resetProjectile();			
-				}
-				//top-most
-				else if (mainImageTilePosY<0+iInnerVerticalOffset) {
-					//OK
-					//mainImageTilePosY=0;
-					//OK; wraps around; TODO: -add door
-					mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
-					
-					iCurrMapLocation=1;
-										
-					resetProjectile();
-				}	
-*/				
-				//WALL
-				//added by Mike, 20241104
-				if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
-					//OK
-					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
-					//OK; wraps around; TODO: -add door
-					//mainImageTilePosY=0;
-					//mainImageTilePosY=0+iInnerVerticalOffset;
-
-					//alert("mainImageTilePosX: "+mainImageTilePosX);				
-					resetProjectile();			
-				}
-				else if (mainImageTilePosY<0+iInnerVerticalOffset) {
-					//OK
-					mainImageTilePosY=0+iInnerVerticalOffset;
-					//OK; wraps around; TODO: -add door
-					//mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
-					
-					resetProjectile();
-				}		
-				break;
-			case 1:
-				//alert("HALLO");
-				
-				//clear all doors
-				var doorImageRight = document.getElementById("doorImageRightId");
-				doorImageRight.style.visibility="hidden";
+				break;		
+			//OK; LEFT DOOR, REST of the sides WALLS
+			case 22:
+				doorImageLeft.style.visibility="visible";
 			
 				//WALL
-				//right-most
-				//square rooms; hence, iStageMaxHeight
-				if (mainImageTilePosX+iImageFrameWidth>(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight) {
-					//OK;
-					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidth)+iStageMaxHeight-iImageFrameWidth;
-					
-					//OK; wraps around; TODO: -add door
-					//mainImageTilePosX=0+iInnerHorizontalOffset;
-					
-					//alert("mainImageTilePosX: "+mainImageTilePosX);				
-					resetProjectile();			
-				}
-				//left-most
-				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidth)) {
-					//OK;
-					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidth);
-
-					//OK; wraps around; TODO: -add door
-					//mainImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidth;
-
-					resetProjectile();
-				}		
-	
-				//WALL
-				//added by Mike, 20241104
-				//bottom
-				if (mainImageTilePosY+iImageFrameHeight>0+iStageMaxHeight-iInnerVerticalOffset*2) {
-					//OK
-					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeight;
-					//OK; wraps around; TODO: -add door
-					//mainImageTilePosY=0;
-					//mainImageTilePosY=0+iInnerVerticalOffset;
-
-					//alert("mainImageTilePosX: "+mainImageTilePosX);				
-					resetProjectile();			
-				}
-				//top
-				else if (mainImageTilePosY<0+iInnerVerticalOffset) {
+				//square rooms; hence, iStageMaxHeight				
+				//top wall
+				if (mainImageTilePosY<0+iInnerVerticalOffset) {
 					//OK
 					mainImageTilePosY=0+iInnerVerticalOffset;
-					//OK; wraps around; TODO: -add door
-					//mainImageTilePosY=0+iStageMaxHeight-iImageFrameHeight-iInnerVerticalOffset;
-					
 					resetProjectile();
 				}			
-				break;
+				//bottom wall
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+					//OK;
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
+					resetProjectile();
+				}
+										
+				//WALL
+				//right-most
+				//square rooms; hence, iStageMaxHeight
+				if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
+					//OK;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+					resetProjectile();			
+				}
+				//left wall with door at center
+				else if (mainImageTilePosX<iDoorImageLeftPosStartX) {					
+
+					if (((mainImageTilePosY>=iDoorImageLeftPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageLeftPosEndY)) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageLeftPosStartX,iDoorImageLeftPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
+											
+						//OK; wraps around
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+						
+						mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=21;
+					}			
+					else {
+						//OK;
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+						resetProjectile();						
+					}					
+				}				
+				break;		
+			//OK; BOTTOM DOOR; REST of the sides WALLS
+			case 11:
+				doorImageBottom.style.visibility="visible";
+				
+				//WALL
+				//square rooms; hence, iStageMaxHeight				
+				//top wall
+				if (mainImageTilePosY<0+iInnerVerticalOffset) {
+					//OK
+					mainImageTilePosY=0+iInnerVerticalOffset;
+					resetProjectile();
+				}		
+				//bottom door
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset*2) {
+						
+					if ((((mainImageTilePosX>=iDoorImageBottomPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageBottomPosEndX))) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageBottomPosStartX,iDoorImageBottomPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
+						//OK; wraps around
+						mainImageTilePosY=0+iInnerVerticalOffset;
+						
+						mainImageTilePosX=iDoorImageBottomPosStartX+iImageFrameWidthDefault/2;
+						
+						resetProjectile();			
+												
+						//DOOR
+						iCurrMapLocation=21;
+					}			
+					else {
+						//OK;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
+						resetProjectile();						
+					}						
+				}	
+
+				//WALL
+				//right-most
+				//square rooms; hence, iStageMaxHeight
+				if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
+					//OK;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+					resetProjectile();			
+				}
+				//left wall with door at center
+				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
+					//OK;
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+					resetProjectile();
+				}
+				break;				
 		}
 
 
 		//STAGE; MAX
-		if (mainImageTilePosX+iImageFrameWidth>iStageMaxWidth) {
-			mainImageTilePosX=iStageMaxWidth-iImageFrameWidth;
+		if (mainImageTilePosX+iImageFrameWidthDefault>iStageMaxWidth) {
+			mainImageTilePosX=iStageMaxWidth-iImageFrameWidthDefault;
 		}
 		else if (mainImageTilePosX<0) {
 			mainImageTilePosX=0;
@@ -3558,15 +3593,19 @@ executeDustEffect();
 		
 
 
-		if (mainImageTilePosY+iImageFrameHeight>iStageMaxHeight) {
+		if (mainImageTilePosY+iImageFrameHeightDefault>iStageMaxHeight) {
 			//edited by Mike, 20231126
-			//mainImageTilePosY=iStageMaxHeight-iImageFrameHeight;
-			mainImageTilePosY=iStageMaxHeight-iImageFrameHeight-iImageFrameHeight*0.25;
+			//mainImageTilePosY=iStageMaxHeight-iImageFrameHeightDefault;
+			mainImageTilePosY=iStageMaxHeight-iImageFrameHeightDefault-iImageFrameHeightDefault*0.25;
 		}
 		else if (mainImageTilePosY<0) {
 			mainImageTilePosY=0;
 		}
+				
 		
+		
+		
+//--------------------------------------		
 
 		
 		//DOOR
@@ -3707,6 +3746,9 @@ executeDustEffect();
 		mainImageTileTankBody.style.left = mainImageTile.style.left;
 		mainImageTileTankBody.style.top = mainImageTile.style.top;
 
+		mainImageTileHeroBody.style.left = mainImageTile.style.left;
+		mainImageTileHeroBody.style.top = mainImageTile.style.top;
+
     mainImageMonster.style.left = (iHorizontalOffset+mainImageMonsterPosX)+"px";
     mainImageMonster.style.top = (iVerticalOffsetInnerScreen+mainImageMonsterPosY)+"px";
 
@@ -3729,8 +3771,6 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 					mainImageTileProjectilePosX=parseInt(mainImageTileProjectilePosX)+newMainImageTileProjectilePosX;
 		
 
-
-
 		mainImageTileProjectile.style.left = mainImageTileProjectilePosX+"px";
 
 		mainImageTileProjectile.style.top = mainImageTileProjectilePosY+"px";
@@ -3743,7 +3783,13 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 		mainImageTilePosX=mainImageTileProjectilePosX;		
 		mainImageTilePosY=mainImageTileProjectilePosY;
 		
-		executeHeroWalkingAnimation();
+		
+		if (bIsHeroInTank) {
+			executeTankWalkingAnimation();
+		}
+		else {
+			executeHeroWalkingAnimation();
+		}
 
 //-----------------
 
@@ -3767,147 +3813,81 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 
 //-----------------
 
+		if (bIsHeroInTank) {
+			iImageFrameWidth=iImageFrameWidthLarge;
+		}
+		else {
+			iImageFrameWidth=iImageFrameWidthDefault;
+		}
 
-	
-			//TODO: -update: this
-/*
-			if (Math.abs(mainImageTileProjectilePosY)==Math.abs(mainImageTileProjectileStepDestinationY)) {
-				//mainImageTileProjectilePosY=mainImageTileProjectileStepDestinationY;
-				//resetProjectile();				
-			}
-*/
-			//if (Math.abs(mainImageTileProjectilePosX)==Math.abs(mainImageTileProjectileStepDestinationX)) {
-			//distance
-			//alert(Math.sqrt(Math.pow(mainImageTileProjectileStepDestinationX-mainImageTileProjectilePosX,2)+Math.pow(mainImageTileProjectileStepDestinationY-mainImageTileProjectilePosY,2)));
-			
-			//if (Math.sqrt(Math.pow(mainImageTileProjectileStepDestinationX-mainImageTileProjectilePosX,2)+Math.pow(mainImageTileProjectileStepDestinationY-mainImageTileProjectilePosY,2))<=0) 
-/*
-alert("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDestinationX);
-			alert("mainImageTileProjectilePosX: "+mainImageTileProjectilePosX);
-*/			
-/*			
-			alert("mainImageTileProjectilePosX: "+mainImageTileProjectilePosX);
-			
-			alert("distanceX: "+Math.sqrt(Math.pow(mainImageTileProjectileStepDestinationX-(mainImageTileProjectilePosX+iImageFrameHeight),2)));
-			
-			alert("mainImageTileProjectileStepX: "+mainImageTileProjectileStepX);
-			
-*/			
-			//alert("newMainImageTileProjectilePosX: "+newMainImageTileProjectilePosX);
-
-			//if (Math.sqrt(Math.pow(mainImageTileProjectileStepDestinationX-(mainImageTileProjectilePosX+iImageFrameWidth),2))<=0) {
-/*			
-			var bHasReachedDestinationX=false;
-			var bHasReachedDestinationY=false;
-*/			
-
-/*
-			if ((mainImageTileProjectilePosX==mainImageTileProjectileStepDestinationX) && (mainImageTileProjectilePosY==mainImageTileProjectileStepDestinationY)){
-				resetProjectile();
-			}
-			else {
-*/
-
-				//destination to the left of hero projectile
-				if (newMainImageTileProjectilePosX<0) {
-				//if (bIsHeroFacingLeft) {
-				//iImageFrameWidth
-				//newMainImageTileProjectilePosX
-					if (mainImageTileProjectilePosX+iImageFrameWidth/2<=mainImageTileProjectileStepDestinationX) {
-				
-				//alert("DITO!");
-				
-					//if hero project already passed destination
-					//if (mainImageTileProjectilePosX+iImageFrameWidth<=mainImageTileProjectileStepDestinationX) {
-							
-					  mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX-iImageFrameWidth/2;
-					  bHasReachedDestinationX=true;
-					  //resetProjectile();
-					}
-					else {
-					  bHasReachedDestinationX=false;
-					}
+//destination to the left of hero projectile
+			if (newMainImageTileProjectilePosX<0) {
+				if (mainImageTileProjectilePosX+iImageFrameWidth/2<=mainImageTileProjectileStepDestinationX) {
+						
+				  mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX-iImageFrameWidth/2;
+				  bHasReachedDestinationX=true;
+				  //resetProjectile();
 				}
-				//destination to the right of hero projectile
 				else {
-					if (mainImageTileProjectilePosX+iImageFrameWidth/2>=mainImageTileProjectileStepDestinationX) {
-						mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX-iImageFrameWidth/2;
-						bHasReachedDestinationX=true;
-						//resetProjectile();
-					}		
-					else {
-					  bHasReachedDestinationX=false;
-					}				
+				  bHasReachedDestinationX=false;
 				}
+			}
+			//destination to the right of hero projectile
+			else {
+				if (mainImageTileProjectilePosX+iImageFrameWidth/2>=mainImageTileProjectileStepDestinationX) {
+					mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX-iImageFrameWidth/2;
+					bHasReachedDestinationX=true;
+					//resetProjectile();
+				}		
+				else {
+				  bHasReachedDestinationX=false;
+				}				
+			}
 			
-				//alert("newMainImageTileProjectilePosY: "+newMainImageTileProjectilePosY);
-
-
-				//destination to the top of hero projectile
-				if (newMainImageTileProjectilePosY<0) {
-				//iImageFrameWidth
-					if (mainImageTileProjectilePosY+iImageFrameHeight/2<=mainImageTileProjectileStepDestinationY) {
-				
-				//alert("DITO!");
-				
-					//if hero project already passed destination
-					//if (mainImageTileProjectilePosX+iImageFrameWidth<=mainImageTileProjectileStepDestinationX) {
-							
+			//destination to the top of hero projectile
+			if (newMainImageTileProjectilePosY<0) {
+				if (mainImageTileProjectilePosY+iImageFrameHeight/2<=mainImageTileProjectileStepDestinationY) {
+										
+				mainImageTileProjectilePosY=mainImageTileProjectileStepDestinationY-iImageFrameHeight/2;
+				bHasReachedDestinationY=true;
+				//resetProjectile();
+				}
+				else {
+				  bHasReachedDestinationY=false;
+				}				
+			}
+			//destination to the bottom of hero projectile
+			else {
+				if (mainImageTileProjectilePosY+iImageFrameHeight/2>=mainImageTileProjectileStepDestinationY) {
 					mainImageTileProjectilePosY=mainImageTileProjectileStepDestinationY-iImageFrameHeight/2;
 					bHasReachedDestinationY=true;
 					//resetProjectile();
-					}
-					else {
-					  bHasReachedDestinationY=false;
-					}				
-				}
-				//destination to the bottom of hero projectile
-				else {
-					if (mainImageTileProjectilePosY+iImageFrameHeight/2>=mainImageTileProjectileStepDestinationY) {
-						mainImageTileProjectilePosY=mainImageTileProjectileStepDestinationY-iImageFrameHeight/2;
-						bHasReachedDestinationY=true;
-						//resetProjectile();
-					}			
-					else {
-					  bHasReachedDestinationY=false;
-					}								
 				}			
-				
-				if ((bHasReachedDestinationX) && (bHasReachedDestinationY)) {
-					resetProjectile();				
-				}
-				
-/*				
-			}
-*/			
-			
+				else {
+				  bHasReachedDestinationY=false;
+				}								
+			}			
+							
+			if ((bHasReachedDestinationX) && (bHasReachedDestinationY)) {
+				resetProjectile();				
+			}				
 
-		if (mainImageTileProjectilePosX+iImageFrameWidth>iStageMaxWidth+iHorizontalOffset) {
-//+iImageFrameWidth
-			resetProjectile();
-		}
-		else if (mainImageTileProjectilePosX<0+iHorizontalOffset){
+			if (mainImageTileProjectilePosX+iImageFrameWidth>iStageMaxWidth+iHorizontalOffset) {
+	//+iImageFrameWidth
 				resetProjectile();
-		}
+			}
+			else if (mainImageTileProjectilePosX<0+iHorizontalOffset){
+					resetProjectile();
+			}
 
-
-//		if (mainImageTileProjectilePosY+iImageFrameHeight>iVerticalOffset+iStageMaxHeight) {
-
-//		if (mainImageTileProjectilePosY+iImageFrameHeight>iStageMaxHeight) {
-//		if (mainImageTileProjectilePosY>iStageMaxHeight) { //+iImageFrameHeight
-
-		//edited by Mike, 20231125
-		if (mainImageTileProjectilePosY+iImageFrameHeight/2>iStageMaxHeight) {
-			resetProjectile();
-		}
-//		else if (mainImageTileProjectilePosY<0+iVerticalOffset) {
-		else if (mainImageTileProjectilePosY<0) {
-			resetProjectile();
-		}
-
-
-
-
+			if (mainImageTileProjectilePosY+iImageFrameHeight/2>iStageMaxHeight) {
+				resetProjectile();
+			}
+			else if (mainImageTileProjectilePosY<0) {
+				resetProjectile();
+			}		
+		
+		
 			}
 
 		  }	 
@@ -3946,6 +3926,9 @@ alert(Date.now()-iMouseClickStartTime);
 
 	//added by Mike, 20231124
 	var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+
+	var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
+
 	//removed by Mike, 20231128
 	//mainImageTileTankBody.style.visibility = "visible";
 	
@@ -3963,48 +3946,80 @@ alert(Date.now()-iMouseClickStartTime);
 	}	
 */
 	
-
-	if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, parseInt(mainImageTileTankBody.style.left),parseInt(mainImageTileTankBody.style.top))) {
-        //alert("HIT!");
-		//no change
-		//if ((bHasReachedDestinationX) && (bHasReachedDestinationY)) {
+	if (bIsHeroInTank) {
+		if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, parseInt(mainImageTileTankBody.style.left),parseInt(mainImageTileTankBody.style.top))) {
 			if ((iXPos==iPrevMouseXPos) && (iYPos==iPrevMouseYPos)) {	
 				//TODO: -add: hit wall animation;
 				return;
 			}
-		//}	
-    }
-
-	
-	//added by Mike, 20241104
-	if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, iPrevMouseXPos,iPrevMouseYPos)) {
-		//TODO: -add: hit wall animation;
-		//return;
-		
-		//do this only if at the borders of the inner stage
-	
-		//INNER STAGE; MAX
-		//iHorizontalOffset=(640-iStageMaxHeight)/2;
-		var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
-		var iInnerVerticalOffset=iImageFrameHeight/2;
-
-		//reminder: innerStageWidth uses iStageMaxHeight
-	
-		if (mainImageTilePosX+iImageFrameWidth>=iInnerHorizontalOffset+iStageMaxHeight) {
-			return;
 		}
-		else if (mainImageTilePosX<=0+iInnerHorizontalOffset) {
-			return;
+		
+		if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, iPrevMouseXPos,iPrevMouseYPos)) {
+			
+			//do this only if at the borders of the inner stage		
+			//INNER STAGE; MAX
+			//iHorizontalOffset=(640-iStageMaxHeight)/2;
+			var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
+			var iInnerVerticalOffset=iImageFrameHeightLarge/2;
+
+			//reminder: innerStageWidth uses iStageMaxHeight
+		
+			if (mainImageTilePosX+iImageFrameWidthLarge>=iInnerHorizontalOffset+iStageMaxHeight) {
+				return;
+			}
+			else if (mainImageTilePosX<=0+iInnerHorizontalOffset) {
+				return;
+			}		
+			
+			if (mainImageTilePosY+iImageFrameHeightLarge>=0+iStageMaxHeight-iInnerVerticalOffset) {
+				return;
+			}
+			else if (mainImageTilePosY<=0) {
+				return;
+			}	
 		}		
-		
-		if (mainImageTilePosY+iImageFrameHeight>=0+iStageMaxHeight-iInnerVerticalOffset) {
-			return;
-		}
-		else if (mainImageTilePosY<=0) {
-			return;
+	}
+	else {	
+		if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, parseInt(mainImageTileHeroBody.style.left),parseInt(mainImageTileHeroBody.style.top))) {
+			//alert("HIT!");
+			//no change
+			//if ((bHasReachedDestinationX) && (bHasReachedDestinationY)) {
+				if ((iXPos==iPrevMouseXPos) && (iYPos==iPrevMouseYPos)) {	
+					//TODO: -add: hit wall animation;
+					return;
+				}
+			//}	
 		}	
-    }
 	
+		//added by Mike, 20241104
+		if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, iPrevMouseXPos,iPrevMouseYPos)) {
+			//TODO: -add: hit wall animation;
+			//return;
+			
+			//do this only if at the borders of the inner stage
+		
+			//INNER STAGE; MAX
+			//iHorizontalOffset=(640-iStageMaxHeight)/2;
+			var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
+			var iInnerVerticalOffset=iImageFrameHeight/2;
+
+			//reminder: innerStageWidth uses iStageMaxHeight
+		
+			if (mainImageTilePosX+iImageFrameWidth>=iInnerHorizontalOffset+iStageMaxHeight) {
+				return;
+			}
+			else if (mainImageTilePosX<=0+iInnerHorizontalOffset) {
+				return;
+			}		
+			
+			if (mainImageTilePosY+iImageFrameHeight>=0+iStageMaxHeight-iInnerVerticalOffset) {
+				return;
+			}
+			else if (mainImageTilePosY<=0) {
+				return;
+			}	
+		}
+	}	
 		
 	iPrevMouseXPos=iXPos;
 	iPrevMouseYPos=iYPos;
@@ -4054,8 +4069,14 @@ alert(Date.now()-iMouseClickStartTime);
     var iDeltaX=(iXPos-iHorizontalOffset)-mainImageTilePosX;
     var iDeltaY=(iYPos-iVerticalOffset)-mainImageTilePosY;
     */
-    var iDeltaX=(iXPos-iHorizontalOffset)-(mainImageTilePosX+iImageFrameWidth/2);
-    var iDeltaY=(iYPos-iVerticalOffset)-(mainImageTilePosY+iImageFrameHeight/2);
+
+	var iDeltaX=(iXPos-iHorizontalOffset)-(mainImageTilePosX+iImageFrameWidth/2);
+	var iDeltaY=(iYPos-iVerticalOffset)-(mainImageTilePosY+iImageFrameHeight/2);
+	
+	if (bIsHeroInTank) {
+		iDeltaX=(iXPos-iHorizontalOffset)-(mainImageTilePosX+iImageFrameWidthLarge/2);
+		iDeltaY=(iYPos-iVerticalOffset)-(mainImageTilePosY+iImageFrameHeightLarge/2);
+	}
 
     //alert("iXPos: "+iXPos);
 
@@ -4433,6 +4454,8 @@ function initTouchInput() {
   	let mdo2XPos = iXPos2;
   	let mdo2YPos = iYPos2;
 
+	//TODO: -verify: this with LARGE
+
   	let mdo2Width = iImageFrameWidth; //iPuzzleTileWidth;
   	let mdo2Height = iImageFrameHeight; //iPuzzleTileHeight;
 
@@ -4612,11 +4635,10 @@ opting to put assets folder in "html_application" folder instead
 	<img id="doorImageBottomId" class="Image32x32Tile" src="assets/images/tile.png">
 	
 	
-		<img id="mainImageTileImageTankBodyId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
+		<img id="mainImageTileImageTankBodyId" class="ImageTankFrame1" src="assets/images/inputImageLarge.png?lastmod=20241110">
+		
+		<img id="mainImageTileImageHeroBodyId" class="ImageHeroFrame1" src="assets/images/inputImage.png?lastmod=20241110">		
 
-<!--
-		<img id="mainImageTileImageTankBodyId" class="ImageHeroFrame1" src="assets/images/tile.png">
--->
 		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
 
 		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
