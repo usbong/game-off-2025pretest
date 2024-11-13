@@ -320,6 +320,16 @@
 			z-index: 10; /*4;*/
 		}
 		
+		.ImageHeroAttack {
+			position: absolute;
+
+			clip: rect(0px,32px,32px,0px);
+
+			visibility: hidden;
+
+			z-index: 10; /*4;*/
+		}			
+		
 		.ImageHowToPlayGuide {
 			position: absolute;
 
@@ -952,6 +962,13 @@ var iDustEffectAnimationCountMax=5;
 var iDustEffectAnimationDelayCount=0;
 var iDustEffectAnimationDelayCountMax=4;//1;
 
+//added by Mike, 20241113
+var iHeroAttackEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
+var iHeroAttackEffectAnimationCountMax=5;
+var iHeroAttackEffectAnimationDelayCount=0;
+var iHeroAttackEffectAnimationDelayCountMax=4;//1;
+
+
 //added by Mike, 20231128
 var iTransitionFromPuzzleToBossDelayCount=0;
 var iTransitionFromPuzzleToBossDelayCountMax=150;//100;
@@ -967,6 +984,10 @@ var iImageExplosionEffectAnimationHeight=64;
 //added by Mike, 20241105
 var iImageDustEffectAnimationWidth=32;
 var iImageDustEffectAnimationHeight=32;
+
+//added by Mike, 20241113
+var iImageHeroAttackEffectAnimationWidth=32;
+var iImageHeroAttackEffectAnimationHeight=32;
 
 //added by Mike, 20231127
 var iTransitionRotate=0;
@@ -1854,6 +1875,29 @@ alert("iInputY: "+iInputY);
 		dustEffectImage.style.top = iInputY+iImageDustEffectAnimationHeight/4; //near feet
 	}
   
+	//added by Mike, 20240513
+	function setHeroAttackEffectPosition(iInputX, iInputY) {
+		var heroAttackEffectImage = document.getElementById("heroAttackEffectImageId");
+
+		if (heroAttackEffectImage.style.visibility=="visible") {
+		  return;
+		}
+
+		heroAttackEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+
+		heroAttackEffectImage.style.visibility="visible";
+
+		iHeroAttackEffectAnimationDelayCount=iHeroAttackEffectAnimationDelayCountMax;
+
+		iHeroAttackEffectAnimationCount=-1; //0;
+
+////alert("iInputX: "+iInputX);
+////alert("iInputY: "+iInputY);
+
+		heroAttackEffectImage.style.left = iInputX;//+iImageDustEffectAnimationWidth/2;
+		heroAttackEffectImage.style.top = iInputY+iImageHeroAttackEffectAnimationHeight/4; //near feet
+	} 
+  
   	//added by Mike, 20231128
 	function executeEnterClickAnimation() {	
 		var textEnterDiv = document.getElementById("textEnterDivId");
@@ -2278,6 +2322,48 @@ alert("iInputY: "+iInputY);
 			dustEffectImage.style.visibility="hidden";
 		}		
 	}
+	
+	//added by Mike, 20241113
+	function executeHeroAttackEffect() {
+		var heroAttackEffectImage = document.getElementById("heroAttackEffectImageId");
+
+		if (heroAttackEffectImage.style.visibility=="hidden") {
+			return;
+		}
+
+		if (iHeroAttackEffectAnimationDelayCount==iHeroAttackEffectAnimationDelayCountMax) {
+			iHeroAttackEffectAnimationCount=(iHeroAttackEffectAnimationCount+1)%4;//5; //last hidden
+
+			iHeroAttackEffectAnimationDelayCount=0;
+		}
+		else {
+			iHeroAttackEffectAnimationDelayCount++;
+		}
+		
+		//dustEffectImage.style.objectPosition = "-" + 0 + "px -" + 256 + "px";
+
+		//alert("iDustEffectAnimationCount: "+iDustEffectAnimationCount);
+
+		//heroAttackEffectImage is 32px below dustEffectImage
+		if (iHeroAttackEffectAnimationCount==0) { //%2
+			heroAttackEffectImage.style.objectPosition = "-" + 0 + "px -" + (256+iImageDustEffectAnimationHeight) + "px";
+		}
+		else if (iHeroAttackEffectAnimationCount==1) {
+			heroAttackEffectImage.style.objectPosition = "-" + iImageHeroAttackEffectAnimationWidth + "px -" + (256+iImageDustEffectAnimationHeight) + "px";
+			//alert(">>>>");
+		}
+		else if (iHeroAttackEffectAnimationCount==2) {
+			heroAttackEffectImage.style.objectPosition = "-" + iImageHeroAttackEffectAnimationWidth*2 + "px -" + (256+iImageDustEffectAnimationHeight) + "px";
+			//alert(">>>>");
+		}
+////		else if (iExplosionEffectAnimationCount==3) {
+////			explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 0 + "px";
+////			//alert(">>>>");
+////		}	
+		else {
+			heroAttackEffectImage.style.visibility="hidden";
+		}		
+	}		
 	
 	//added by Mike, 20231127
 	function resetTransitionEffect() {						
@@ -3122,6 +3208,8 @@ else {
 //added by Mike, 20241105
 executeDustEffect();
 
+//added by Mike, 20241113
+executeHeroAttackEffect();
 
 	//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);
 
@@ -4412,6 +4500,9 @@ alert(Date.now()-iMouseClickStartTime);
 	//added by Mike, 20231130
 	var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
 	
+	//added by Mike, 20241113
+	var heroAttackEffectImage = document.getElementById("heroAttackEffectImageId");
+	
 	//edited by Mike, 20241105; 20241103
 	bHasFiredTemp = bHasFired;
 	
@@ -4595,7 +4686,10 @@ alert(Date.now()-iMouseClickStartTime);
 	mainImageTileProjectileStepDestinationX=iXPos;//iDeltaX;//newMainImageTileProjectilePosX;//.iDeltaX;
 	mainImageTileProjectileStepDestinationY=iYPos;//iDeltaY;//newMainImageTileProjectilePosY;//iDeltaY;
 	
-	
+	//added by Mike, 20241113
+////heroAttackEffectImage.style.objectPosition = "-" + (512/2) + "px -" + (512/2) + "px";	
+//heroAttackEffectImage.style.transform = "rotate("+ (iMainImageTileStepAngle % 360) +"deg)";
+
 
     					bHasFired=true;
 						
@@ -4638,6 +4732,14 @@ alert(Date.now()-iMouseClickStartTime);
 				
 		//added by Mike, 20241105
 		setDustEffectPosition(mainImageTilePosX,mainImageTilePosY);
+		
+		
+//added by Mike, 20241113
+setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameWidthDefault/2,mainImageTileProjectileStepDestinationY-iImageFrameHeightDefault/2); //mainImageTilePosX,mainImageTilePosY);
+
+////heroAttackEffectImage.style.left = mainImageTile.style.left;
+////heroAttackEffectImage.style.top = mainImageTile.style.top;
+
 /*		
     }
 */
@@ -5213,6 +5315,7 @@ opting to put assets folder in "html_application" folder instead
 
 	<img id="dustEffectImageId" class="ImageDust" src="assets/images/effectsSmall.png">
 
+	<img id="heroAttackEffectImageId" class="ImageHeroAttack" src="assets/images/effectsSmall.png">
 
 	<!-- added by Mike, 20221119 -->
 	<div id="divPuzzleTileImageTargetBorderId" class="Image32x32TileTargetBorder"></div>
