@@ -14,6 +14,8 @@ This is a work of fiction created for Game Off 2024 with the theme SECRETS.
 
 1) https://masarapmabuhay.itch.io/game-off-2024-prototype0 (updated from [Game Off 2023](https://github.com/usbong/game-off-2023))
 
+2) https://masarapmabuhay.itch.io/game-off-2024-prototype1
+   
 ## Select Software Development Productivity Tools
 
 1) MS Paint
