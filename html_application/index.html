@@ -976,7 +976,7 @@ var iDustEffectAnimationDelayCountMax=4;//1;
 var iHeroAttackEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iHeroAttackEffectAnimationCountMax=5;
 var iHeroAttackEffectAnimationDelayCount=0;
-var iHeroAttackEffectAnimationDelayCountMax=4;//1;
+var iHeroAttackEffectAnimationDelayCountMax=2;//4;//1;
 
 
 //added by Mike, 20231128
@@ -1911,8 +1911,12 @@ alert("iInputY: "+iInputY);
 ////alert("iInputX: "+iInputX);
 ////alert("iInputY: "+iInputY);
 
+/*
 		heroAttackEffectImage.style.left = iInputX;//+iImageDustEffectAnimationWidth/2;
 		heroAttackEffectImage.style.top = iInputY+iImageHeroAttackEffectAnimationHeight/4; //near feet
+*/
+		heroAttackEffectImage.style.left = iInputX;
+		heroAttackEffectImage.style.top = iInputY;		
 	} 
   
   	//added by Mike, 20231128
@@ -2450,8 +2454,9 @@ alert("iInputY: "+iInputY);
 				mainImageTileHeroBody.style.visibility = "visible";
 			}
 			
-			bossBattleBgImage.style.visibility = "visible";
-			bossBattleBgImagePart2.style.visibility = "visible";
+			bossBattleBgImage.style.visibility = "visible"; //"hidden";
+			
+			bossBattleBgImagePart2.style.visibility = "visible"; //"hidden";
 			
 			bossBattleBgImagePart2.style.left = 0+"px"; 
 			
@@ -2934,8 +2939,11 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
     //myCanvasContext.clearRect(0, 0, iStageMaxWidth, iStageMaxHeight)
 
     //edited by Mike, 20231126
-    //myCanvasTwoContext.fillStyle = "#000000"; //"#ffffff"; //white background//stage
+    myCanvasTwoContext.fillStyle = "#000000"; //"#ffffff"; //white background//stage
+    //myCanvasTwoContext.fillStyle = "#261912"; //brown background//stage
 
+
+/*
     //reference#1: https://www.w3schools.com/jsref/canvas_createlineargradient.asp;
     //last accessed: 20231126
     //reference#2: https://www.tumblr.com/yes-asil; last accessed: 20231126
@@ -2949,28 +2957,39 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
 
     // Draw a filled Rectangle
     myCanvasTwoContext.fillStyle = grd;
+*/	
 
     //note: max is 150 for height?...
-    myCanvasTwoContext.fillRect(0, 0, iStageMaxWidth, 120);//iStageMaxHeight/2);
+    //myCanvasTwoContext.fillRect(0, 0, iStageMaxWidth, 120);//iStageMaxHeight/2);
+    myCanvasTwoContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);//iStageMaxHeight/2);
 
-	
+	//edited by Mike, 20241114	
 	//iCurrSnowFlakeCountMax
 	for (iCurrSnowFlakeCount=0; iCurrSnowFlakeCount<10; iCurrSnowFlakeCount++) {
-	
+
 		var myDivSnowEffect = document.getElementById("divSnowEffectId"+iCurrSnowFlakeCount);
+
+		if (iCurrMapLocation==53) {
+	////		var iCurrSnowFlakeCountPosX=0;
+	////		var iCurrSnowFlakeCountPosY=0;
 	
-/*		
-		var iCurrSnowFlakeCountPosX=0;
-		var iCurrSnowFlakeCountPosY=0;
-*/
-		iCurrSnowFlakeCountPosX=window.parseInt(Math.random() * iStageMaxWidth)%iStageMaxWidth;
+			//iCurrSnowFlakeCountPosX=window.parseInt(Math.random() * iStageMaxWidth)%iStageMaxWidth;
+			iCurrSnowFlakeCountPosX=window.parseInt(Math.random() * iStageMaxHeight)%iStageMaxHeight;
 
-		iCurrSnowFlakeCountPosY=window.parseInt(Math.random() * iStageMaxHeight)%iStageMaxHeight;
 
-		myDivSnowEffect.style.left=iCurrSnowFlakeCountPosX+iHorizontalOffset+"px";
-		myDivSnowEffect.style.top=iCurrSnowFlakeCountPosY+iVerticalOffsetInnerScreen+"px";	
+			iCurrSnowFlakeCountPosY=window.parseInt(Math.random() * iStageMaxHeight)%iStageMaxHeight;
 
-		myDivSnowEffect.style.visibility="visibility";		
+			//myDivSnowEffect.style.left=iCurrSnowFlakeCountPosX+iHorizontalOffset+"px";
+			//myDivSnowEffect.style.left=iCurrSnowFlakeCountPosX+"px";
+			myDivSnowEffect.style.left=iCurrSnowFlakeCountPosX+iHorizontalOffset+"px";
+			
+			myDivSnowEffect.style.top=iCurrSnowFlakeCountPosY+iVerticalOffsetInnerScreen+"px";	
+
+			myDivSnowEffect.style.visibility="visible";		
+		}
+		else {
+			myDivSnowEffect.style.visibility="hidden";		
+		}
 	}
 	
 	//added by Mike, 20231128
