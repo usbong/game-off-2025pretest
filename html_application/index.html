@@ -824,7 +824,35 @@
 				z-index: 90; /*4;*/
 			}
 
+			div.DivTextTime
+			{
+				position: absolute;
+/*
+				background-color: #000000aa;
+*/
+				color: #ffffff; /* brown; #6d4e22 */
 
+				/*opacity: 50%;*/
+
+				font-size: 32px;/*42px;*/
+				font-weight: bold;
+
+/* //edited by Mike, 20230130
+				padding: 10px;
+*/
+				/* //changed from margin */
+				/* //edited by Mike, 20230130
+				margin: 10px;
+				*/
+				padding: 0px;
+
+				visibility: hidden;
+
+				/* put above image tiles;
+					below step count button
+				*/
+				z-index: 90; /*4;*/
+			}
 
 
       audio.myAudio
@@ -1036,6 +1064,13 @@ var bIsIncreasingScore=false;//true;
 var iTextScoreDivWidthOffset=5;
 var iTextScoreDivWidth;
 var iTextScoreShadowDivWidthOffset=1;
+
+//added by Mike, 20241114
+//font size at 32px; 00:00:00.length is 8
+var iTextTimeDivWidthOffset=16*8; //5;
+var iTextTimeDivWidth;
+var iTextTimeShadowDivWidthOffset=1;
+var iStartTimeInMilliseconds=0;
 
 //added by Mike, 20231127
 var iCurrSnowFlakeCount=0;
@@ -1692,6 +1727,27 @@ function closeFullscreen() {
 		textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
 
 		textScoreShadowDiv.style.top = textScoreDiv.style.top;
+		
+		//---------------		
+		var textTimeDiv = document.getElementById("textTimeDivId");
+
+		iTextTimeDivWidth = (textTimeDiv.clientWidth)+iTextTimeDivWidthOffset;
+		//iTextTimeDivWidth = "00:00".length*32; //32px font
+		
+		textTimeDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextTimeDivWidth+"px";
+		textTimeDiv.style.top= (0)+"px";
+		
+		textTimeDiv.style.visibility = "hidden";
+/*
+		var textScoreShadowDiv = document.getElementById("textScoreShadowDivId");
+		textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
+		textScoreShadowDiv.style.top = textScoreDiv.style.top		
+*/
+		iStartTimeInMilliseconds=Date.now();
+		
+		//---------------
+		
+		
 
 		mainImageTile.style.visibility = "hidden";
 
@@ -2436,12 +2492,53 @@ alert("iInputY: "+iInputY);
 			//added by Mike, 20231129
 			var bossBattleBgImagePart2 = document.getElementById("bossBattleBgImagePart2Id");		
 			var mainImageSoldier = document.getElementById("mainImageSoldierId");			
-									
+			
+			var textTimeDiv = document.getElementById("textTimeDivId");
+
+			dElapsedTimeInSeconds=(Date.now()-iStartTimeInMilliseconds)/1000;
+/*			
+			dElapsedTimeInSeconds=60*59;
+			dElapsedTimeInSeconds=60*60;
+			dElapsedTimeInSeconds=60*45*59;
+*/			
+
+			dCurrTimeSeconds=(dElapsedTimeInSeconds)%60;
+			dCurrTimeMinutes=((dElapsedTimeInSeconds)/60)%60;
+			dCurrTimeHours=(dElapsedTimeInSeconds)/60/60;
+
+			//max reached
+			if (dCurrTimeHours>=60) {
+				dCurrTimeMinutes=99;
+				dCurrTimeSeconds=99;
+				dCurrTimeHours=99;
+			}
+
+			sCurrTimeSeconds=parseInt(dCurrTimeSeconds);			
+			if (parseInt(dCurrTimeSeconds)<10) {
+				sCurrTimeSeconds="0"+sCurrTimeSeconds;
+			}
+
+			sCurrTimeMinutes=parseInt(dCurrTimeMinutes);			
+			if (parseInt(dCurrTimeMinutes)<10) {
+				sCurrTimeMinutes="0"+sCurrTimeMinutes;
+			}
+			
+			sCurrTimeHours=parseInt(dCurrTimeHours);			
+			if (parseInt(dCurrTimeHours)<10) {
+				sCurrTimeHours="0"+sCurrTimeHours;
+			}
+			
+			//textTimeDiv.innerHTML = parseInt(dCurrTimeMinutes) + ":" + sCurrTimeSeconds;//sCurrTime;
+			textTimeDiv.innerHTML = sCurrTimeHours + ":" + sCurrTimeMinutes + ":" + sCurrTimeSeconds;			
+			
 			mainImageSoldier.style.visibility = "hidden";
 			 
 			mainImageMonster.style.visibility = "hidden";
 			textScoreDivId.style.color="white";
 			myCanvasTwo.style.visibility="visible";
+			
+			textTimeDiv.style.visibility = "visible";
+
 									
 			//edited by Mike, 20241103
 			//mainImageTile.style.visibility = "visible";
@@ -5431,6 +5528,8 @@ opting to put assets folder in "html_application" folder instead
 	<div id="textScoreShadowDivId" class="DivStepCountStatusShadow">0</div>
 
 	<div id="textScoreDivId" class="DivTextScore">0</div>
+
+	<div id="textTimeDivId" class="DivTextTime">0</div>
 
 
 <!--
