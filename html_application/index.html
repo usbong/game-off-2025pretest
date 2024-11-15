@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241114; from 20241113
+' @date updated: 20241115; from 20241114
 ' @website: www.usbong.ph
 '
 '
@@ -126,7 +126,7 @@
 */
       visibility: hidden;
 
-			border: 1px dotted gray;
+			border: 0px; /*1px dotted gray;*/
 
 			z-index: -1;
 		}
@@ -880,11 +880,11 @@ iTargetAtSpaceBlinkAnimationCountMax=6;
 iTargetTileBgCount=-1;
 
 //added by Mike, 20221106
-//note: 4x4
+//note: 5x3; //4x4;
 var iRowCount=0;
-const iRowCountMax=4;
+const iRowCountMax=5;
 var iColumnCount=0;
-const iColumnCountMax=4;
+const iColumnCountMax=3;
 var arrayPuzzleTileCountId = [];
 var arrayPuzzleTilePos = [ [],[],[],[] ];
 
@@ -962,7 +962,6 @@ const sAudioEffectActionCannonFire ="assets/audio/usbongGameOff2023AudioEffectsC
 //TODO: -update: this
 const sAudioBGM="assets/audio/usbongGameOff2023BGM.mp3";
 
-
 //added by Mike, 20231115
 var iAnimationCount=-1;//0; start at -1
 var iAnimationCountMax=5;
@@ -979,6 +978,12 @@ var iBossMonsterAnimationCount=-1;//0; start at -1
 var iBossMonsterAnimationCountMax=5;
 var iBossMonsterAnimationDelayCount=10; //0
 var iBossMonsterAnimationDelayCountMax=10;
+
+//added by Mike, 20241115
+var iMiniMapAnimationCount=-1;//0; start at -1
+var iMiniMapAnimationCountMax=5;
+var iMiniMapAnimationDelayCount=0; //0
+var iMiniMapAnimationDelayCountMax=5;
 
 
 //added by Mike, 20231119
@@ -1618,6 +1623,73 @@ function closeFullscreen() {
 		//alert("dito");
 	}
 
+	//added by Mike, 20241115
+	//reference: 
+	//1) Game Off 2023: Battle Tactics
+	//2) https://www.w3schools.com/graphics/canvas_lines.asp; last accessed: 20241115
+	function drawMiniMap(myCanvasContext, iXPos, iYPos) {
+		iMiniMapRoomWidth=5;
+		iMiniMapRoomHeight=5;		
+		iMiniMapSpacing=2;
+/*		
+		myCanvasContext.fillStyle = "#ffffff"; //"#ff0000";
+		myCanvasContext.fillRect(0+iXPos, 0+iYPos, iMiniMapRoomHeight, iMiniMapRoomHeight);
+*/		
+
+		//horizontal
+    	for (var iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
+    		for (var iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
+				myCanvasContext.fillStyle = "#ffffff"; //"#ff0000";
+				
+				myCanvasContext.fillRect(0+iXPos+iColumnCount*iMiniMapRoomWidth+iMiniMapSpacing*iColumnCount, 0+iYPos+iRowCount*iMiniMapRoomHeight+iMiniMapSpacing*iRowCount, iMiniMapRoomWidth, iMiniMapRoomHeight);
+			}
+		}		
+		
+		//alert(iCurrMapLocation)
+		
+		//myCanvasContext.fillStyle = "#ff0000"; //"#ffffff";
+		
+		//example: 53
+		iRowCount=parseInt(iCurrMapLocation/10);
+		iColumnCount=iCurrMapLocation-iRowCount*10;
+/*		
+		alert("iRowCount: "+iRowCount);
+		alert("iColumnCount: "+iColumnCount);
+*/		
+		iRowCount-=1;
+		iColumnCount-=1;
+
+		
+		if (iMiniMapAnimationDelayCount==iMiniMapAnimationDelayCountMax) {
+			iMiniMapAnimationCount=(iMiniMapAnimationCount+1)%5; //last hidden
+
+			iMiniMapAnimationDelayCount=0;
+		}
+		else {
+			iMiniMapAnimationDelayCount++;
+		}
+
+		//iMiniMapAnimationCount=(iMiniMapAnimationCount+1)%5;
+		
+		if (iMiniMapAnimationCount==0) {
+			//myCanvasContext.fillStyle = "#ff0000"; //"#ffffff";
+			
+			myCanvasContext.strokeStyle = "#ff0000";
+			
+			myCanvasContext.beginPath();
+			
+			myCanvasContext.rect(0+iXPos+iColumnCount*iMiniMapRoomWidth+iMiniMapSpacing*iColumnCount, 0+iYPos+iRowCount*iMiniMapRoomHeight+iMiniMapSpacing*iRowCount, iMiniMapRoomWidth, iMiniMapRoomHeight);
+
+			myCanvasContext.stroke();
+		}
+		else {
+			myCanvasContext.fillStyle = "#ffffff";
+			
+			myCanvasContext.fillRect(0+iXPos+iColumnCount*iMiniMapRoomWidth+iMiniMapSpacing*iColumnCount, 0+iYPos+iRowCount*iMiniMapRoomHeight+iMiniMapSpacing*iRowCount, iMiniMapRoomWidth, iMiniMapRoomHeight);			
+		}
+		
+//		myCanvasContext.fillRect(0+iXPos+iColumnCount*iMiniMapRoomWidth+iMiniMapSpacing*iColumnCount, 0+iYPos+iRowCount*iMiniMapRoomHeight+iMiniMapSpacing*iRowCount, iMiniMapRoomWidth, iMiniMapRoomHeight);
+	}
 
 	function init() {
 		var myAudio = document.getElementById("myAudioId");
@@ -1744,6 +1816,10 @@ function closeFullscreen() {
 		textScoreShadowDiv.style.top = textScoreDiv.style.top		
 */
 		iStartTimeInMilliseconds=Date.now();
+		
+		//---------------		
+		//map
+		
 		
 		//---------------
 		
@@ -3018,6 +3094,8 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
 		//textScoreShadowDiv.style.left = textScoreDiv.style.left;
 		textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
 
+		var textTimeDiv = document.getElementById("textTimeDivId");
+
 
     //added by Mike, 20230313
     //reference: https://www.w3schools.com/tags/canvas_fillrect.asp;
@@ -3059,6 +3137,10 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
     //note: max is 150 for height?...
     //myCanvasTwoContext.fillRect(0, 0, iStageMaxWidth, 120);//iStageMaxHeight/2);
     myCanvasTwoContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);//iStageMaxHeight/2);
+	
+	
+	//use iStageMaxHeight; square inner stage
+	//drawMap(myCanvasTwoContext, iHorizontalOffset+iStageMaxWidth-iStageMaxHeight/iColumnCountMax, iVerticalOffsetInnerScreen-iStageMaxHeight/iColumnCountMax);
 
 	//edited by Mike, 20241114	
 	//iCurrSnowFlakeCountMax
@@ -3341,8 +3423,19 @@ howToPlayGuideImageFrame2.style.visibility = "hidden";
 			}
 
 
-        mainImageMonsterBoss.style.visibility = "visible";
+        mainImageMonsterBoss.style.visibility = "hidden"; //"visible";
 
+
+//--------------------
+
+//alert(textTimeDiv.style.left);
+	//alert(iVerticalOffsetInnerScreen);	
+	
+	//100 offset
+	drawMiniMap(myCanvasTwoContext,iHorizontalOffset+iStageMaxHeight-100, 0+textTimeDiv.clientHeight);
+	
+//--------------------	
+	
 
 executeExplosionEffect();
 
@@ -4398,6 +4491,7 @@ else {
 
     //alert(iAnimationDelayCount);
 
+/*
     if (iBossMonsterAnimationDelayCount==iBossMonsterAnimationDelayCountMax) {
       iBossMonsterAnimationCount=(iBossMonsterAnimationCount+1)%2; //iAnimationCountMax
       iBossMonsterAnimationDelayCount=0;
@@ -4406,7 +4500,7 @@ else {
       iBossMonsterAnimationDelayCount++;
       //bIsMonsterBossHit=false;
     }
-	
+*/	
 
 	//edited by Mike, 20241103
 	//alert("iAnimationCount: "+iAnimationCount);
@@ -4420,7 +4514,7 @@ else {
 		iAnimationDelayCount++;
 	}
 
-
+/*
     if (bIsMonsterBossHit) {
       //alert(iAnimationCount);
       mainImageMonsterBoss.style.objectPosition = "-" + 128*(iBossMonsterAnimationCount) + "px -" + 128 + "px";
@@ -4451,6 +4545,7 @@ else {
     else {
       mainImageMonsterBoss.style.objectPosition = "-" + 128*(iBossMonsterAnimationCount) + "px -" + 0 + "px";
     }
+*/
 
 		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
 		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
@@ -4465,9 +4560,10 @@ else {
     mainImageMonster.style.left = (iHorizontalOffset+mainImageMonsterPosX)+"px";
     mainImageMonster.style.top = (iVerticalOffsetInnerScreen+mainImageMonsterPosY)+"px";
 
+/*
     mainImageMonsterBoss.style.left = (iHorizontalOffset+mainImageMonsterBossPosX)+"px";
     mainImageMonsterBoss.style.top = (iVerticalOffsetInnerScreen+mainImageMonsterBossPosY)+"px";
-
+*/
 
 //-----------------------
 
@@ -4511,6 +4607,7 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
       mainImageMonster.style.visibility="hidden";
     }
 
+/*
 	//edited by Mike, 20231128
 	if (!bIsBossBattleDone) {
 		if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, parseInt(mainImageMonsterBoss.style.left),parseInt(mainImageMonsterBoss.style.top))) {
@@ -4523,7 +4620,7 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 		  resetProjectile();
 		}
 	}
-
+*/
 //-----------------
 
 		if (bIsHeroInTank) {
