@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241115; from 20241114
+' @date updated: 20241116; from 20241115
 ' @website: www.usbong.ph
 '
 '
@@ -979,7 +979,6 @@ var iSnakeMonsterAnimationCountMax=5;
 var iSnakeMonsterAnimationDelayCount=10; //bat; //0
 var iSnakeMonsterAnimationDelayCountMax=6;
 
-
 var iBossMonsterAnimationCount=-1;//0; start at -1
 var iBossMonsterAnimationCountMax=5;
 var iBossMonsterAnimationDelayCount=10; //0
@@ -1375,6 +1374,15 @@ var iOffsetHeight=0;
 	var snakeMonsterTileStepDelayMax=5;	
 	var isSnakeMonsterTileActive=false;
 
+	var arraySnakeMonsterCountId = [[],[]];
+	var snakeMonsterCountMax = 2;
+	
+	const MONSTER_OBJECT=0;
+	const MONSTER_IS_ACTIVE=1;	
+	const MONSTER_POSX=2;
+	const MONSTER_POSY=3;
+	const MONSTER_STEPX=4;
+	const MONSTER_STEPY=5;
 	
 	//added by Mike, 20241106
 	var iCurrMapLocation=53;//12;//0;
@@ -1783,9 +1791,23 @@ function closeFullscreen() {
 		batMonsterImageTile.style.visibility="hidden";
 
 		var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
+		
 		snakeMonsterImageTile.style.visibility="hidden";
 
+		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
+			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
+			
+			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="hidden";
+			
+			arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=false;
 
+			arraySnakeMonsterCountId[iCount][MONSTER_POSX]=0;
+			arraySnakeMonsterCountId[iCount][MONSTER_POSY]=0;
+			arraySnakeMonsterCountId[iCount][MONSTER_STEPX]=2;
+			arraySnakeMonsterCountId[iCount][MONSTER_STEPY]=2;			
+		}
+			
+	
 		//added by Mike, 20231121
 		var mouseInputImage = document.getElementById("mouseInputImageId");
 
@@ -2295,9 +2317,10 @@ alert("iInputY: "+iInputY);
 */		
 	}
 	
-	function executeSnakeMonsterWalkingAnimation() {
+	function executeSnakeMonsterWalkingAnimationPrevWithoutArray() {
 		//var batMonsterImageTile = document.getElementById("batMonsterImageId");
 		var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
+		
 		//hero tile position
 		var mainImageTile = document.getElementById("mainImageTileImageId");
 
@@ -2344,38 +2367,86 @@ alert("iInputY: "+iInputY);
 				snakeMonsterImageTilePosX-=snakeMonsterTileStepX;
 			}
 			
-			snakeMonsterImageTile.style.left=snakeMonsterImageTilePosX+"px";			
+			snakeMonsterImageTile.style.left=snakeMonsterImageTilePosX+"px";
 		}
 		//==============================
-				
-		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
-
+		
 		//var iFrameY=0;
 		var iFrameY=iImageFrameHeight*3;//2;//64*2; 128;
 
-/*		
-		//destination to the left of hero projectile
-		//if (newMainImageTileProjectilePosX<0) {
-		if (bIsHeroFacingLeft) {
-			iFrameY=iImageFrameHeight*2;//64*2; 128;
-		}
-		else {
-			iFrameY=iImageFrameHeight*3;//64*3; 192;
-		}
-*/
 		//currently two frames only
 		if (iSnakeMonsterAnimationCount==0) { 
 			snakeMonsterImageTile.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
 		}
 		else if (iSnakeMonsterAnimationCount==1) { 
 			snakeMonsterImageTile.style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
-		}
-/*		
-		else {
-			batMonsterImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*2 + "px -" + iFrameY + "px";
-		}
-*/		
+		}		
 	}
+	
+	function executeSnakeMonsterWalkingAnimation(inputArraySnakeMonsterWithIdCount) {
+		//var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
+		
+		//hero tile position
+		var mainImageTile = document.getElementById("mainImageTileImageId");
+
+		inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.visibility="visible";
+		
+		if (iSnakeMonsterAnimationDelayCount>=iSnakeMonsterAnimationDelayCountMax) {
+			iSnakeMonsterAnimationCount=(iSnakeMonsterAnimationCount+1)%2; //3; //last hidden
+
+			iSnakeMonsterAnimationDelayCount=0;			
+			
+			if (snakeMonsterTileStepDelay>=snakeMonsterTileStepDelayMax) {
+				snakeMonsterTileStepDelay=0;
+			}
+			else {
+				snakeMonsterTileStepDelay++;
+			}				
+		}
+		else {
+			iSnakeMonsterAnimationDelayCount++;
+		}
+
+		//==============================
+		//AI; movement		
+		if (iSnakeMonsterAnimationDelayCount>=iSnakeMonsterAnimationDelayCountMax/2) {
+		
+			if (inputArraySnakeMonsterWithIdCount[MONSTER_POSY]<parseInt(mainImageTile.style.top)) {//mainImageTilePosY) {
+				inputArraySnakeMonsterWithIdCount[MONSTER_POSY]+=inputArraySnakeMonsterWithIdCount[MONSTER_STEPY];				
+			}
+			else {
+				inputArraySnakeMonsterWithIdCount[MONSTER_POSY]-=inputArraySnakeMonsterWithIdCount[MONSTER_STEPY];
+			}
+			
+			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.top=inputArraySnakeMonsterWithIdCount[MONSTER_POSY]+"px";
+
+			if (inputArraySnakeMonsterWithIdCount[MONSTER_POSX]<mainImageTilePosX) {
+				inputArraySnakeMonsterWithIdCount[MONSTER_POSX]+=inputArraySnakeMonsterWithIdCount[MONSTER_STEPX];
+			}
+			else {
+				inputArraySnakeMonsterWithIdCount[MONSTER_POSX]-=inputArraySnakeMonsterWithIdCount[MONSTER_STEPX];
+			}
+			
+			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.left=inputArraySnakeMonsterWithIdCount[MONSTER_POSX]+"px";	
+			
+		}
+			
+//		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
+			//arraySnakeMonsterCountId[iCount][MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
+			
+			//var iFrameY=0;
+			var iFrameY=iImageFrameHeight*3;//2;//64*2; 128;
+
+			//currently two frames only
+			if (iSnakeMonsterAnimationCount==0) { 
+				inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+			}
+			else if (iSnakeMonsterAnimationCount==1) { 
+				inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
+			}
+		//}
+		//==============================
+	}	
 	
 	function executeExplosionEffect() {
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
@@ -3070,68 +3141,105 @@ alert("iInputY: "+iInputY);
 */			
 		}
 	}
-	
-	function verifyHeroCollideWithSnakeMonsters() {
-		var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
-
+			
+	function verifyHeroCollideWithSnakeMonsters(inputArraySnakeMonsterWithIdCount) {
+			
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
+	
+		//alert(inputArraySnakeMonsterWithIdCount[MONSTER_IS_ACTIVE]);
 
-		if (!isSnakeMonsterTileActive) {
-			return;
-		}		
-		//if (batMonsterImageTile.style.visibility!=="hidden") {						
-		else { //if (isBatMonsterTileActive) {						
+	
+//		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
+			//inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
 
-			if (bIsHeroAttacked) {
-				//bIsHeroAttacked=false;
+			//alert(arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]);
+
+			if (!inputArraySnakeMonsterWithIdCount[MONSTER_IS_ACTIVE]) {
 				return;
-			}
+			}		
+			else { //if (isBatMonsterTileActive) {						
+
+				if (bIsHeroAttacked) {
+					//bIsHeroAttacked=false;
+					return;
+				}
 			
 			//bIsHeroAttacked=false;		
 
 			//+iImageFrameWidthDefault/2; iImageFrameHeightDefault/2
-			if (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTilePosX,mainImageTilePosY, snakeMonsterImageTilePosX,snakeMonsterImageTilePosY, iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {			
-				//alert("HALLO"); 	
-				
-				//verify if hero attacked
-				if (bHasFired && (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTileProjectileStepDestinationX-iImageFrameWidthDefault/2,mainImageTileProjectileStepDestinationY-iImageFrameHeightDefault/2, snakeMonsterImageTilePosX,snakeMonsterImageTilePosY, iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault))) {
-					monsterHitByHero(mainImageTilePosX,mainImageTilePosY, snakeMonsterImageTilePosX,snakeMonsterImageTilePosY);
+				if (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTilePosX,mainImageTilePosY, inputArraySnakeMonsterWithIdCount[MONSTER_POSX],inputArraySnakeMonsterWithIdCount[MONSTER_POSY], iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {			
+					//alert("HALLO"); 	
 					
-					
-					setExplosionEffectPosition(snakeMonsterImageTilePosX,snakeMonsterImageTilePosY);
-					
-					snakeMonsterImageTile.style.visibility="hidden";				
-					isSnakeMonsterTileActive=false;
-				}
-				else {			
-					bIsHeroAttacked=true;
-					bIsExecutingShake=true;
+					//verify if hero attacked
+					if (bHasFired && (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTileProjectileStepDestinationX-iImageFrameWidthDefault/2,mainImageTileProjectileStepDestinationY-iImageFrameHeightDefault/2, inputArraySnakeMonsterWithIdCount[MONSTER_POSX],inputArraySnakeMonsterWithIdCount[MONSTER_POSY], iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault))) {
+						monsterHitByHero(mainImageTilePosX,mainImageTilePosY, inputArraySnakeMonsterWithIdCount[MONSTER_POSX],inputArraySnakeMonsterWithIdCount[MONSTER_POSY]);
+												
+						setExplosionEffectPosition(inputArraySnakeMonsterWithIdCount[MONSTER_POSX],inputArraySnakeMonsterWithIdCount[MONSTER_POSY]);
+						
+						inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.visibility="hidden";				
+						inputArraySnakeMonsterWithIdCount[MONSTER_IS_ACTIVE]=false;
+					}
+					else {			
+						bIsHeroAttacked=true;
+						bIsExecutingShake=true;
 
-					//Usbong SFZ
-					//TODO: -add: hitBy(...)
-					heroHitByMonster(mainImageTilePosX,mainImageTilePosY, snakeMonsterImageTilePosX,snakeMonsterImageTilePosY);
+						//Usbong SFZ
+						//TODO: -add: hitBy(...)
+						heroHitByMonster(mainImageTilePosX,mainImageTilePosY, inputArraySnakeMonsterWithIdCount[MONSTER_POSX],inputArraySnakeMonsterWithIdCount[MONSTER_POSY]);
+					}
 				}
-				
-				//batMonsterImageTile.style.visibility="hidden";				
-				//isBatMonsterTileActive=false;
-/*				
-				if (bIsHeroInTank) {
-					mainImageTileTankBody.style.visibility="hidden";				
-				}
-				else {
-					mainImageTileHeroBody.style.visibility="hidden";
-				}				
-*/				
 			}
-/*			
-			else {
+		//}
+	}		
+		
+	function verifyHeroCollideWithSnakeMonstersPrevWithArray() {
+		var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
+		
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
+		
+		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
+			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
+
+			//alert(arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]);
+
+			if (!arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
+				return;
+			}		
+			else { //if (isBatMonsterTileActive) {						
+
 				if (bIsHeroAttacked) {
-					//alert("DITO");
+					//bIsHeroAttacked=false;
+					return;
 				}
-				bIsHeroAttacked=false;		
+			
+			//bIsHeroAttacked=false;		
+
+			//+iImageFrameWidthDefault/2; iImageFrameHeightDefault/2
+				if (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTilePosX,mainImageTilePosY, arraySnakeMonsterCountId[iCount][MONSTER_POSX],arraySnakeMonsterCountId[iCount][MONSTER_POSY], iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {			
+					//alert("HALLO"); 	
+					
+					//verify if hero attacked
+					if (bHasFired && (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTileProjectileStepDestinationX-iImageFrameWidthDefault/2,mainImageTileProjectileStepDestinationY-iImageFrameHeightDefault/2, arraySnakeMonsterCountId[iCount][MONSTER_POSX],arraySnakeMonsterCountId[iCount][MONSTER_POSY], iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault))) {
+						monsterHitByHero(mainImageTilePosX,mainImageTilePosY, arraySnakeMonsterCountId[iCount][MONSTER_POSX],arraySnakeMonsterCountId[iCount][MONSTER_POSY]);
+						
+						
+						setExplosionEffectPosition(arraySnakeMonsterCountId[iCount][MONSTER_POSX],arraySnakeMonsterCountId[iCount][MONSTER_POSY]);
+						
+						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="hidden";				
+						arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=false;
+					}
+					else {			
+						bIsHeroAttacked=true;
+						bIsExecutingShake=true;
+
+						//Usbong SFZ
+						//TODO: -add: hitBy(...)
+						heroHitByMonster(mainImageTilePosX,mainImageTilePosY, arraySnakeMonsterCountId[iCount][MONSTER_POSX],arraySnakeMonsterCountId[iCount][MONSTER_POSY]);
+					}
+				}
 			}
-*/			
 		}
 	}
 	
@@ -3180,6 +3288,11 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
 
 		var batMonsterImageTile = document.getElementById("batMonsterImageId");
 		var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
+		
+		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
+			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
+		}
+
 
 	//added by Mike, 20231129
 	 var mainImageSoldier = document.getElementById("mainImageSoldierId");
@@ -3728,7 +3841,12 @@ else {
 		var iDoorImageBottomPosStartY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 		
 		batMonsterImageTile.style.visibility="hidden";
+		
 		snakeMonsterImageTile.style.visibility="hidden";
+		
+		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
+			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="hidden";
+		}					
 
 		//reminder: innerStageWidth uses iStageMaxHeight
 
@@ -3872,7 +3990,6 @@ else {
 				
 				//left wall with door at center				
 				if (mainImageTilePosX<iDoorImageLeftPosStartX) {					
-
 					if (((mainImageTilePosY>=iDoorImageLeftPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageLeftPosEndY)) ||	
 						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageLeftPosStartX,iDoorImageLeftPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
 											
@@ -3906,7 +4023,8 @@ else {
 			case 33:
 				doorImageTop.style.visibility="visible";
 				doorImageBottom.style.visibility="visible";
-				
+
+/*				
 				if (!hasInitMapLocation) {
 					isSnakeMonsterTileActive=true;
 					snakeMonsterImageTile.style.visibility="visible";
@@ -3915,22 +4033,59 @@ else {
 					snakeMonsterImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
 					snakeMonsterImageTilePosY=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
 				}
-				
-				hasInitMapLocation=true;
+*/
+			for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
+				if (!hasInitMapLocation) {
+					arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
+					arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
 
-				if (isSnakeMonsterTileActive) {
-					snakeMonsterImageTile.style.visibility="visible";
-
-/*			
-				batMonsterImageTile.style.top = 0+iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameHeightDefault+"px";
-				batMonsterImageTile.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault) +"px";
-*/				
-					snakeMonsterImageTile.style.top = 0+snakeMonsterImageTilePosY+"px"; //iInnerVerticalOffset
-					snakeMonsterImageTile.style.left = 0+snakeMonsterImageTilePosX+"px"; //iInnerHorizontalOffset
+/*					
+					//TilePosX; width; square based on iStageMaxHeight
+					arraySnakeMonsterCountId[iCount][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+					arraySnakeMonsterCountId[iCount][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
+*/
 			
-					executeSnakeMonsterWalkingAnimation();
-					verifyHeroCollideWithSnakeMonsters();
+					arraySnakeMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault;
+					arraySnakeMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
+					
+					arraySnakeMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault;
+					arraySnakeMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
+					
+					arraySnakeMonsterCountId[1][MONSTER_STEPX]=1;
+					arraySnakeMonsterCountId[1][MONSTER_STEPY]=1;
+/*					
+					alert(arraySnakeMonsterCountId[0][MONSTER_POSX]);
+					alert(arraySnakeMonsterCountId[1][MONSTER_POSX]);
+*/					
+					//alert("iCount: "+iCount+"; "+arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]);
 				}
+
+				//hasInitMapLocation=true;				
+				if (iCount>=snakeMonsterCountMax-1) {
+					hasInitMapLocation=true;				
+				}
+
+				if (arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
+					arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+					
+					//alert(iCount);
+
+					arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.top = 0+arraySnakeMonsterCountId[iCount][MONSTER_POSY]+"px"; //iInnerVerticalOffset
+					arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.left = 0+arraySnakeMonsterCountId[iCount][MONSTER_POSX]+"px"; //iInnerHorizontalOffset
+			
+					//alert(arraySnakeMonsterCountId[iCount][MONSTER_POSX]);
+			
+					executeSnakeMonsterWalkingAnimation(arraySnakeMonsterCountId[iCount]);					
+					
+					//arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=false;
+					
+					//alert(arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]);
+				
+					verifyHeroCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
+				}
+			}
+				
+				
 				
 				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault/2) {					
 
@@ -5732,8 +5887,10 @@ opting to put assets folder in "html_application" folder instead
 
 		<img id="batMonsterImageId" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241110">
 
-
 		<img id="snakeMonsterImageId" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241110">
+
+		<img id="snakeMonsterImageId0" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241110">
+		<img id="snakeMonsterImageId1" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241110">
 
 
 		<!-- added by Mike, 20231121 -->
