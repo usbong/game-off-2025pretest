@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241116; from 20241115
+' @date updated: 20241117; from 20241116
 ' @website: www.usbong.ph
 '
 '
@@ -38,18 +38,9 @@
 ' last accessed: 20230426
 '
 '*/
-//added by Mike, 20230313
-//TO-DO: -add: adjustable "STAGE" SIZE textbox
-//TO-DO: -add: timeline?; remembers: DIRECTOR6, FLASH tool
-//TO-DO: -note: location of image sprite file in assets folder, editable using GIMP tool
--->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-<!-- TO-DO: -update: this -->
-<!-- //edited by Mike, 20230314 //TO-DO: -add: option to set IF from internet
--->
-
 <!--
   	<base href="http://localhost/usbong_2DAnimationTool/" target="_blank">
   	<base href="http://store.usbong.ph/" target="_blank">
@@ -869,67 +860,30 @@
 
   <script>
 
-
-//added by Mike, 20221105
-bIsTargetAtSpace = true;
-
-iTargetAtSpaceBlinkAnimationCount=0;
-iTargetAtSpaceBlinkAnimationCountMax=6;
-
-//added by Mike, 20221106
-iTargetTileBgCount=-1;
-
 //added by Mike, 20221106
 //note: 5x3; //4x4;
 var iRowCount=0;
 const iRowCountMax=5;
 var iColumnCount=0;
 const iColumnCountMax=3;
-var arrayPuzzleTileCountId = [];
-var arrayPuzzleTilePos = [ [],[],[],[] ];
 
-const iTileBgCountMax=iRowCountMax*iColumnCountMax;
-
-//added by Mike, 20231123
-var bSoldierTileTypeDone=false;
-var bTankTileTypeDone=false;
-var bBuildingTileTypeDone=false;
-
-
-//added by Mike, 20231109
-var bHasHitTileWithForeignKey=false;
-var bIsPuzzleDone=false;
-
-var bHasClosedPuzzle=false;
+var bIsGameOver=false;
 
 //added by Mike, 20231124
 var bIsBossBattleDone=false;
-
 var bIsHeroInTank=false;
-
 var bIsHeroAttacked=false;
 
-
-//added by Mike, 20231126
 var bIsMonsterBossHit=false;
-//edited by Mike, 20231129
-var iBossLife=3;//1;//50;
+var iBossLife=3;
 
-//added by Mike, 20231111
 var bIsActionKeyPressed=false;
 
-//added by Mike, 20231119
-var bIsPuzzleTileTargetHit=false;
-
-//added by Mike, 20231114
 var iInputDelayCountMax=3;
 var iInputDelayCount=iInputDelayCountMax;
 
-//added by Mike, 20231122
 var bHasViewedHowToPlayGuide=false;
-
-//added by Mike, 20231116
-var bIsStillUsingItchScreen=false;
+//var bIsStillUsingItchScreen=false;
 
 //added by Mike, 20231111
 //reference: https://github.com/usbong/tugon/blob/main/mainLinux.cpp;
@@ -947,37 +901,26 @@ var iShakeOffsetHeight=iShakeOffsetHeightMax;
 var iHeroInvincibileCount=0;
 var iHeroInvincibileCountMax=10;
 
+var iCurrHeroLifeMax=10;
+var iCurrHeroLife=iCurrHeroLifeMax;
 
-//added by Mike, 20231112
-const sAudioEffectActionStart="assets/audio/usbongGameOff2023TapLoudEdited.mp3";
+var iHeroDeathCount=0;
 
-//added by Mike, 20231114
-const sAudioEffectLowPower="assets/audio/voiceover/lowpower.mp3";
-
-//added by Mike, 20231130
 const sAudioEffectActionCannonFire ="assets/audio/usbongGameOff2023AudioEffectsCannon.mp3";
-
-
-//added by Mike, 20231129
-//TODO: -update: this
 const sAudioBGM="assets/audio/usbongGameOff2023BGM.mp3";
 
-//added by Mike, 20231115
+/*
 var iAnimationCount=-1;//0; start at -1
 var iAnimationCountMax=5;
 var iAnimationDelayCount=10; //0
 var iAnimationDelayCountMax=10;
+*/
 
 //added by Mike, 20231127
 var iBatMonsterAnimationCount=-1;//0; start at -1
 var iBatMonsterAnimationCountMax=5;
 var iBatMonsterAnimationDelayCount=10; //bat; //0
 var iBatMonsterAnimationDelayCountMax=6;
-
-var iSnakeMonsterAnimationCount=-1;//0; start at -1
-var iSnakeMonsterAnimationCountMax=5;
-var iSnakeMonsterAnimationDelayCount=10; //bat; //0
-var iSnakeMonsterAnimationDelayCountMax=6;
 
 var iBossMonsterAnimationCount=-1;//0; start at -1
 var iBossMonsterAnimationCountMax=5;
@@ -989,7 +932,6 @@ var iMiniMapAnimationCount=-1;//0; start at -1
 var iMiniMapAnimationCountMax=5;
 var iMiniMapAnimationDelayCount=0; //0
 var iMiniMapAnimationDelayCountMax=5;
-
 
 //added by Mike, 20231119
 var iExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
@@ -1016,37 +958,23 @@ var iHeroAttackEffectAnimationCountMax=5;
 var iHeroAttackEffectAnimationDelayCount=0;
 var iHeroAttackEffectAnimationDelayCountMax=2;//4;//1;
 
-
-//added by Mike, 20231128
-var iTransitionFromPuzzleToBossDelayCount=0;
-var iTransitionFromPuzzleToBossDelayCountMax=150;//100;
-
-//added by Mike, 20231128
 var iMonsterBossAttackDelayCount=0;
 var iMonsterBossAttackDelayCountMax=120;
 
-//added by Mike, 20231120
 var iImageExplosionEffectAnimationWidth=32;//64;
 var iImageExplosionEffectAnimationHeight=32;//64;
 
-//added by Mike, 20241105
 var iImageDustEffectAnimationWidth=32;
 var iImageDustEffectAnimationHeight=32;
 
-//added by Mike, 20241113
 var iImageHeroAttackEffectAnimationWidth=32;
 var iImageHeroAttackEffectAnimationHeight=32;
 
-//added by Mike, 20231127
 var iTransitionRotate=0;
 var iTransitionScale=0;//1;
 var iTransitionDelayCount=0;
 var iTransitionDelayCountMax=20;
 
-var bIsExecutingTransition=false;
-var bIsTransitionFirstPartDone=false;
-
-//added by Mike, 20231121
 var iMouseAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iMouseAnimationCountMax=5;
 var iMouseAnimationDelayCount=0;
@@ -1057,23 +985,21 @@ var iMouseClickStartTime=0;
 var iMouseClickMaxElapsedTime=250; //1/4 second
 var bIsHeroDash=false;
 
-//added by Mike, 20241103
 var iHeroAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iHeroAnimationCountMax=5;
 var iHeroAnimationDelayCount=0;
 var iHeroAnimationDelayCountMax=5;//2;//1; //TODO: -add: more dust effect if target walking distance is far
 
-//edited by Mike, 20231124; from 20231123
+/*
 var iScore=10000;//0;
 var iTargetScore=10000;//0;
-
-//added by Mike, 20231129; from 20231124
 var bIsIncreasingScore=false;//true;
 
 //added by Mike, 20231125
 var iTextScoreDivWidthOffset=5;
 var iTextScoreDivWidth;
 var iTextScoreShadowDivWidthOffset=1;
+*/
 
 //added by Mike, 20241114
 //font size at 32px; 00:00:00.length is 8
@@ -1088,12 +1014,7 @@ var iCurrSnowFlakeCountMax=20;
 var iCurrSnowFlakeCountPosX=0;
 var iCurrSnowFlakeCountPosY=0;
 
-//added by Mike, 20231129
-var iSoldierAnimationScale=0;
-
-//added by Mike, 20231124
 //note: acceleration
-
 //min 2; not 1
 var mainImageTileProjectileStepYMax=6;//10;//4;//20;//20;
 var mainImageTileProjectileStepXMax=6;//10;//4;//20;//20;
@@ -1107,28 +1028,11 @@ var mainImageTileProjectileStepXMin=mainImageTileProjectileVelocityX;//4;//12;
 var mainImageTileProjectileStepY=mainImageTileProjectileStepYMin;//20;
 var mainImageTileProjectileStepX=mainImageTileProjectileStepYMin;//20;
 
-//added by Mike, 20241103
 var mainImageTileProjectileStepDestinationY=0;
 var mainImageTileProjectileStepDestinationX=0;
 
-
-//added by Mike, 20231125
-var mainImageMonsterPosX=0;
-var mainImageMonsterPosY=0;
-
-//added by Mike, 20231126
 var mainImageMonsterBossPosX=500;
 var mainImageMonsterBossPosY=10;
-
-
-//added by Mike, 20231124
-//note: parameters
-var iDefaultAnimationImageX=0;//-32; //default x
-var iDefaultAnimationImageY=0;//-32; //default y
-
-//edited by Mike, 20230418
-//iTotalAnimImageFrameCount=4;//2;
-var iTotalAnimImageFrameCount=2;
 
 var iImageFrameWidth=32;// 64; //0;
 var iImageFrameHeight=32;// 64;
@@ -1143,43 +1047,18 @@ var iImageFrameHeightDefault=32;
 var iMouseInputImageWidth=64;
 var iMouseInputImageHeight=64;
 
-
 //added by Mike, 20231128
 var iCurrTextCharacterCount=0;
 var iCurrTextCharacterCountMax=0;
 var sCurrText="";
 
 //added by Mike, 20231128
-var iTitleExplosionEffectDelayCount=0;
-var iTitleExplosionEffectDelayCountMax=200;
-
-//added by Mike, 20231128
 var iTitlePressStartEffectDelayCount=0;
 var iTitlePressStartEffectDelayCountMax=5;
 
 //added by Mike, 20231129
-var ihowToPlayGuideImageFrame2DelayCount=0;
-var ihowToPlayGuideImageFrame2DelayCountMax=8;
-
-
-/*
-//added by Mike, 20221108
-var iCountMovementStep=0;
-
-//added by Mike, 20221213
-const iCountInitMovementStepMax=15;
-const iCountMovementStepMax=100-iCountInitMovementStepMax;
-
-//added by Mike, 20221214
-var arrayCountMovementStep= [];
-
-var bIsInitAutoGeneratePuzzleFromEnd=false;
-var iDelayAnimationCountMovementStep=0;
-const iDelayAnimationCountMovementStepMax=6;
-
-//added by Mike, 20221129
-var iPrevDirection=0;
-*/
+var iHowToPlayGuideImageFrame2DelayCount=0;
+var iHowToPlayGuideImageFrame2DelayCountMax=8;
 
 //added by Mike, 20231119; from 20221121
 var iDelayAnimationCountEnter=0;
@@ -1187,176 +1066,69 @@ const iDelayAnimationCountEnterMax=10;
 
 //added by Mike, 20231121
 var bHasViewedTitle=false;
-
 var bHasPressedStart=false;
-
-
-//added by Mike, 20230123
-var iPuzzleTileWidth=64;
-var iPuzzleTileHeight=64;
-
-//added by Mike, 20230123
-const iPuzzleTileTotalWidthMax=iPuzzleTileWidth*iColumnCountMax;
-const iPuzzleTileTotalHeightMax=iPuzzleTileHeight*iRowCountMax;
-
-//added by Mike, 20231126
-var iMonsterTileWidth=64;
-var iMonsterTileHeight=64;
 
 var iMonsterBossTileWidth=128;
 var iMonsterBossTileHeight=128;
 
-var iBorderOffset=0;
-var iOffsetWidth=0;
-var iOffsetHeight=0;
+var iMainImageTileStepAngle=0;
 
+var newMainImageTileProjectilePosX=0;
+var newMainImageTileProjectilePosY=0;
+var bHasFired=false;
 
+var iMousePointPosX=0;
+var iMousePointPosY=0;
 
-	//added by Mike, 20221214
-	var iCountMovementStep=0;
-	const iCountInitMovementStepMax=15;
-	const iCountMovementStepMax=100-iCountInitMovementStepMax;
-	//edited by Mike, 20230421; from 20230418
-	var iCountMovementStepDelay=0;
-	const iCountMovementStepDelayMax=10;
+const iKEY_W = 0;
+const iKEY_S = 1;
+const iKEY_A = 2;
+const iKEY_D = 3;
 
-	//added by Mike, 20230421
-	//SOH-CAH-TOA
-	//note: Max increase incrementally angle to end destination
-	const iCountMovementDiagonalStepMax=5; //10
-	var iCountMovementDiagonalStep=iCountMovementDiagonalStepMax;
-	//edited by Mike, 20230426; from 20230425
-	//360 and 0, @12 o'clock; rotation; image and step direction
-	//inverted y;
-	//SOH-CAH-TOA; where: use of cos and sin also interchanged;
-	var iMainImageTileStepAngle=0;
-    //var iMainImageTileStepAngleTemp=0;
+const iTotalKeyCount = 4; //8; //12;
+const iDirectionTotalKeyCount = 4; //8
 
-    //added by Mike, 20230427
-    var newMainImageTileProjectilePosX=0;
-    var newMainImageTileProjectilePosY=0;
-    var bHasFired=false;
+//added by Mike, 20231125
+//https://www.w3schools.com/js/js_arrays.asp; last accessed: 20220823
+const arrayKeyPressed = [];
+for (iCount=0; iCount<iTotalKeyCount; iCount++) {
+	arrayKeyPressed[iCount]=false;
+}
 
-	//added by Mike, 20230423
-	var iMousePointPosX=0;
-	var iMousePointPosY=0;
-
-	var iPrevDirection=0;
-	var bIsInitAutoGeneratePuzzleFromEnd=true;
-
-	const iKEY_W = 0;
-	const iKEY_S = 1;
-	const iKEY_A = 2;
-	const iKEY_D = 3;
-
-	//edited by Mike, 20231125; from 20230418
 /*
-	const iKEY_I = 4;
-	const iKEY_K = 5;
-	const iKEY_J = 6;
-	const iKEY_L = 7;
+var iFacingDirection=0;
 
-
-	//added by Mike, 20230418
-	const iKEY_Q = 4; //TOP-LEFT
-	const iKEY_E = 5; //TOP-RIGHT
-	const iKEY_C = 6; //BOTTOM-RIGHT
-	const iKEY_Z = 7; //BOTTOM-LEFT
-
-	const iKEY_I = 8;
-	const iKEY_K = 9;
-	const iKEY_J = 10;
-	const iKEY_L = 11;
-
-	//edited by Mike, 20230418
-	const iTotalKeyCount = 12; //8; //4;
-	const iDirectionTotalKeyCount = 8; //4;
+const iFACING_DOWN=0;
+const iFACING_UP=1;
+const iFACING_LEFT=2;
+const iFACING_RIGHT=3;
 */
-	const iTotalKeyCount = 4; //8; //12;
-	const iDirectionTotalKeyCount = 4; //8
 
-	//added by Mike, 20230421
-	var iDirection=-1;
+//edited by Mike, 20221129
+//1000/60=16.66; 60 frames per second
+//1000/30=33.33; 30 frames
+const fFramesPerSecondDefault=16.66;
+//const fFramesPerSecondDefault=33.33;
+var fFramesPerSecond=fFramesPerSecondDefault;
+var iCurrentIntervalId=-1;
 
-	//added by Mike, 20231125
-	//https://www.w3schools.com/js/js_arrays.asp; last accessed: 20220823
-	const arrayKeyPressed = [];
-	for (iCount=0; iCount<iTotalKeyCount; iCount++) {
-		arrayKeyPressed[iCount]=false;
-	}
+var mainImageTilePosX=0;
+var mainImageTilePosY=0;
+var mainImageTileStepX=2;//0; //2;
+var mainImageTileStepY=2;//0; //2;
 
-
-	var arrayCountMovementStep= [];
-
-	//added by Mike, 20230311
-	var iFacingDirection=0;
-
-	const iFACING_DOWN=0;
-	const iFACING_UP=1;
-	const iFACING_LEFT=2;
-	const iFACING_RIGHT=3;
-
-	//edited by Mike, 20230314
-	//note: VALUES set in init()
-	//const iTotalAnimImageFrameCount=2;//6;
-	var iTotalAnimImageFrameCount;//=4;//6;
-	var iAnimImageFrameCount;//=0;
-
-	var iDefaultAnimationImageX;//=0; //default x
-	var iDefaultAnimationImageY;//=0;//-32; //default y
-
-//	var iTotalAnimImageFrameCount=4;
-
-	/*	//removed by Mike, 20230312
-	var iImageFrameSizeX=0;
-	var iImageFrameSizeY=32;
-*/
-	//added by Mike, 20230315
-	//edited by Mike, 20230418
-	//var iAnimImageDirection=0; //vertical
-	var iAnimImageDirection=1; //horizontal
-
-	const AnimImageDirection_VERTICAL=0;
-	const AnimImageDirection_HORIZONTAL=1;
-
-
-	var bIsWalkingAction=true; //false;
-
-	//edited by Mike, 20221129
-	//1000/60=16.66; 60 frames per second
-	//1000/30=33.33; 30 frames
-	const fFramesPerSecondDefault=16.66;
-	//const fFramesPerSecondDefault=33.33;
-	var fFramesPerSecond=fFramesPerSecondDefault;
-	var iCurrentIntervalId=-1;
-
-	//edited by Mike, 20230315; from 20230311
-	//adds 6 frames before frame update
-	var iDelayAnimationCountMovementStep=0;
-	var iDelayAnimationCountMovementStepMax=12; //6;
-
-	//added by Mike, 20230410
-	var mainImageTilePosX=0;
-	var mainImageTilePosY=0;
-	//edited by Mike, 20230418
-	var mainImageTileStepX=2;//0; //2;
-	var mainImageTileStepY=2;//0; //2;
-
-	//added by Mike, 20230427
-	var mainImageTileProjectilePosX=0;
-	var mainImageTileProjectilePosY=0;
+var mainImageTileProjectilePosX=0;
+var mainImageTileProjectilePosY=0;
 	
-	var bHasReachedDestinationY=false;
-	var bHasReachedDestinationX=false;
+var bHasReachedDestinationY=false;
+var bHasReachedDestinationX=false;
 	
-	var iPrevMouseXPos=-1;
-	var iPrevMouseYPos=-1;
+var iPrevMouseXPos=-1;
+var iPrevMouseYPos=-1;
 	
-	//TODO: -do code refactoring; there's also iFacingDirection
-	var bIsHeroFacingLeft=false;
+var bIsHeroFacingLeft=false;
 		
 	//added by Mike, 20241111
-	//TODO: -put in array;
 	var batMonsterImageTilePosX=0;
 	var batMonsterImageTilePosY=0;
 	var batMonsterTileStepX=2;
@@ -1364,8 +1136,8 @@ var iOffsetHeight=0;
 	var batMonsterTileStepDelay=0;	
 	var batMonsterTileStepDelayMax=5;	
 	var isBatMonsterTileActive=false;
-	
-	//TODO: -put in array;
+
+/*	
 	var snakeMonsterImageTilePosX=0;
 	var snakeMonsterImageTilePosY=0;
 	var snakeMonsterTileStepX=2;
@@ -1373,9 +1145,9 @@ var iOffsetHeight=0;
 	var snakeMonsterTileStepDelay=0;	
 	var snakeMonsterTileStepDelayMax=5;	
 	var isSnakeMonsterTileActive=false;
-
+*/
 	var arraySnakeMonsterCountId = [[],[]];
-	var snakeMonsterCountMax = 2;
+	var iSnakeMonsterCountMax = 2;
 	
 	const MONSTER_OBJECT=0;
 	const MONSTER_IS_ACTIVE=1;	
@@ -1383,151 +1155,28 @@ var iOffsetHeight=0;
 	const MONSTER_POSY=3;
 	const MONSTER_STEPX=4;
 	const MONSTER_STEPY=5;
+
+	const MONSTER_ANIMATION_DELAY_COUNT=6;
+	const MONSTER_ANIMATION_DELAY_COUNT_MAX=7;
+	const MONSTER_ANIMATION_COUNT=8;
+	const MONSTER_ANIMATION_COUNT_MAX=9;
+	const MONSTER_STEP_DELAY=10;
+	const MONSTER_STEP_DELAY_MAX=11;
 	
-	//added by Mike, 20241106
-	var iCurrMapLocation=53;//12;//0;
-		
+	var iCurrMapLocation=53;//12;//0;		
 	var hasInitMapLocation=false;	
 		
-
-/*	//removed by Mike, 20231124
-	//edited by Mike, 20230418
-	var mainImageTileProjectileStepX=2;//0; //2;
-	var mainImageTileProjectileStepY=2;//0; //2;
-*/
-
-	//edited by Mike, 20230314
-/*
-	const iStageMaxWidth=160*2; //160;
-	const iStageMaxHeight=144*2; //144;
-*/
-	//TO-DO: -add: auto-update Canvas' width and height to be EXACT
-/*	//edited by Mike, 20231121
-	var iStageMaxWidth=448; //640;
-	var iStageMaxHeight=402; //576;
-*/
-
-/*
-	var iStageMaxWidth=640;
-	var iStageMaxHeight=360; //480
-*/
 	var iStageMaxWidth=640;
 	var iStageMaxHeight=360;
 
-
-//	var iHorizontalOffset=0;
 	var iVerticalOffset=0;
 
 	//note: for INNER SCREEN
-//edited by Mike, 20231126; itch.io; screen.width appears to cause incorrect output;
-//due to itch.io window top-left at 0;
-//iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
-iHorizontalOffset=0;
+	//edited by Mike, 20231126; itch.io; screen.width appears to cause incorrect output;
+	//due to itch.io window top-left at 0;
+	var iHorizontalOffset=0;
+	var iVerticalOffsetInnerScreen=0;
 
-//edited by Mike, 20231126
-iVerticalOffsetInnerScreen=0;
-//iVerticalOffsetInnerScreen=10;
-
-/*
-	//added by Mike, 20230312
-	//note: press TAB, then ENTER to SET
-	function setAnimImageFrameX() {
-		var setAnimImageFrameXText = document.getElementById("textSetAnimImageFrameXId");
-
-		//notes: auto-sets to negative number;
-		//TO-DO: -add: a checkbox as switch?
-		if (setAnimImageFrameXText.value>0) {
-			setAnimImageFrameXText.value=setAnimImageFrameXText.value*-1;
-		}
-
-		//alert(setAnimImageFrameXText.value);
-		iDefaultAnimationImageX=setAnimImageFrameXText.value;//-32;
-	}
-
-	function setAnimImageFrameY() {
-		var setAnimImageFrameYText = document.getElementById("textSetAnimImageFrameYId");
-
-		//notes: auto-sets to negative number;
-		//TO-DO: -add: a checkbox as switch?
-		if (setAnimImageFrameYText.value>0) {
-			setAnimImageFrameYText.value=setAnimImageFrameYText.value*-1;
-		}
-
-		//alert(setAnimImageFrameXText.value);
-		iDefaultAnimationImageY=setAnimImageFrameYText.value;//-32;
-	}
-
-	function setAnimImageFrameWidth() {
-		var setAnimImageFrameWidthText = document.getElementById("textSetAnimImageFrameWidthId");
-
-		//alert(setAnimImageFrameXText.value);
-		iImageFrameWidth=setAnimImageFrameWidthText.value;//-32;
-	}
-
-	function setAnimImageFrameHeight() {
-		var setAnimImageFrameHeightText = document.getElementById("textSetAnimImageFrameHeightId");
-
-		//alert(setAnimImageFrameXText.value);
-		iImageFrameHeight=setAnimImageFrameHeightText.value;//-32;
-	}
-
-	function setAnimDelay() {
-		var setAnimDelayText = document.getElementById("textSetAnimDelayId");
-					iDelayAnimationCountMovementStepMax=setAnimDelayText.value;
-	}
-
-	function setTotalAnimImageFrameCount() {
-		var setTotalAnimImageFrameCountText = document.getElementById("textSetTotalAnimImageFrameCountId");
-
-		//notes: auto-sets to positive number;
-		if (setTotalAnimImageFrameCountText.value<0) {
-			setTotalAnimImageFrameCountText.value=setTotalAnimImageFrameCountText.value*-1;
-		}
-
-		//edited by Mike, 20230314
-		iTotalAnimImageFrameCount=setTotalAnimImageFrameCountText.value;
-	}
-*/
-
-//added by Mike, 20241102
-//https://www.w3schools.com/howto/howto_js_fullscreen.asp; last accessed: 20241102
-
-/* Get the documentElement (<html>) to display the page in fullscreen */
-var elem = document.documentElement;
-
-/* View in fullscreen */
-function openFullscreen() {
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
-  } else if (elem.webkitRequestFullscreen) { /* Safari */
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) { /* IE11 */
-    elem.msRequestFullscreen();
-  }
-/*  
-  	var iStageMaxWidth=640*2;
-	var iStageMaxHeight=360*2;
-	
-
-var scale = 'scale(1)';
-document.body.style.webkitTransform =  scale;    // Chrome, Opera, Safari
- document.body.style.msTransform =   scale;       // IE 9
- document.body.style.transform = scale;   
- */
-}
-
-/* Close fullscreen */
-function closeFullscreen() {
-  if (document.exitFullscreen) {
-    document.exitFullscreen();
-  } else if (document.webkitExitFullscreen) { /* Safari */
-    document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) { /* IE11 */
-    document.msExitFullscreen();
-  }
-}
-
-	//added by Mike, 20230427
 	function resetProjectile() {
 		var mainImageTile = document.getElementById("mainImageTileImageId");
 
@@ -1538,37 +1187,9 @@ function closeFullscreen() {
 
 		var iFrameY=0;
 
-/*
-		var iFrameY=0;
-		//destination to the left of hero projectile		
-		if (newMainImageTileProjectilePosX<0) {
-			iFrameY=64*2;//128;
-		}
-		else {
-			iFrameY=64*3;//192;
-		}
-*/
-		
-/*	//edited by Mike, 20231125
-		//added by Mike, 20230427
-		mainImageTileProjectilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
-
-		//edited by Mike, 20231124
-		//mainImageTileProjectilePosY=iStageMaxHeight/2-iImageFrameHeight/2;
-		mainImageTileProjectilePosY=iStageMaxHeight-iImageFrameHeight;
-*/
 		mainImageTileProjectilePosX = parseInt(mainImageTile.style.left);
 		mainImageTileProjectilePosY =parseInt(mainImageTile.style.top);
 
-
-		//alert("mainImageTileProjectilePosX: "+mainImageTileProjectilePosX);
-		//alert("mainImageTileProjectilePosY: "+mainImageTileProjectilePosY);
-
-/*		
-		//TO-DO: -update: newMainImage... step
-		newMainImageTileProjectilePosX=0; //mainImageTileProjectilePosX;
-		newMainImageTileProjectilePosY=0; //mainImageTileProjectilePosY;
-*/
 		newMainImageTileProjectilePosX=parseInt(mainImageTileProjectilePosX);
 		newMainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY);
 
@@ -1576,37 +1197,20 @@ function closeFullscreen() {
 		mainImageTileProjectile.style.top = mainImageTileProjectilePosY+"px";
 
 		mainImageTileProjectile.style.visibility="hidden";
-		bHasFired=false;
-		
+		bHasFired=false;		
 		bIsHeroDash=false;
 
-		//added by Mike, 20230428
 		iMainImageTileStepAngle=0;
 
-		//added by Mike, 20231124
 		mainImageTileProjectileStepY=mainImageTileProjectileStepYMin;//20;
 		mainImageTileProjectileStepX=mainImageTileProjectileStepXMin;//20;
 
 		bHasReachedDestinationY=false;
 		bHasReachedDestinationX=false;
-		
-/*		//TODO: -verify: this
-		mainImageTileProjectileStepDestinationX=mainImageTileProjectilePosX;
-		mainImageTileProjectileStepDestinationY=mainImageTileProjectilePosY;	
-*/
 	
 		//TODO: -add: idle animation
 		
 		iHeroAnimationCount=0; 
-
-/*
-		if (bIsHeroFacingLeft) {
-			iFrameY=iImageFrameHeight*2;//64*2; 128;
-		}
-		else {
-			iFrameY=iImageFrameHeight*3;//64*3; 192;
-		}
-*/
 
 		mainImageTileTankBody.style.visibility="hidden";
 		mainImageTileHeroBody.style.visibility="hidden";
@@ -1635,15 +1239,6 @@ function closeFullscreen() {
 
 			mainImageTileHeroBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
 		}
-
-/*			
-		if (bIsHeroAttacked) {
-			//alert(">>>>>>>>>DITO");
-			//bIsHeroAttacked=false;
-		}
-*/
-			
-		//alert("dito");
 	}
 
 	//added by Mike, 20241115
@@ -1709,171 +1304,247 @@ function closeFullscreen() {
 			myCanvasContext.fillStyle = "#ffffff";
 			
 			myCanvasContext.fillRect(0+iXPos+iColumnCount*iMiniMapRoomWidth+iMiniMapSpacing*iColumnCount, 0+iYPos+iRowCount*iMiniMapRoomHeight+iMiniMapSpacing*iRowCount, iMiniMapRoomWidth, iMiniMapRoomHeight);			
+		}		
+	}
+	
+	function drawHeroLifeBar(myCanvasContext, iXPos, iYPos) {
+		var iHeroLifeBarWidth=4;
+		var iHeroLifeBarHeight=4;		
+		var iHeroLifeBarSpacing=0;//1;
+			
+		//var iCurrHeroLife=10;
+
+		//myCanvasContext.fillStyle = "#00c7ff"; //00d9ff; //"#ff0000";
+
+		if (iCurrHeroLife>=5) {
+			myCanvasContext.fillStyle = "#00c7ff";		
+		}
+		else if (iCurrHeroLife>=2) {
+			myCanvasContext.fillStyle = "#ff6b00"; //orange
+		}
+		else {
+			myCanvasContext.fillStyle = "#ff0000"; //red
 		}
 		
-//		myCanvasContext.fillRect(0+iXPos+iColumnCount*iMiniMapRoomWidth+iMiniMapSpacing*iColumnCount, 0+iYPos+iRowCount*iMiniMapRoomHeight+iMiniMapSpacing*iRowCount, iMiniMapRoomWidth, iMiniMapRoomHeight);
-	}
+		myCanvasContext.fillRect(0+iXPos, 0+iYPos, iHeroLifeBarWidth*iCurrHeroLife, iHeroLifeBarHeight);
+	}	
 
-	function init() {
+	function initTest() {
+		iCurrHeroLife=iCurrHeroLifeMax;
+		
+		bHasPressedStart=false;
+  		bHasViewedHowToPlayGuide=false;
+		bHasViewedTitle=false;
+		bIsBossBattleDone=false;
+		
+		//------------
+		//note: not played during onLoad(), unless in ITCH.IO...
 		var myAudio = document.getElementById("myAudioId");
 		
         myAudio.setAttribute("src", sAudioBGM);
 
-        fMyAudioVolume=1.0;//0.4;
+        var fMyAudioVolume=1.0;//0.4;
+        myAudio.volume=fMyAudioVolume;
+        myAudio.loop=true;		
+        myAudio.play();
+		//-----------	
+		
+	}
+
+	function init() {	
+		bIsGameOver=false;		
+		
+		iHeroInvincibileCount=0;
+		bIsHeroAttacked=false;
+		bIsExecutingShake=false;
+		iDestroyHumanShakeDelayCount=0;
+		
+		bHasPressedStart=false;
+  		bHasViewedHowToPlayGuide=false;
+		bHasViewedTitle=false;
+		bIsBossBattleDone=false;
+		bIsHeroInTank=false;
+		bIsHeroDash=false;
+		
+		iBatMonsterAnimationCount=-1;//0; start at -1
+		iBatMonsterAnimationCountMax=5;
+		iBatMonsterAnimationDelayCount=10; //bat; //0
+		iBatMonsterAnimationDelayCountMax=6;
+
+		iBossMonsterAnimationCount=-1;//0; start at -1
+		iBossMonsterAnimationCountMax=5;
+		iBossMonsterAnimationDelayCount=10; //0
+		iBossMonsterAnimationDelayCountMax=10;
+
+		iMiniMapAnimationCount=-1;//0; start at -1
+		iMiniMapAnimationCountMax=5;
+		iMiniMapAnimationDelayCount=0; //0
+		iMiniMapAnimationDelayCountMax=5;
+
+		iExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
+		iExplosionEffectAnimationCountMax=5;
+		iExplosionEffectAnimationDelayCount=0;
+		iExplosionEffectAnimationDelayCountMax=4;//1;
+
+		iMonsterExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
+		iMonsterExplosionEffectAnimationCountMax=5;
+		iMonsterExplosionEffectAnimationDelayCount=0;
+		iMonsterExplosionEffectAnimationDelayCountMax=2;//4;//1;
+
+		iDustEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
+		iDustEffectAnimationCountMax=5;
+		iDustEffectAnimationDelayCount=0;
+		iDustEffectAnimationDelayCountMax=4;//1;
+
+		iHeroAttackEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
+		iHeroAttackEffectAnimationCountMax=5;
+		iHeroAttackEffectAnimationDelayCount=0;
+		iHeroAttackEffectAnimationDelayCountMax=2;//4;//1;
+
+		iHeroAnimationCount=-1; //0; //due to immediately +1 in execution;
+		iHeroAnimationCountMax=5;
+		iHeroAnimationDelayCount=0;
+		iHeroAnimationDelayCountMax=5;//2;//1; //TODO: -add: more dust effect if target walking distance is far
+
+		var mouseInputImage = document.getElementById("mouseInputImageId");
+		var titleImage = document.getElementById("titleImageId");
+		var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
+		var howToPlayGuideImageFrame2 = document.getElementById("howToPlayGuideImageFrame2Id");
+		var bossBattleBgImage = document.getElementById("bossBattleBgImageId");			
+		var bossBattleBgImagePart2 = document.getElementById("bossBattleBgImagePart2Id");		
+		var textStatusDiv = document.getElementById("textStatusDivId");
+		var textStatusBackgroundDiv = document.getElementById("textStatusBackgroundDivId");
+		var myCanvasTwo = document.getElementById("myCanvasTwoId");
+		
+		var mainImageTile = document.getElementById("mainImageTileImageId");
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
+		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
+
+		var doorImageRight = document.getElementById("doorImageRightId");		
+		var doorImageLeft = document.getElementById("doorImageLeftId");
+		var doorImageTop = document.getElementById("doorImageTopId");
+		var doorImageBottom = document.getElementById("doorImageBottomId");
+
+		var batMonsterImageTile = document.getElementById("batMonsterImageId");
+
+		var myFavicon = document.getElementById("faviconImageId");
+		var textTimeDiv = document.getElementById("textTimeDivId");
+		
+		var titleImage = document.getElementById("titleImageId");
+		var textEnterDiv = document.getElementById("textEnterDivId");
+
+		//--------------------
+		mouseInputImage.style.visibility="hidden";
+		titleImage.style.visibility="visible";
+		howToPlayGuideImage.style.visibility="hidden";
+		howToPlayGuideImageFrame2.style.visibility="hidden";		
+		bossBattleBgImage.style.visibility="hidden";
+		bossBattleBgImagePart2.style.visibility="hidden";
+		textStatusDiv.style.visibility="hidden";
+		textStatusBackgroundDiv.style.visibility="hidden";
+		myCanvasTwo.style.visibility="hidden";
+		
+		mainImageTile.visibility="hidden";
+		mainImageTileTankBody.visibility="hidden";
+		mainImageTileHeroBody.visibility="hidden";
+		mainImageTileProjectile.visibility="hidden";		
+		
+		doorImageRight.style.visibility="hidden";
+		doorImageLeft.style.visibility="hidden";
+		doorImageTop.style.visibility="hidden";
+		doorImageBottom.style.visibility="hidden";
+
+		batMonsterImageTile.style.visibility="hidden";
+
+		myFavicon.style.visibility="hidden";
+		textTimeDiv.style.visibility="hidden";
+		
+		titleImage.style.visibility="hidden";
+		textEnterDiv.style.visibility="visible";
+				
+		//--------------------
+		myCanvasTwo.style.top = (iVerticalOffsetInnerScreen+0)+"px";
+		myCanvasTwo.style.left = iHorizontalOffset+"px";
+
+		mainImageTilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
+		mainImageTilePosY=iStageMaxHeight/2-iImageFrameHeight;
+
+		mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
+		mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
+		
+		mainImageTileTankBody.style.left = mainImageTile.style.left;
+		mainImageTileTankBody.style.top = mainImageTile.style.top;
+
+		mainImageTileHeroBody.style.left = mainImageTile.style.left;
+		mainImageTileHeroBody.style.top = mainImageTile.style.top;
+		
+		textTimeDiv.innerHTML = "00:00:00";
+
+		////var myCanvasTwo = document.getElementById("myCanvasTwoId");
+		////myCanvasTwo.style.visibility="hidden";
+			
+		var iCurrMapLocation=53;		
+		var hasInitMapLocation=false;
+
+		//------------
+		//note: not played during onLoad(), unless in ITCH.IO...
+		var myAudio = document.getElementById("myAudioId");
+		
+        myAudio.setAttribute("src", sAudioBGM);
+
+        var fMyAudioVolume=1.0;//0.4;
         myAudio.volume=fMyAudioVolume;
         myAudio.loop=true;		
         myAudio.play();
 
 		//alert("DITO");	
-		//-----------	
-
+		//-----------			
 /*
-		//added by Mike, 20231121
-		var myCanvas = document.getElementById("myCanvasId");
-
-		myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+"px";
-
-    //alert(screen.width);
-
-    //removed by Mike, 20231126
-		//iHorizontalOffset=myCanvas.getBoundingClientRect().x;
-    //iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
-    iHorizontalOffset=0;
-
-    myCanvas.style.left=iHorizontalOffset+"px";
-*/
-
-/*
-    //added by Mike, 20231126
-//    document.addEventListener("fullscreenchange", function() {
-    object.onfullscreenchange = function(){
-
-////      output.innerHTML = "fullscreenchange event fired!";
-////      alert("DITO");
-
-	    iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
-    };
-*/
-
-	//removed by Mike, 20241102
-	//iHorizontalOffset=(screen.width-iStageMaxWidth)/2;
-
-    //added by Mike, 20231126
-    var myCanvasTwo = document.getElementById("myCanvasTwoId");
-
-		myCanvasTwo.style.top = (iVerticalOffsetInnerScreen+0)+"px";
-
-		//iHorizontalOffset=myCanvasTwo.getBoundingClientRect().x;
-    myCanvasTwo.style.left = iHorizontalOffset+"px";
-    myCanvasTwo.style.visibility="hidden";
-
-		var mainImageTile = document.getElementById("mainImageTileImageId");
-
-		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
-
-		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
-
-		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
-		
-		var doorImageRight = document.getElementById("doorImageRightId");
-		doorImageRight.style.visibility="hidden";
-		
-		var doorImageLeft = document.getElementById("doorImageLeftId");
-		doorImageLeft.style.visibility="hidden";
-		
-		var doorImageTop = document.getElementById("doorImageTopId");
-		doorImageTop.style.visibility="hidden";
-		
-		var doorImageBottom = document.getElementById("doorImageBottomId");
-		doorImageBottom.style.visibility="hidden";
-
-		var batMonsterImageTile = document.getElementById("batMonsterImageId");
-		batMonsterImageTile.style.visibility="hidden";
-
-		var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
-		
+		var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");		
 		snakeMonsterImageTile.style.visibility="hidden";
+*/
 
-		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
+		for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
 			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
 			
-			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="hidden";
-			
+			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="hidden";			
 			arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=false;
 
 			arraySnakeMonsterCountId[iCount][MONSTER_POSX]=0;
 			arraySnakeMonsterCountId[iCount][MONSTER_POSY]=0;
 			arraySnakeMonsterCountId[iCount][MONSTER_STEPX]=2;
 			arraySnakeMonsterCountId[iCount][MONSTER_STEPY]=2;			
-		}
 			
+			arraySnakeMonsterCountId[iCount][MONSTER_ANIMATION_DELAY_COUNT]=10;
+			arraySnakeMonsterCountId[iCount][MONSTER_ANIMATION_DELAY_COUNT_MAX]=6;		
+
+			arraySnakeMonsterCountId[iCount][MONSTER_ANIMATION_COUNT]=-1;		
+			arraySnakeMonsterCountId[iCount][MONSTER_ANIMATION_COUNT_MAX]=5;		
+
+			arraySnakeMonsterCountId[iCount][MONSTER_STEP_DELAY]=0;		
+			arraySnakeMonsterCountId[iCount][MONSTER_STEP_DELAY_MAX]=5;		
+		}
 	
 		//added by Mike, 20231121
-		var mouseInputImage = document.getElementById("mouseInputImageId");
-
-		//added by Mike, 20231121
-		var titleImage = document.getElementById("titleImageId");
-		//titleImage.style.visibility="hidden";
+////		var mouseInputImage = document.getElementById("mouseInputImageId");
 
 		var iTitleImageWidth = (titleImage.clientWidth);
 		var iTitleImageHeight = (titleImage.clientHeight);
 
 		titleImage.style.top = (iVerticalOffsetInnerScreen+0+iStageMaxHeight/3 -iTitleImageHeight/2)+"px";
 		titleImage.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTitleImageWidth/2 +"px";
-
-
-		//added by Mike, 20231123
-		var textScoreDiv = document.getElementById("textScoreDivId");
-
-//		var iTextScoreDivWidthOffset=5;
-		iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;
-
-		textScoreDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextScoreDivWidth+"px";
-		textScoreDiv.style.top= (0)+"px";
-
-		//added by Mike, 20231125
-		var textScoreShadowDiv = document.getElementById("textScoreShadowDivId");
-
-		//var iTextScoreShadowDivWidthOffset=1;
-		//var iTextScoreShadowDivWidth = (textScoreShadowDiv.clientWidth)+iTextScoreShadowDivWidthOffset;
-
-		textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
-
-		textScoreShadowDiv.style.top = textScoreDiv.style.top;
 		
 		//---------------		
-		var textTimeDiv = document.getElementById("textTimeDivId");
 
 		iTextTimeDivWidth = (textTimeDiv.clientWidth)+iTextTimeDivWidthOffset;
 		//iTextTimeDivWidth = "00:00".length*32; //32px font
 		
-		textTimeDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextTimeDivWidth+"px";
+		textTimeDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextTimeDivWidth*0.60+"px";
 		textTimeDiv.style.top= (0)+"px";
-		
-		textTimeDiv.style.visibility = "hidden";
-/*
-		var textScoreShadowDiv = document.getElementById("textScoreShadowDivId");
-		textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
-		textScoreShadowDiv.style.top = textScoreDiv.style.top		
-*/
+	
 		iStartTimeInMilliseconds=Date.now();
-		
-		//---------------		
-		//map
-		
-		
-		//---------------
-		
-		
-
-		mainImageTile.style.visibility = "hidden";
-
-		mainImageTileTankBody.style.visibility = "hidden";
-
-		mainImageTileHeroBody.style.visibility = "hidden";
-
-		mainImageTileProjectile.style.visibility = "hidden";
-
+	
 		if (bIsHeroInTank) {
 			iImageFrameWidth=iImageFrameWidthLarge;
 		}
@@ -1913,93 +1584,54 @@ function closeFullscreen() {
 		}
 		
 
-		//added by Mike, 20231124
 		mainImageTileProjectile.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
-
-
 		mainImageTileProjectilePosX = mainImageTile.style.left;
 		mainImageTileProjectilePosY = mainImageTile.style.top;
 
 
-		//added by Mike, 20231121
+		var iTextEnterDivWidth = (textEnterDiv.clientWidth);
+		var iTextEnterDivHeight = (textEnterDiv.clientHeight);
 
-		var textEnterDiv = document.getElementById("textEnterDivId");
+		textEnterDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextEnterDivWidth/2 +"px";
 
-			var iTextEnterDivWidth = (textEnterDiv.clientWidth);
-			var iTextEnterDivHeight = (textEnterDiv.clientHeight);
+		textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight*2+"px";
 
-			textEnterDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextEnterDivWidth/2 +"px";
+		//alert ("textEnterDiv.style.left: "+textEnterDiv.style.left);
+		//alert ("textEnterDiv.style.top: "+textEnterDiv.style.top);
 
-			textEnterDiv.style.top = 0+iStageMaxHeight-iTextEnterDivHeight*2+"px";
+		textEnterDiv.style.visibility="visible";
 
-			//alert ("textEnterDiv.style.left: "+textEnterDiv.style.left);
-			//alert ("textEnterDiv.style.top: "+textEnterDiv.style.top);
-
-			textEnterDiv.style.visibility="visible";
-
-			iTransitionScale=1;
-			
-			textEnterDiv.style.transform = "scale("+iTransitionScale+","+iTransitionScale+")";	
-			
-
-		var mouseInputImage = document.getElementById("mouseInputImageId");
+		iTransitionScale=1;
+		
+		textEnterDiv.style.transform = "scale("+iTransitionScale+","+iTransitionScale+")";	
+		
 
 
 		mouseInputImage.style.left = (iHorizontalOffset+iStageMaxWidth/2-iTextEnterDivWidth/2+iMouseInputImageWidth/2)+"px";
-
 		mouseInputImage.style.top = (iVerticalOffsetInnerScreen+iStageMaxHeight+iTextEnterDivHeight/2)+"px";
-
 		mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
 
-    //added by Mike, 20231126
-    mainImageMonsterPosX=iHorizontalOffset+iStageMaxWidth/2-iMonsterTileWidth;
-//    mainImageMonsterPosY=iVerticalOffsetInnerScreen+iStageMaxHeight/2-iMonsterTileWidth;
-    mainImageMonsterPosY=iVerticalOffsetInnerScreen+0-iMonsterTileHeight;
+/*
+		mainImageMonsterPosX=iHorizontalOffset+iStageMaxWidth/2-iMonsterTileWidth;
+		mainImageMonsterPosY=iVerticalOffsetInnerScreen+0-iMonsterTileHeight;
+*/
 
-		//removed by Mike, 20231129
-		//setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/3);
-		
 		bHasReachedDestinationY=false;
 		bHasReachedDestinationX=false;		
+		
+		iCurrHeroLife=iCurrHeroLifeMax;
+				
+		//resetProjectile()				
 	}
 
-/*
-	//added by Mike, 20231120
-	function setExplosionEffectPosition(iTileBgCountInput) {
-		var explosionEffectImage = document.getElementById("explosionEffectImageId");
-
-    //added by Mike, 20231126
-    if (explosionEffectImage.style.visibility=="visible") {
-      return;
-    }
-
-		explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
-
-		explosionEffectImage.style.visibility="visible";
-
-		iExplosionEffectAnimationDelayCount=iExplosionEffectAnimationDelayCountMax;
-
-		iExplosionEffectAnimationCount=-1; //0;
-
-		explosionEffectImage.style.left = parseInt(arrayPuzzleTileCountId[iTileBgCountInput].style.left,10)-iImageExplosionEffectAnimationWidth/2;
-
-		explosionEffectImage.style.top = parseInt(arrayPuzzleTileCountId[iTileBgCountInput].style.top,10)-iImageExplosionEffectAnimationHeight/2;
-	}
-*/	
-
-  //added by Mike, 20231126
   function setExplosionEffectPosition(iInputX, iInputY) {
-//    var explosionEffectImage = document.getElementById("explosionEffectImageId");
     var explosionEffectImage = document.getElementById("explosionEffectImageId");
 
-    //added by Mike, 20231126
     if (explosionEffectImage.style.visibility=="visible") {
       return;
     }
-		
-	//edited by Mike, 20231127
+
     explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
-    //explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
 
 	explosionEffectImage.style.transform = "scale(0.5,0.5)";	
 
@@ -2008,10 +1640,7 @@ function closeFullscreen() {
 	iExplosionEffectAnimationDelayCount=iExplosionEffectAnimationDelayCountMax;
 
 	iExplosionEffectAnimationCount=-1; //0;
-/*
-    explosionEffectImage.style.left = iInputX-iImageExplosionEffectAnimationWidth/2;
-    explosionEffectImage.style.top = iInputY-iImageExplosionEffectAnimationHeight/2;
-*/	
+
     explosionEffectImage.style.left = iInputX-128-iImageExplosionEffectAnimationWidth/2;
     explosionEffectImage.style.top = iInputY-128-iImageExplosionEffectAnimationHeight/2;
 	
@@ -2019,10 +1648,8 @@ function closeFullscreen() {
 
   //added by Mike, 20231129
   function setCityExplosionEffectPosition(iInputX, iInputY) {
-//    var explosionEffectImage = document.getElementById("explosionEffectImageId");
     var explosionEffectImage = document.getElementById("explosionEffectToCityImageId");
 
-    //added by Mike, 20231126
     if (explosionEffectImage.style.visibility=="visible") {
       return;
     }
@@ -2081,13 +1708,6 @@ alert("iInputY: "+iInputY);
 
 		iHeroAttackEffectAnimationCount=-1; //0;
 
-////alert("iInputX: "+iInputX);
-////alert("iInputY: "+iInputY);
-
-/*
-		heroAttackEffectImage.style.left = iInputX;//+iImageDustEffectAnimationWidth/2;
-		heroAttackEffectImage.style.top = iInputY+iImageHeroAttackEffectAnimationHeight/4; //near feet
-*/
 		heroAttackEffectImage.style.left = iInputX;
 		heroAttackEffectImage.style.top = iInputY;		
 	} 
@@ -2119,34 +1739,20 @@ alert("iInputY: "+iInputY);
 
 		textEnterDiv.style.transform = "scale("+iTransitionScale+","+iTransitionScale+")";	
 	}
-
 	
 	//added by Mike, 20231121
 	function executeMouseClickAnimation() {
 		var mouseInputImage = document.getElementById("mouseInputImageId");
-    mouseInputImage.style.visibility="visible";
+		mouseInputImage.style.visibility="visible";
 
 		if (iMouseAnimationDelayCount==iMouseAnimationDelayCountMax) {
 			iMouseAnimationCount=(iMouseAnimationCount+1)%3; //last hidden
 
-
 			iMouseAnimationDelayCount=0;
-			/*
-			explosionEffectImage.style.visibility="visible";
-			*/
-			
-			//setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/2);
 		}
 		else {
 			iMouseAnimationDelayCount++;
-
-	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
-
 		}
-
-		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
-
-	    //iImageFrameWidth*2; inputImageLarge
 
 		if (iMouseAnimationCount==0) { 
 			mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
@@ -2171,15 +1777,10 @@ alert("iInputY: "+iInputY);
 		}
 		else {
 			iHeroAnimationDelayCount++;
-
-	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
 		}
 
-		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
-
 		var iFrameY=0;
-		//destination to the left of hero projectile
-		//if (newMainImageTileProjectilePosX<0) {
+
 		if (bIsHeroFacingLeft) {
 			iFrameY=iImageFrameHeight*2;//64*2; 128;
 		}
@@ -2209,15 +1810,10 @@ alert("iInputY: "+iInputY);
 		}
 		else {
 			iHeroAnimationDelayCount++;
-
-	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
 		}
-
-		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
 
 		var iFrameY=0;
 		//destination to the left of hero projectile
-		//if (newMainImageTileProjectilePosX<0) {
 		if (bIsHeroFacingLeft) {
 			iFrameY=iImageFrameHeightLarge*2;//64*2; 128;
 		}
@@ -2244,10 +1840,7 @@ alert("iInputY: "+iInputY);
 
 		batMonsterImageTile.style.visibility="visible";
 
-
 		//iMonsterAnimationDelayCountMax=15;
-
-		//alert(mainImageTile.style.left);
 		
 		if (iBatMonsterAnimationDelayCount>=iBatMonsterAnimationDelayCountMax) {
 			iBatMonsterAnimationCount=(iBatMonsterAnimationCount+1)%2; //3; //last hidden
@@ -2288,21 +1881,9 @@ alert("iInputY: "+iInputY);
 	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
 		}
 
-		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
-
 		//var iFrameY=0;
 		var iFrameY=iImageFrameHeight*2;//64*2; 128;
 
-/*		
-		//destination to the left of hero projectile
-		//if (newMainImageTileProjectilePosX<0) {
-		if (bIsHeroFacingLeft) {
-			iFrameY=iImageFrameHeight*2;//64*2; 128;
-		}
-		else {
-			iFrameY=iImageFrameHeight*3;//64*3; 192;
-		}
-*/
 		//currently two frames only
 		if (iBatMonsterAnimationCount==0) { 
 			batMonsterImageTile.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
@@ -2317,99 +1898,31 @@ alert("iInputY: "+iInputY);
 */		
 	}
 	
-	function executeSnakeMonsterWalkingAnimationPrevWithoutArray() {
-		//var batMonsterImageTile = document.getElementById("batMonsterImageId");
-		var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
-		
-		//hero tile position
-		var mainImageTile = document.getElementById("mainImageTileImageId");
-
-		snakeMonsterImageTile.style.visibility="visible";
-
-		//iMonsterAnimationDelayCountMax=15;
-
-		//alert(mainImageTile.style.left);
-		
-		if (iSnakeMonsterAnimationDelayCount>=iSnakeMonsterAnimationDelayCountMax) {
-			iSnakeMonsterAnimationCount=(iSnakeMonsterAnimationCount+1)%2; //3; //last hidden
-
-			iSnakeMonsterAnimationDelayCount=0;			
-			
-			if (snakeMonsterTileStepDelay>=snakeMonsterTileStepDelayMax) {
-				snakeMonsterTileStepDelay=0;
-			}
-			else {
-				snakeMonsterTileStepDelay++;
-			}				
-		}
-		else {
-			iSnakeMonsterAnimationDelayCount++;
-
-	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
-		}
-
-		//==============================
-		//AI; movement
-		if (iSnakeMonsterAnimationDelayCount>=iSnakeMonsterAnimationDelayCountMax/2) {		
-			if (snakeMonsterImageTilePosY<parseInt(mainImageTile.style.top)) {//mainImageTilePosY) {
-				snakeMonsterImageTilePosY+=snakeMonsterTileStepY;				
-			}
-			else {
-				snakeMonsterImageTilePosY-=snakeMonsterTileStepY;
-			}
-			
-			snakeMonsterImageTile.style.top=snakeMonsterImageTilePosY+"px";
-
-			if (snakeMonsterImageTilePosX<mainImageTilePosX) {
-				snakeMonsterImageTilePosX+=snakeMonsterTileStepX;
-			}
-			else {
-				snakeMonsterImageTilePosX-=snakeMonsterTileStepX;
-			}
-			
-			snakeMonsterImageTile.style.left=snakeMonsterImageTilePosX+"px";
-		}
-		//==============================
-		
-		//var iFrameY=0;
-		var iFrameY=iImageFrameHeight*3;//2;//64*2; 128;
-
-		//currently two frames only
-		if (iSnakeMonsterAnimationCount==0) { 
-			snakeMonsterImageTile.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
-		}
-		else if (iSnakeMonsterAnimationCount==1) { 
-			snakeMonsterImageTile.style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
-		}		
-	}
-	
-	function executeSnakeMonsterWalkingAnimation(inputArraySnakeMonsterWithIdCount) {
-		//var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
-		
+	function executeSnakeMonsterWalkingAnimation(inputArraySnakeMonsterWithIdCount) {		
 		//hero tile position
 		var mainImageTile = document.getElementById("mainImageTileImageId");
 
 		inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.visibility="visible";
-		
-		if (iSnakeMonsterAnimationDelayCount>=iSnakeMonsterAnimationDelayCountMax) {
-			iSnakeMonsterAnimationCount=(iSnakeMonsterAnimationCount+1)%2; //3; //last hidden
+				
+		if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]>=inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT_MAX]) {
+			inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_COUNT]=(inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_COUNT]+1)%2; //3; //last hidden
 
-			iSnakeMonsterAnimationDelayCount=0;			
+			inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]=0;
 			
-			if (snakeMonsterTileStepDelay>=snakeMonsterTileStepDelayMax) {
-				snakeMonsterTileStepDelay=0;
+			if (inputArraySnakeMonsterWithIdCount[MONSTER_STEP_DELAY]>=inputArraySnakeMonsterWithIdCount[MONSTER_STEP_DELAY_MAX]) {
+				inputArraySnakeMonsterWithIdCount[MONSTER_STEP_DELAY]=0;
 			}
 			else {
-				snakeMonsterTileStepDelay++;
+				inputArraySnakeMonsterWithIdCount[MONSTER_STEP_DELAY]++;
 			}				
 		}
 		else {
-			iSnakeMonsterAnimationDelayCount++;
+			inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]++;
 		}
 
 		//==============================
 		//AI; movement		
-		if (iSnakeMonsterAnimationDelayCount>=iSnakeMonsterAnimationDelayCountMax/2) {
+		if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]>=inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT_MAX]/2) {
 		
 			if (inputArraySnakeMonsterWithIdCount[MONSTER_POSY]<parseInt(mainImageTile.style.top)) {//mainImageTilePosY) {
 				inputArraySnakeMonsterWithIdCount[MONSTER_POSY]+=inputArraySnakeMonsterWithIdCount[MONSTER_STEPY];				
@@ -2430,23 +1943,19 @@ alert("iInputY: "+iInputY);
 			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.left=inputArraySnakeMonsterWithIdCount[MONSTER_POSX]+"px";	
 			
 		}
-			
-//		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
-			//arraySnakeMonsterCountId[iCount][MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
-			
-			//var iFrameY=0;
-			var iFrameY=iImageFrameHeight*3;//2;//64*2; 128;
-
-			//currently two frames only
-			if (iSnakeMonsterAnimationCount==0) { 
-				inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
-			}
-			else if (iSnakeMonsterAnimationCount==1) { 
-				inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
-			}
-		//}
 		//==============================
-	}	
+			
+		//var iFrameY=0;
+		var iFrameY=iImageFrameHeight*3;//2;//64*2; 128;
+
+		//currently two frames only
+		if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_COUNT]==0) { 
+			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+		}
+		else if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_COUNT]==1) { 
+			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
+		}
+	}
 	
 	function executeExplosionEffect() {
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
@@ -2540,8 +2049,6 @@ alert("iInputY: "+iInputY);
 		}
 		else {
 			explosionEffectImage.style.visibility="hidden";
-			//added by Mike, 20231128
-			//iTitleExplosionEffectDelayCount=0;
 		}
 	}
 
@@ -2604,8 +2111,6 @@ alert("iInputY: "+iInputY);
 		}
 		else {
 			explosionEffectImage.style.visibility="hidden";
-			//added by Mike, 20231128
-			//iTitleExplosionEffectDelayCount=0;
 		}
 	}
 
@@ -2693,383 +2198,56 @@ alert("iInputY: "+iInputY);
 			heroAttackEffectImage.style.visibility="hidden";
 		}		
 	}		
-	
-	//added by Mike, 20231127
-	function resetTransitionEffect() {						
-		var myDivTransitionEffect = document.getElementById("divTransitionEffectId");
 		
-		iTransitionScale=0; //0.00005;
-		iTransitionRotate=0;
-		iTransitionDelayCount=0;
-		
-		//added by Mike, 20231128
-		iTransitionFromPuzzleToBossDelayCount=0;
-				
-		myDivTransitionEffect.style.transform = "rotate("+iTransitionRotate+"deg)"+" scale("+iTransitionScale+","+iTransitionScale+")";	
-				
-		myDivTransitionEffect.style.visibility="visible";
-		
-		bIsExecutingTransition=true;
-		bIsTransitionFirstPartDone=false;
-		
-		//alert("HALLO!!");
-	}
+	function executeTimeDisplay() {
+		var textTimeDiv = document.getElementById("textTimeDivId");
 
-	function executeTransitionEffect() {
-
-		bIsTransitionFirstPartDone=true;				
-		iTransitionDelayCount=0;
-		
-		var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
-
-		var howToPlayGuideImageFrame2 = document.getElementById("howToPlayGuideImageFrame2Id");
-
-		howToPlayGuideImage.style.visibility = "hidden";
-		howToPlayGuideImageFrame2.style.visibility = "hidden";
-		
-		  if (!bIsBossBattleDone) {					
-
-			var mainImageMonster = document.getElementById("mainImageMonster0");
-			var textScoreDiv = document.getElementById("textScoreDivId");
-			var myCanvasTwo = document.getElementById("myCanvasTwoId");
-			var mainImageTile = document.getElementById("mainImageTileImageId");
-			var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
-			var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
-
-			//added by Mike, 20231129
-			var bossBattleBgImage = document.getElementById("bossBattleBgImageId");			
-
-			//added by Mike, 20231129
-			var bossBattleBgImagePart2 = document.getElementById("bossBattleBgImagePart2Id");		
-			var mainImageSoldier = document.getElementById("mainImageSoldierId");			
-			
-			var textTimeDiv = document.getElementById("textTimeDivId");
-
-			dElapsedTimeInSeconds=(Date.now()-iStartTimeInMilliseconds)/1000;
+		dElapsedTimeInSeconds=(Date.now()-iStartTimeInMilliseconds)/1000;
 /*			
-			dElapsedTimeInSeconds=60*59;
-			dElapsedTimeInSeconds=60*60;
-			dElapsedTimeInSeconds=60*45*59;
+		dElapsedTimeInSeconds=60*59;
+		dElapsedTimeInSeconds=60*60;
+		dElapsedTimeInSeconds=60*45*59;
 */			
 
-			dCurrTimeSeconds=(dElapsedTimeInSeconds)%60;
-			dCurrTimeMinutes=((dElapsedTimeInSeconds)/60)%60;
-			dCurrTimeHours=(dElapsedTimeInSeconds)/60/60;
+		dCurrTimeSeconds=(dElapsedTimeInSeconds)%60;
+		dCurrTimeMinutes=((dElapsedTimeInSeconds)/60)%60;
+		dCurrTimeHours=(dElapsedTimeInSeconds)/60/60;
 
-			//max reached
-			if (dCurrTimeHours>=60) {
-				dCurrTimeMinutes=99;
-				dCurrTimeSeconds=99;
-				dCurrTimeHours=99;
-			}
+		//max reached
+		if (dCurrTimeHours>=60) {
+			dCurrTimeMinutes=99;
+			dCurrTimeSeconds=99;
+			dCurrTimeHours=99;
+		}
 
-			sCurrTimeSeconds=parseInt(dCurrTimeSeconds);			
-			if (parseInt(dCurrTimeSeconds)<10) {
-				sCurrTimeSeconds="0"+sCurrTimeSeconds;
-			}
+		sCurrTimeSeconds=parseInt(dCurrTimeSeconds);			
+		if (parseInt(dCurrTimeSeconds)<10) {
+			sCurrTimeSeconds="0"+sCurrTimeSeconds;
+		}
 
-			sCurrTimeMinutes=parseInt(dCurrTimeMinutes);			
-			if (parseInt(dCurrTimeMinutes)<10) {
-				sCurrTimeMinutes="0"+sCurrTimeMinutes;
-			}
-			
-			sCurrTimeHours=parseInt(dCurrTimeHours);			
-			if (parseInt(dCurrTimeHours)<10) {
-				sCurrTimeHours="0"+sCurrTimeHours;
-			}
-			
-			//textTimeDiv.innerHTML = parseInt(dCurrTimeMinutes) + ":" + sCurrTimeSeconds;//sCurrTime;
-			textTimeDiv.innerHTML = sCurrTimeHours + ":" + sCurrTimeMinutes + ":" + sCurrTimeSeconds;			
-			
-			mainImageSoldier.style.visibility = "hidden";
-			 
-			mainImageMonster.style.visibility = "hidden";
-			textScoreDivId.style.color="white";
-			myCanvasTwo.style.visibility="visible";
-			
-			textTimeDiv.style.visibility = "visible";
-
-									
-			//edited by Mike, 20241103
-			//mainImageTile.style.visibility = "visible";
-			mainImageTile.style.visibility = "hidden";
-
-			if (bIsHeroInTank) {
-				mainImageTileTankBody.style.visibility = "visible";			
-			}
-			else {
-				mainImageTileHeroBody.style.visibility = "visible";
-			}
-			
-			bossBattleBgImage.style.visibility = "visible"; //"hidden";
-			
-			bossBattleBgImagePart2.style.visibility = "visible"; //"hidden";
-			
-			bossBattleBgImagePart2.style.left = 0+"px"; 
-			
-			bossBattleBgImagePart2.style.top = 0+iStageMaxHeight-bossBattleBgImagePart2.clientHeight+"px";
-
-			
-			//added by Mike, 20231129
-			//setCityExplosionEffectPosition(0,0);
-			//setCityExplosionEffectPosition(parseInt(bossBattleBgImage.style.left)+bossBattleBgImage.clientWidth*0.3,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/2);
-			
-			setCityExplosionEffectPosition(parseInt(bossBattleBgImage.style.left)+bossBattleBgImage.clientWidth*0.1,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/3);
-
-			//setCityExplosionEffectPosition(0,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/5);
-		  }
-	}
-	
-	function initMapLocation() {
+		sCurrTimeMinutes=parseInt(dCurrTimeMinutes);			
+		if (parseInt(dCurrTimeMinutes)<10) {
+			sCurrTimeMinutes="0"+sCurrTimeMinutes;
+		}
 		
+		sCurrTimeHours=parseInt(dCurrTimeHours);			
+		if (parseInt(dCurrTimeHours)<10) {
+			sCurrTimeHours="0"+sCurrTimeHours;
+		}
+		
+		//textTimeDiv.innerHTML = parseInt(dCurrTimeMinutes) + ":" + sCurrTimeSeconds;//sCurrTime;
+		textTimeDiv.innerHTML = sCurrTimeHours + ":" + sCurrTimeMinutes + ":" + sCurrTimeSeconds;	
+		textTimeDiv.style.visibility = "visible";
 	}
 
-	function heroHitByMonster(mainImageTilePosX, mainImageTilePosY, iMonsterImageTilePosX, iMonsterImageTilePosY) {	
+	function heroHitByMonster(mainImageTilePosX, mainImageTilePosY, iMonsterImageTilePosX, iMonsterImageTilePosY) {			
+		iCurrHeroLife--;
 		
-		
-		//bIsHeroAttacked=true;
-		
-		
-	
-/*	
-		mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX-iImageFrameWidth/2;
-		bHasReachedDestinationX=true;
-*/		
-		//alert(">>>>>mainImageTilePosY: "+mainImageTilePosY);
-		
-		//alert(">>>>>iMonsterImageTilePosY: "+iMonsterImageTilePosY);
-		
-/*		
-		mainImageTileProjectilePosX = mainImageTile.style.left;
-		mainImageTileProjectilePosY = mainImageTile.style.top;
-*/
-
-/*	
-		alert ("mainImageTileProjectileStepDestinationX: "+mainImageTileProjectileStepDestinationX);
-
-		alert ("mainImageTileProjectileStepDestinationY: "+mainImageTileProjectileStepDestinationY);
-
-		//push to the opposite direction
-		//monster is to the left of hero
-		if (iMonsterImageTilePosX+iImageFrameWidthDefault<mainImageTilePosX) {
-			mainImageTileProjectilePosX=iMonsterImageTilePosX+iImageFrameWidthDefault+mainImageTileStepX*5;
-			
-			mainImageTilePosX=mainImageTileProjectilePosX;
+		if (iCurrHeroLife<0) {
+			iCurrHeroLife=0;
 		}
-		//monster is to the right of hero		
-		//hero's iImageFrameWidth
-		else { //if (iMonsterImageTilePosX>=mainImageTilePosX+iImageFrameWidth) {				
-			mainImageTileProjectilePosX=iMonsterImageTilePosX-mainImageTileStepX*5-iImageFrameWidth;
-			
-			mainImageTilePosX=mainImageTileProjectilePosX;
-		}
-
-		//monster is to the top of hero
-		if (iMonsterImageTilePosY+iImageFrameHeightDefault<mainImageTilePosY) {		
-			//alert("mainImageTilePosY: "+mainImageTilePosY);
-
-			mainImageTileProjectilePosY=iMonsterImageTilePosY+iImageFrameHeightDefault+mainImageTileStepY*5;
-			
-			mainImageTilePosY=mainImageTileProjectilePosY;			
-			
-			//alert("mainImageTilePosY: "+mainImageTilePosY);			
-		}
-		//monster is to the bottom of hero		
-		//hero's iImageFrameHeight
-		else { //if (iMonsterImageTilePosY>=mainImageTilePosY+iImageFrameHeight) {	
-			mainImageTileProjectilePosY=iMonsterImageTilePosY-mainImageTileStepY*5-iImageFrameHeight;
-						
-			mainImageTilePosY=mainImageTileProjectilePosY;
-		}
-*/		
-
+				
 		resetProjectile();	
-/*		
-		mainImageTileProjectileStepDestinationX=mainImageTileProjectileStepDestinationX*(-1);		
-		mainImageTileProjectileStepDestinationY=mainImageTileProjectileStepDestinationY*(-1);
-*/		
-		
-/*		
-		//mainImageTilePosX-=mainImageTileStepX; //horizontal movement;
-		mainImageTilePosY+=mainImageTileStepY*10; //vertical movement;
-		
-		//mainImageTile.style.left=mainImageTilePosX+"px";
-		mainImageTile.style.top=mainImageTilePosY+"px";
-*/
-		
-/*
-		mainImageTileProjectileStepDestinationX=mainImageTileProjectileStepDestinationX*(-1);		
-		mainImageTileProjectileStepDestinationY=mainImageTileProjectileStepDestinationY*(-1);
-		
-
-		mainImageTileProjectilePosX=parseInt(mainImageTileProjectilePosX)+newMainImageTileProjectilePosX;
-
-		mainImageTileProjectilePosX=mainImageTileProjectilePosX*(-1);
-
-		mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTileProjectilePosY;
-
-		mainImageTileProjectilePosY=mainImageTileProjectilePosY*(-1);
-
-		//mainImageTileProjectilePosY=iMonsterImageTilePosY-mainImageTileStepY*5-iImageFrameHeight;
-		
-		mainImageTilePosX=mainImageTileProjectilePosX;
-						
-		mainImageTilePosY=mainImageTileProjectilePosY;
-*/			
-		
-		//alert("mainImageTileProjectileStepDestinationY: "+mainImageTileProjectileStepDestinationY);
-
-/*
-		alert("mainImageTileProjectilePosY: "+mainImageTileProjectilePosY);
-*/				
-		
-/*		
-		mainImageTileProjectilePosY=iMonsterImageTilePosY+iImageFrameHeightDefault+mainImageTileStepY*5;
-		
-		mainImageTileProjectileStepDestinationY=mainImageTileProjectilePosY;
-
-		mainImageTilePosY=mainImageTileProjectilePosY;			
-*/
-			
-/*			
-		
-		//push to the opposite direction
-		//monster is to the left of hero
-		if (iMonsterImageTilePosX+iImageFrameWidthDefault<=mainImageTilePosX) {
-			mainImageTileProjectilePosX=iMonsterImageTilePosX+iImageFrameWidthDefault+mainImageTileStepX*5;
-			
-			mainImageTileProjectileStepDestinationX=mainImageTileProjectilePosX;
-			
-			mainImageTilePosX=mainImageTileProjectilePosX;
-		}
-		//monster is to the right of hero		
-		//hero's iImageFrameWidth
-		else if (iMonsterImageTilePosX>=mainImageTilePosX+iImageFrameWidth) {				
-			mainImageTileProjectilePosX=iMonsterImageTilePosX-mainImageTileStepX*5-iImageFrameWidth;
-			
-			mainImageTileProjectileStepDestinationX=mainImageTileProjectilePosX;
-			
-			mainImageTilePosX=mainImageTileProjectilePosX;
-		}
-
-		//monster is to the top of hero
-		if (iMonsterImageTilePosY+iImageFrameHeightDefault<=mainImageTilePosY) {		
-			//alert("mainImageTilePosY: "+mainImageTilePosY);
-
-			mainImageTileProjectilePosY=iMonsterImageTilePosY+iImageFrameHeightDefault+mainImageTileStepY*5;
-			
-			mainImageTileProjectileStepDestinationY=mainImageTileProjectilePosY;
-
-			mainImageTilePosY=mainImageTileProjectilePosY;			
-			
-			//alert("mainImageTilePosY: "+mainImageTilePosY);			
-		}
-		//monster is to the bottom of hero		
-		//hero's iImageFrameHeight
-		else if (iMonsterImageTilePosY>=mainImageTilePosY+iImageFrameHeight) {	
-			mainImageTileProjectilePosY=iMonsterImageTilePosY-mainImageTileStepY*5-iImageFrameHeight;
-			
-			mainImageTileProjectileStepDestinationY=mainImageTileProjectilePosY;
-			
-			mainImageTilePosY=mainImageTileProjectilePosY;
-		}
-*/
-		
-
-/*
-		//if (!bHasReachedDestinationX) {
-			if (newMainImageTileProjectilePosX<0) {
-				if (mainImageTileProjectilePosX+iImageFrameWidth/2<=mainImageTileProjectileStepDestinationX) {
-						
-				  mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX-iImageFrameWidth/2;
-				  bHasReachedDestinationX=true;
-				  //resetProjectile();
-				}
-				else {
-				  bHasReachedDestinationX=false;
-				}
-			}
-			//destination to the right of hero projectile
-			else {
-				if (mainImageTileProjectilePosX+iImageFrameWidth/2>=mainImageTileProjectileStepDestinationX) {
-					mainImageTileProjectilePosX=mainImageTileProjectileStepDestinationX-iImageFrameWidth/2;
-					bHasReachedDestinationX=true;
-					//resetProjectile();
-				}		
-				else {
-				  bHasReachedDestinationX=false;
-				}				
-			}
-		//}
-		
-		//if (!bHasReachedDestinationY) {		
-			//destination to the top of hero projectile
-			if (newMainImageTileProjectilePosY<0) {
-				if (mainImageTileProjectilePosY+iImageFrameHeight/2<=mainImageTileProjectileStepDestinationY) {
-										
-				mainImageTileProjectilePosY=mainImageTileProjectileStepDestinationY-iImageFrameHeight/2;
-				bHasReachedDestinationY=true;
-				//resetProjectile();
-				}
-				else {
-				  bHasReachedDestinationY=false;
-				}				
-			}
-			//destination to the bottom of hero projectile
-			else {
-				if (mainImageTileProjectilePosY+iImageFrameHeight/2>=mainImageTileProjectileStepDestinationY) {
-					mainImageTileProjectilePosY=mainImageTileProjectileStepDestinationY-iImageFrameHeight/2;
-					bHasReachedDestinationY=true;
-					//resetProjectile();
-				}			
-				else {
-				  bHasReachedDestinationY=false;
-				}								
-			}			
-		//}
-*/		
-		
-/*		
-		bHasReachedDestinationX=true;
-		bHasReachedDestinationY=true;
-*/		
-
-		//mainImageTileProjectileStepDestinationX=mainImageTileProjectilePosX;
-		//mainImageTileProjectileStepDestinationY=mainImageTileProjectilePosY;	
-
-
-/*
-		var mainImageTile = document.getElementById("mainImageTileImageId");		
-		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
-		
-		mainImageTile.style.left=mainImageTilePosX+"px";
-		mainImageTile.style.top=mainImageTilePosY+"px";
-		
-		mainImageTileHeroBody.style.left = mainImageTile.style.left;
-		mainImageTileHeroBody.style.top = mainImageTile.style.top;
-*/		
-
-/*		
-		mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*3-iImageFrameHeightDefault;
-						
-						mainImageTilePosX=iDoorImageTopPosStartX+iImageFrameWidthDefault/2;
-*/						
-/*								
-
-		mainImageTilePosY=0;//+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
-						
-		mainImageTilePosX=500;//iDoorImageTopPosStartX+iImageFrameWidthDefault/2;
-*/
-				
-//mainImageTilePosY=500;
-				
-		//mainImageTilePosY=0+iInnerVerticalOffset+iImageFrameHeightDefault/2;
-				
-		//alert(">>>>>mainImageTilePosY: "+mainImageTilePosY);
-		
-		//resetProjectile();
-		
-		//return true;
 	}
 	
 	function monsterHitByHero(mainImageTilePosX, mainImageTilePosY, iMonsterImageTilePosX, iMonsterImageTilePosY) {	
@@ -3150,7 +2328,7 @@ alert("iInputY: "+iInputY);
 		//alert(inputArraySnakeMonsterWithIdCount[MONSTER_IS_ACTIVE]);
 
 	
-//		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
+//		for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
 			//inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
 
 			//alert(arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]);
@@ -3192,80 +2370,12 @@ alert("iInputY: "+iInputY);
 			}
 		//}
 	}		
-		
-	function verifyHeroCollideWithSnakeMonstersPrevWithArray() {
-		var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
-		
-		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
-		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
-		
-		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
-			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
-
-			//alert(arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]);
-
-			if (!arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
-				return;
-			}		
-			else { //if (isBatMonsterTileActive) {						
-
-				if (bIsHeroAttacked) {
-					//bIsHeroAttacked=false;
-					return;
-				}
-			
-			//bIsHeroAttacked=false;		
-
-			//+iImageFrameWidthDefault/2; iImageFrameHeightDefault/2
-				if (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTilePosX,mainImageTilePosY, arraySnakeMonsterCountId[iCount][MONSTER_POSX],arraySnakeMonsterCountId[iCount][MONSTER_POSY], iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {			
-					//alert("HALLO"); 	
-					
-					//verify if hero attacked
-					if (bHasFired && (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTileProjectileStepDestinationX-iImageFrameWidthDefault/2,mainImageTileProjectileStepDestinationY-iImageFrameHeightDefault/2, arraySnakeMonsterCountId[iCount][MONSTER_POSX],arraySnakeMonsterCountId[iCount][MONSTER_POSY], iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault))) {
-						monsterHitByHero(mainImageTilePosX,mainImageTilePosY, arraySnakeMonsterCountId[iCount][MONSTER_POSX],arraySnakeMonsterCountId[iCount][MONSTER_POSY]);
-						
-						
-						setExplosionEffectPosition(arraySnakeMonsterCountId[iCount][MONSTER_POSX],arraySnakeMonsterCountId[iCount][MONSTER_POSY]);
-						
-						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="hidden";				
-						arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=false;
-					}
-					else {			
-						bIsHeroAttacked=true;
-						bIsExecutingShake=true;
-
-						//Usbong SFZ
-						//TODO: -add: hitBy(...)
-						heroHitByMonster(mainImageTilePosX,mainImageTilePosY, arraySnakeMonsterCountId[iCount][MONSTER_POSX],arraySnakeMonsterCountId[iCount][MONSTER_POSY]);
-					}
-				}
-			}
-		}
-	}
 	
 	function myUpdateFunction() {
-//    alert(window.getfullscreen());
+		//using square for main dungeon
+		iHorizontalOffset=(640-iStageMaxHeight)/2;
 
-/*
-    //alert(window.getfullscreen);
-    if (window.getfullscreen!=undefined) {
-      alert(window.getfullscreen);
-    }
-*/
-   //alert(screen.width);
-/*
-   if (screen.width!==1280) {
-     alert(screen.width);
-   }
-*/
-
-//iHorizontalOffset=(screen.width-iStageMaxWidth)/2;
-//using square for main dungeon
-iHorizontalOffset=(640-iStageMaxHeight)/2;
-
-
-//iHorizontalOffset=0;
-
+		var myFavicon = document.getElementById("faviconImageId");
 
 		var mainImageTile = document.getElementById("mainImageTileImageId");
 
@@ -3280,28 +2390,19 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
 		//added by Mike, 20231128
 		var bossBattleBgImage = document.getElementById("bossBattleBgImageId");
 
+		var bossBattleBgImagePart2 = document.getElementById("bossBattleBgImagePart2Id");		
 
     //added by Mike, 20231125
     var mainImageMonsterBoss = document.getElementById("mainImageMonsterBoss");
-    var mainImageMonster = document.getElementById("mainImageMonster0");
 
-
-		var batMonsterImageTile = document.getElementById("batMonsterImageId");
-		var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
-		
-		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
-			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
-		}
-
-
-	//added by Mike, 20231129
-	 var mainImageSoldier = document.getElementById("mainImageSoldierId");
-
-    	//added by Mike, 20231124
-    	var puzzleTileImageTargetBorder = document.getElementById("divPuzzleTileImageTargetBorderId");
-
-		//added by Mike, 20231111
-		var puzzleTileImageSpaceBorder = document.getElementById("divPuzzleTileImageSpaceBorderId");
+/*
+	var batMonsterImageTile = document.getElementById("batMonsterImageId");
+	//var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");
+	
+	for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
+		arraySnakeMonsterCountId[iCount][MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
+	}
+*/
 
 		var textStatusDiv = document.getElementById("textStatusDivId");
 		var textStatusBackgroundDiv = document.getElementById("textStatusBackgroundDivId");
@@ -3310,9 +2411,8 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
 
 		//added by Mike, 20231119
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
-    //added by Mike, 20231126
-    var explosionEffectToMonsterImage = document.getElementById("explosionEffectToMonsterImageId");
-
+		//added by Mike, 20231126
+		var explosionEffectToMonsterImage = document.getElementById("explosionEffectToMonsterImageId");
 
 		//added by Mike, 20231121
 		var mouseInputImage = document.getElementById("mouseInputImageId");
@@ -3327,56 +2427,23 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
 		//added by Mike, 20231129
 		var howToPlayGuideImageFrame2 = document.getElementById("howToPlayGuideImageFrame2Id");
 
-
-		//added by Mike, 20231123
-//		if (iScore<iTargetScore) {
-    //edited by Mike, 20231124
-    if (bIsIncreasingScore) {
-  		if (iScore<(iTargetScore-77)) {
-  			iScore+=77;
-  		}
-  		else {
-  			iScore=iTargetScore;
-  		}
-    }
-    else {
 /*
-      alert("iScore: "+iScore);
-      alert("iTargetScore: "+iTargetScore);
+	var textScoreDiv = document.getElementById("textScoreDivId");
+
+	//note: correct sequence to cause correct OUTPUT
+	textScoreDiv.innerHTML = iScore;
+
+	iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;
+
+	//added by Mike, 20231125
+	var textScoreShadowDiv = document.getElementById("textScoreShadowDivId");
+	textScoreShadowDiv.innerHTML = iScore;
+
+	//textScoreShadowDiv.style.left = textScoreDiv.style.left;
+	textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
 */
-      if (iScore>(iTargetScore+77)) {
-  			iScore-=77;
-  		}
-  		else {
-  			iScore=iTargetScore;
-  		}
-    }
 
-		if (iScore>999999) {
-			iScore=999999;
-		}
-    else if (iScore<=0) {
-      //END; BATTLE FAIL
-      iScore=0;
-    }
-
-		var textScoreDiv = document.getElementById("textScoreDivId");
-
-		//note: correct sequence to cause correct OUTPUT
-		textScoreDiv.innerHTML = iScore;
-
-//		var iTextScoreDivWidthOffset=5;
-		iTextScoreDivWidth = (textScoreDiv.clientWidth)+iTextScoreDivWidthOffset;
-
-		//added by Mike, 20231125
-		var textScoreShadowDiv = document.getElementById("textScoreShadowDivId");
-		textScoreShadowDiv.innerHTML = iScore;
-
-		//textScoreShadowDiv.style.left = textScoreDiv.style.left;
-		textScoreShadowDiv.style.left = parseInt(textScoreDiv.style.left)+iTextScoreShadowDivWidthOffset +"px";
-
-		var textTimeDiv = document.getElementById("textTimeDivId");
-
+	var textTimeDiv = document.getElementById("textTimeDivId");
 
     //added by Mike, 20230313
     //reference: https://www.w3schools.com/tags/canvas_fillrect.asp;
@@ -3399,36 +2466,17 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
     //myCanvasTwoContext.fillStyle = "#261912"; //brown background//stage
 
 
-/*
-    //reference#1: https://www.w3schools.com/jsref/canvas_createlineargradient.asp;
-    //last accessed: 20231126
-    //reference#2: https://www.tumblr.com/yes-asil; last accessed: 20231126
-
-    // Create a Gradient
-//    const grd = myCanvasTwoContext.createLinearGradient(0, 60, 0, 170);
-    const grd = myCanvasTwoContext.createLinearGradient(0, 20, 0, 170);
-
-  grd.addColorStop(0, "#002244");
-  grd.addColorStop(1, "#00aacc");
-
-    // Draw a filled Rectangle
-    myCanvasTwoContext.fillStyle = grd;
-*/	
-
     //note: max is 150 for height?...
     //myCanvasTwoContext.fillRect(0, 0, iStageMaxWidth, 120);//iStageMaxHeight/2);
     myCanvasTwoContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);//iStageMaxHeight/2);
-	
-	
-	//use iStageMaxHeight; square inner stage
-	//drawMap(myCanvasTwoContext, iHorizontalOffset+iStageMaxWidth-iStageMaxHeight/iColumnCountMax, iVerticalOffsetInnerScreen-iStageMaxHeight/iColumnCountMax);
 
 	//edited by Mike, 20241114	
 	//iCurrSnowFlakeCountMax
 	for (iCurrSnowFlakeCount=0; iCurrSnowFlakeCount<10; iCurrSnowFlakeCount++) {
-
 		var myDivSnowEffect = document.getElementById("divSnowEffectId"+iCurrSnowFlakeCount);
+		myDivSnowEffect.style.visibility="hidden";		
 
+/*
 		if (iCurrMapLocation==53) {
 	////		var iCurrSnowFlakeCountPosX=0;
 	////		var iCurrSnowFlakeCountPosY=0;
@@ -3450,13 +2498,13 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
 		else {
 			myDivSnowEffect.style.visibility="hidden";		
 		}
+*/	
 	}
 	
 	//added by Mike, 20231128
 	bossBattleBgImage.style.left=0+iHorizontalOffset+"px";
 	//bossBattleBgImage.style.top=0+iVerticalOffsetInnerScreen+iStageMaxHeight*0.2+"px";	
 	bossBattleBgImage.style.top=0+iVerticalOffsetInnerScreen+"px";	
-
 	
 
 	if (bIsExecutingShake) {
@@ -3481,97 +2529,19 @@ iHorizontalOffset=(640-iStageMaxHeight)/2;
 			iShakeOffsetHeight=0;
 	}
 
+    myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+iShakeOffsetHeight+"px";
 
-	myCanvas.style.top = (iVerticalOffsetInnerScreen+0)+iShakeOffsetHeight+"px";
-/*
-  if (bIsStillUsingItchScreen) {
-    iHorizontalOffset=0;
-    myCanvas.style.left=iHorizontalOffset+"px";
-  }
-  else {
-    iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2;
-    myCanvas.style.left=iHorizontalOffset+"px";
-  }
-*/
+    iHorizontalOffset=myCanvas.getBoundingClientRect().x+iShakeOffsetWidth;
 
-  iHorizontalOffset=myCanvas.getBoundingClientRect().x+iShakeOffsetWidth;
-
-
-/*  //removed by Mike, 20231126; itch.io
-  //edited by Mike, 20231126
-  //iHorizontalOffset=myCanvas.getBoundingClientRect().x+iShakeOffsetWidth;
-  //note: for INNER SCREEN
-	iHorizontalOffset=(screen.width)/2-iStageMaxWidth/2+iShakeOffsetWidth;
-  myCanvas.style.left = iHorizontalOffset+"px";
-*/
-//  myCanvas.style.left = iHorizontalOffset+"px";
-
-  //added by Mike, 20231126
-  myCanvasTwo.style.top = myCanvas.style.top;
-  myCanvasTwo.style.left = myCanvas.style.left;
-
-
-		textScoreDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextScoreDivWidth+"px";
-		textScoreDiv.style.top= (0)+"px";
-
-		//edited by Mike, 20230423; from 20230321
-		mainImageTile.style.clip = "rect(0px "+iImageFrameWidth+"px "+iImageFrameHeight+"px 0px)";
-
-		//added by Mike, 20230427
-//		mainImageTileProjectile.style.clip = "rect("+iImageFrameWidth*2+"px "+iImageFrameWidth+"px "+iImageFrameHeight+"px "+iImageFrameWidth*2+"px)";
-
-		mainImageTileProjectile.style.clip = "rect(0px "+iImageFrameWidth+"px "+iImageFrameHeight+"px 0px)";
-
-//reference: https://developer.mozilla.org/en-US/docs/Web/CSS/transform-origin; last accessed: 20230424
-//note: transform rotate uses whole unclipped image size; 256x256px
-//25%/2 = 12.5%
-mainImageTile.style.transformOrigin = "12.5% 12.5%";
-
-
+    myCanvasTwo.style.top = myCanvas.style.top;
+    myCanvasTwo.style.left = myCanvas.style.left;
 
 		//added by Mike, 20231121
 		if (!bHasViewedTitle) {
 			titleImage.style.visibility="visible";
-			
-			mainImageMonster.style.visibility = "visible";
 
-			//added by Mike, 20231121
-			executeMouseClickAnimation();
-			
-			//added by Mike, 20231128
-			explosionEffectImage = document.getElementById("explosionEffectToMonsterImageId");
-	
-			//added by Mike, 20231129
-			explosionEffectToCityImage = document.getElementById("explosionEffectToCityImageId");	
-	
 			executeEnterClickAnimation();
-			
-if (explosionEffectImage.style.visibility=="hidden") {
-	if (iTitleExplosionEffectDelayCount<iTitleExplosionEffectDelayCountMax) {				
-		iTitleExplosionEffectDelayCount++;
-	}
-	else {	
-		//alert("HERE!!!: "+iTitleExplosionEffectDelayCount);
-		
-		var titleImage = document.getElementById("titleImageId");
-
-		var iTitleImageWidth = (titleImage.clientWidth);
-		var iTitleImageHeight = (titleImage.clientHeight);
-
-		//remove this; otherwise, error in output
-		//explosionEffectImage.style.visibility="visible";	
-		
-//		setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/2);
-	
-	
-		setMonsterExplosionEffectPosition(parseInt(titleImage.style.left)+iTitleImageWidth*0.15,parseInt(titleImage.style.top)+iTitleImageHeight/3);
-	
-		
-		iTitleExplosionEffectDelayCount=0;
-	}
-}
-
-			
+			////executeMouseClickAnimation();	
 		}
 
 		if (bHasPressedStart) {
@@ -3580,24 +2550,16 @@ if (explosionEffectImage.style.visibility=="hidden") {
 			bHasViewedTitle=true;
 
 			textEnterDiv.style.visibility="hidden";
-
 			
 			if (!bHasViewedHowToPlayGuide) {
-				//added by Mike, 20231122
-				//var mouseInputImage = document.getElementById("mouseInputImageId");
-
 				mouseInputImage.style.visibility="hidden";
-
 				howToPlayGuideImage.style.visibility = "visible";
-				
-				//added by Mike, 20231129
-				//howToPlayGuideImageFrame2.style.visibility = "visible";
 
-				if (ihowToPlayGuideImageFrame2DelayCount<ihowToPlayGuideImageFrame2DelayCountMax) {
-					ihowToPlayGuideImageFrame2DelayCount++;
+				if (iHowToPlayGuideImageFrame2DelayCount<iHowToPlayGuideImageFrame2DelayCountMax) {
+					iHowToPlayGuideImageFrame2DelayCount++;
 				}
 				else {
-					ihowToPlayGuideImageFrame2DelayCount=0;
+					iHowToPlayGuideImageFrame2DelayCount=0;
 
 					if (howToPlayGuideImageFrame2.style.visibility == "visible") {
 						howToPlayGuideImageFrame2.style.visibility = "hidden";
@@ -3621,13 +2583,27 @@ if (explosionEffectImage.style.visibility=="hidden") {
 				howToPlayGuideImageFrame2.style.left = howToPlayGuideImage.style.left;
 				
 				return;
-
+			}
+			else {
+				//----------------------------------
+				myCanvasTwo.style.visibility="visible";
+				bossBattleBgImage.style.visibility = "visible"; //"hidden";			
+				bossBattleBgImagePart2.style.visibility = "visible"; //"hidden";			
+				bossBattleBgImagePart2.style.left = 0+"px"; 			
+				bossBattleBgImagePart2.style.top = 0+iStageMaxHeight-bossBattleBgImagePart2.clientHeight+"px";
+				howToPlayGuideImage.style.visibility = "hidden";
+				howToPlayGuideImageFrame2.style.visibility = "hidden";
+				
+				if (bIsHeroInTank) {
+					mainImageTileTankBody.style.visibility = "visible";			
+				}
+				else {
+					mainImageTileHeroBody.style.visibility = "visible";
+				}			
+				//----------------------------------
 			}
 
-executeTransitionEffect();
-
-howToPlayGuideImage.style.visibility = "hidden";
-howToPlayGuideImageFrame2.style.visibility = "hidden";
+		//executeTransitionEffect();
 
       //added by Mike, 20231124
       if (bIsBossBattleDone) {
@@ -3698,44 +2674,60 @@ howToPlayGuideImageFrame2.style.visibility = "hidden";
 			textStatusBackgroundDiv.style.height=iStageMaxHeight*0.6;			
 	  }
       else {
-	  		//added by Mike, 20231127
-			if (bIsExecutingTransition) {
-				return;
-			}
+		//INNER STAGE; MAX
+		//iHorizontalOffset=(640-iStageMaxHeight)/2;
+		var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;		
+		var iInnerVerticalOffset=iImageFrameHeight/4;//2;
+	  
+		if (iCurrHeroLife<=0) {
+			
+			bIsGameOver=true;
+		
+			myFavicon.style.left=mainImageTile.style.left;
+			myFavicon.style.top=mainImageTile.style.top;
+			myFavicon.style.visibility="visible";
+		
+			mainImageTile.style.visibility="hidden";
+			mainImageTileTankBody.style.visibility="hidden";
+			mainImageTileHeroBody.style.visibility="hidden";
 
+			//var sText = "GAME OVER";
+			var sText = "CONTINUE?";
+			
+			//"The <font color='#4a50d9'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city...<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
+ 			
+			bossBattleBgImage.style.opacity = "0.6";
+			bossBattleBgImage.style.filter  = 'alpha(opacity=60)'; // IE fallback
+
+			textStatusDiv.innerHTML = sText; //sCurrText
+
+			textStatusDiv.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-textStatusDiv.clientWidth/2;
+			
+			textStatusDiv.style.top = 0+(iStageMaxHeight*0.30)+"px";
+			
+  			textStatusDiv.style.visibility="visible";
+
+			//red tint
+			myCanvasTwoContext.fillStyle = "#550000";
+			myCanvasTwoContext.fillRect(0, 0, iStageMaxWidth, iStageMaxHeight);
+						
+			//fire; cat and hat;
+			return;
+		}
+	  
+	  	bossBattleBgImage.style.opacity = "1.0";
+		bossBattleBgImage.style.filter  = 'alpha(opacity=100)'; // IE fallback
+	
 
         mainImageMonsterBoss.style.visibility = "hidden"; //"visible";
 
+		executeExplosionEffect();
 
-//--------------------
 
-//alert(textTimeDiv.style.left);
-	//alert(iVerticalOffsetInnerScreen);	
-	
-	//100 offset
-	drawMiniMap(myCanvasTwoContext,iHorizontalOffset+iStageMaxHeight-100, 0+textTimeDiv.clientHeight);
-	
-//--------------------	
-	
+	//executeExplosionEffectToMonsterBoss();
 
-executeExplosionEffect();
-
-//TODO: -update: this
-if (iCurrMapLocation==53) {
-	executeExplosionEffectToCity();
-}
-else {
-  var explosionEffectImage = document.getElementById("explosionEffectToCityImageId");
-  explosionEffectImage.style.visibility="hidden";
-}
-
-//executeExplosionEffectToMonsterBoss();
-
-//added by Mike, 20241105
-executeDustEffect();
-
-//added by Mike, 20241113
-executeHeroAttackEffect();
+	executeDustEffect();
+	executeHeroAttackEffect();
 
 	//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);
 
@@ -3747,55 +2739,34 @@ executeHeroAttackEffect();
 		mainImageTileProjectileStepX+=mainImageTileProjectileVelocityX;//++;
 	}
 
-
-//-----------------------
-
-	//		mainImageTilePosX++;
-//		mainImageTilePosX--;
-//		mainImageTilePosY++;
-
-		//edited by Mike, 20230423; from 20230418
-		//autoIdentifyNextDirectionAI();
-		//autoIdentifyNextDirectionAIPart2Mouse();
-
-
-/*	//edited by Mike, 20231125
-		//edited by Mike, 20230421
-		mainImageTilePosX+=mainImageTileStepX; //horizontal movement;
-*/
-		if (arrayKeyPressed[iKEY_D]==true) {
-			mainImageTilePosX+=mainImageTileStepX; //horizontal movement;
-			arrayKeyPressed[iKEY_D]=false;
-		}
-		else if (arrayKeyPressed[iKEY_A]==true) {
-			mainImageTilePosX-=mainImageTileStepX; //horizontal movement;
-			arrayKeyPressed[iKEY_A]=false;
-		}
-
 /*
-		mainImageTilePosY+=mainImageTileStepY; //goes downward; vertical
+	if (arrayKeyPressed[iKEY_D]==true) {
+		mainImageTilePosX+=mainImageTileStepX; //horizontal movement;
+		arrayKeyPressed[iKEY_D]=false;
+	}
+	else if (arrayKeyPressed[iKEY_A]==true) {
+		mainImageTilePosX-=mainImageTileStepX; //horizontal movement;
+		arrayKeyPressed[iKEY_A]=false;
+	}
 */
 
-if (iHeroInvincibileCount<iHeroInvincibileCountMax) {
-	iHeroInvincibileCount++;
-}
-else {
-	iHeroInvincibileCount=0;
-	bIsHeroAttacked=false;
-}
+	if (iHeroInvincibileCount<iHeroInvincibileCountMax) {
+		iHeroInvincibileCount++;
+	}
+	else {
+		iHeroInvincibileCount=0;
+		bIsHeroAttacked=false;
+	}
 
+//--------------------
+	if (!bIsGameOver) {
+		executeTimeDisplay();
+	}
 
-//TODO: -add: in own function
-//--------------------------------------
-
-
-		//added by Mike, 20241104
-		//INNER STAGE; MAX
-		//iHorizontalOffset=(640-iStageMaxHeight)/2;
-		var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;		
-		var iInnerVerticalOffset=iImageFrameHeight/4;//2;
-		
-
+	drawMiniMap(myCanvasTwoContext,iStageMaxHeight-iInnerHorizontalOffset*0.75, 0+iStageMaxHeight/10);
+	drawHeroLifeBar(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60); 
+	
+//--------------------	
 
 		//added by Mike, 20241106
 		var doorImageRight = document.getElementById("doorImageRightId");
@@ -3840,26 +2811,33 @@ else {
 		var iDoorImageBottomPosEndX=iDoorImageTopPosEndX;
 		var iDoorImageBottomPosStartY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
 		
+		var batMonsterImageTile = document.getElementById("batMonsterImageId");
 		batMonsterImageTile.style.visibility="hidden";
-		
+/*		
 		snakeMonsterImageTile.style.visibility="hidden";
-		
-		for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
+*/		
+
+		for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
 			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="hidden";
 		}					
+
 
 		//reminder: innerStageWidth uses iStageMaxHeight
 
 		//hasInitMapLocation=false;
-
 		//iCurrMapLocation=0;
+/*
+		if (bIsGameOver) {
+			alert("iCurrMapLocation: "+iCurrMapLocation);
+		}
+*/
 		switch(iCurrMapLocation) {
 			//OK; TOP DOOR; REST of the sides WALLS
 			case 53:
 				//DOOR
 				//top-most					
 				doorImageTop.style.visibility="visible";
-				
+								
 				hasInitMapLocation=true;
 	
 				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault/2) {					
@@ -4024,68 +3002,64 @@ else {
 				doorImageTop.style.visibility="visible";
 				doorImageBottom.style.visibility="visible";
 
+				if (!hasInitMapLocation) {
+					for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
+						arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
+						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+			
+						arraySnakeMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault;
+						arraySnakeMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
+						
+						arraySnakeMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault;
+						arraySnakeMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
+						
+						arraySnakeMonsterCountId[1][MONSTER_STEPX]=1;
+						arraySnakeMonsterCountId[1][MONSTER_STEPY]=1;
+					}
+					
+					//alert("DITO");
+
+					hasInitMapLocation=true;
+				}
+
+				for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
+					if (arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
+						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						//alert(iCount);
+
+						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.top = 0+arraySnakeMonsterCountId[iCount][MONSTER_POSY]+"px"; //iInnerVerticalOffset
+						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.left = 0+arraySnakeMonsterCountId[iCount][MONSTER_POSX]+"px"; //iInnerHorizontalOffset
+				
+						executeSnakeMonsterWalkingAnimation(arraySnakeMonsterCountId[iCount]);					
+						verifyHeroCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
+					}
+				}
 /*				
+				//DEBUG; loads bat monster
 				if (!hasInitMapLocation) {
-					isSnakeMonsterTileActive=true;
-					snakeMonsterImageTile.style.visibility="visible";
+					//alert("iCurrMapLocation: "+iCurrMapLocation);
+				
+					isBatMonsterTileActive=true;
+					batMonsterImageTile.style.visibility="visible";
 					
 					//TilePosX; width; square based on iStageMaxHeight
-					snakeMonsterImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
-					snakeMonsterImageTilePosY=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
+					batMonsterImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+					batMonsterImageTilePosY=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameHeightDefault/2;
 				}
-*/
-			for (iCount=0; iCount<snakeMonsterCountMax; iCount++) {
-				if (!hasInitMapLocation) {
-					arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
-					arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
-
-/*					
-					//TilePosX; width; square based on iStageMaxHeight
-					arraySnakeMonsterCountId[iCount][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
-					arraySnakeMonsterCountId[iCount][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
-*/
-			
-					arraySnakeMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault;
-					arraySnakeMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
-					
-					arraySnakeMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault;
-					arraySnakeMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
-					
-					arraySnakeMonsterCountId[1][MONSTER_STEPX]=1;
-					arraySnakeMonsterCountId[1][MONSTER_STEPY]=1;
-/*					
-					alert(arraySnakeMonsterCountId[0][MONSTER_POSX]);
-					alert(arraySnakeMonsterCountId[1][MONSTER_POSX]);
-*/					
-					//alert("iCount: "+iCount+"; "+arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]);
-				}
-
-				//hasInitMapLocation=true;				
-				if (iCount>=snakeMonsterCountMax-1) {
-					hasInitMapLocation=true;				
-				}
-
-				if (arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
-					arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
-					
-					//alert(iCount);
-
-					arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.top = 0+arraySnakeMonsterCountId[iCount][MONSTER_POSY]+"px"; //iInnerVerticalOffset
-					arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.left = 0+arraySnakeMonsterCountId[iCount][MONSTER_POSX]+"px"; //iInnerHorizontalOffset
-			
-					//alert(arraySnakeMonsterCountId[iCount][MONSTER_POSX]);
-			
-					executeSnakeMonsterWalkingAnimation(arraySnakeMonsterCountId[iCount]);					
-					
-					//arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=false;
-					
-					//alert(arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]);
 				
-					verifyHeroCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
-				}
-			}
-				
-				
+				hasInitMapLocation=true;
+
+				if (isBatMonsterTileActive) {
+					batMonsterImageTile.style.visibility="visible";
+
+					batMonsterImageTile.style.top = 0+batMonsterImageTilePosY+"px"; //iInnerVerticalOffset
+					batMonsterImageTile.style.left = 0+batMonsterImageTilePosX+"px"; //iInnerHorizontalOffset
+			
+					executeBatMonsterWalkingAnimation();
+					verifyHeroCollideWithBatMonsters();
+				}		
+*/				
 				
 				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault/2) {					
 
@@ -4762,7 +3736,6 @@ else {
 				break;				
 		}
 
-
 		//STAGE; MAX
 		if (mainImageTilePosX+iImageFrameWidthDefault>iStageMaxWidth) {
 			mainImageTilePosX=iStageMaxWidth-iImageFrameWidthDefault;
@@ -4770,8 +3743,6 @@ else {
 		else if (mainImageTilePosX<0) {
 			mainImageTilePosX=0;
 		}
-		
-
 
 		if (mainImageTilePosY+iImageFrameHeightDefault>iStageMaxHeight) {
 			//edited by Mike, 20231126
@@ -4781,111 +3752,21 @@ else {
 		else if (mainImageTilePosY<0) {
 			mainImageTilePosY=0;
 		}
-				
-		
-//--------------------------------------		
-
-		
-		//DOOR
-		//added by Mike, 20241104
-/*		
-		if ((mainImageTilePosX+iImageFrameWidth>=iInnerHorizontalOffset+iStageMaxWidth/2) && (mainImageTilePosX<=iInnerHorizontalOffset+iStageMaxWidth/2+iImageFrameWidth)) {
-	
-	//alert("DITO!!!");
-	
-		//if (isPointsOfRectIntersectingPointsOfRect(mainImageTilePosX,mainImageTilePosY, iInnerHorizontalOffset+iStageMaxWidth/2,iInnerHorizontalOffset+iStageMaxWidth/2)) {
-*/				
-				
-/*			
-		}
-*/		
-
-/*	//removed by Mike, 20241104
-    if (mainImageMonsterBossPosY+iMonsterBossTileHeight>iStageMaxHeight) {
-			mainImageMonsterBossPosY=iStageMaxHeight-iMonsterBossTileHeight;
-
-			
-			//edited by Mike, 20231127
-////			iScore=1;
-////			iTargetScore=1;
-			
-			iTargetScore=1;
-			bIsIncreasingScore=false;
-		    //setMonsterExplosionEffectPosition(0+iHorizontalOffset+iStageMaxHeight-iMonsterBossTileWidth/2,mainImageMonsterBossPosY+iMonsterBossTileHeight/2);
-			
-			
-		    //note: error in output due to reuse of same animation count via function setMonsterExplosion...	//setMonsterExplosionEffectPosition(0+parseInt(textScoreShadowDiv.style.left),+parseInt(textScoreShadowDiv.style.top));
-			
-			//removed by Mike, 20231128
-			//bIsExecutingShake=true;	
-			//increase rotation speed;
-			//iTransitionRotate=(iTransitionRotate+10)%360;		
-
-			if (iScore==1) {
-				if (iMonsterBossAttackDelayCount<iMonsterBossAttackDelayCountMax) {
-					iMonsterBossAttackDelayCount++;
-				}
-				else {			
-					iTransitionRotate=(iTransitionRotate+30)%360;
-					mainImageMonsterBoss.style.transform = "rotate("+iTransitionRotate+"deg)";	
-					mainImageMonsterBoss.style.transformOrigin = "12.5% 12.5%"; 
-				}
-
-			
-			}			
-		}
-		else {		
-			//added by Mike, 20231126
-			mainImageMonsterBossPosY+=3;//2;//++;
-			iTransitionRotate=(iTransitionRotate+10)%360;
-			
-			//mainImageMonsterBoss.style.transform = "rotate("+iTransitionRotate+"deg)"+" scale("+iTransitionScale+","+iTransitionScale+")";	
-			mainImageMonsterBoss.style.transform = "rotate("+iTransitionRotate+"deg)";	
-			mainImageMonsterBoss.style.transformOrigin = "12.5% 12.5%"; //"50% 50%"; //	
-			
-			//bIsExecutingShake=true;	
-		}
-*/		
-		
-		//added by Mike, 20231129
+						
+		//--------------------------------------		
 		var bossBattleBgImage = document.getElementById("bossBattleBgImageId");
-		//setCityExplosionEffectPosition(parseInt(bossBattleBgImage.style.left)+bossBattleBgImage.clientWidth*0.3,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/2);
 
-/*	//removed by Mike, 20241109
-		setCityExplosionEffectPosition(parseInt(bossBattleBgImage.style.left)+bossBattleBgImage.clientWidth*0.1,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/3);
-*/				
-				//setCityExplosionEffectPosition(0,parseInt(bossBattleBgImage.style.top)+bossBattleBgImage.clientHeight/5);
-
-				
-				//setCityExplosionEffectPosition(0,0);		
-
-    //ANIMATION;
-//    mainImageMonsterBoss.style.objectPosition = "-" + 128 + "px -" + 0 + "px";
-
-    //alert(iAnimationDelayCount);
-
-/*
-    if (iBossMonsterAnimationDelayCount==iBossMonsterAnimationDelayCountMax) {
-      iBossMonsterAnimationCount=(iBossMonsterAnimationCount+1)%2; //iAnimationCountMax
-      iBossMonsterAnimationDelayCount=0;
-    }
-    else {
-      iBossMonsterAnimationDelayCount++;
-      //bIsMonsterBossHit=false;
-    }
-*/	
-
-	//edited by Mike, 20241103
-	//alert("iAnimationCount: "+iAnimationCount);
-	if (iAnimationDelayCount==iAnimationDelayCountMax) {
-		//edited by Mike, 20231116
-//		iAnimationCount=(iAnimationCount+1)%2; //iAnimationCountMax
-		iAnimationCount=(iAnimationCount+1)%3; //2; //iAnimationCountMax
-		iAnimationDelayCount=0;
-	}
-	else {
-		iAnimationDelayCount++;
-	}
+/*			
+		//edited by Mike, 20241103
+		//alert("iAnimationCount: "+iAnimationCount);
+		if (iAnimationDelayCount==iAnimationDelayCountMax) {
+			iAnimationCount=(iAnimationCount+1)%3; //2; //iAnimationCountMax
+			iAnimationDelayCount=0;
+		}
+		else {
+			iAnimationDelayCount++;
+		}
+*/		
 
 /*
     if (bIsMonsterBossHit) {
@@ -4930,8 +3811,10 @@ else {
 		mainImageTileHeroBody.style.left = mainImageTile.style.left;
 		mainImageTileHeroBody.style.top = mainImageTile.style.top;
 
+/*
     mainImageMonster.style.left = (iHorizontalOffset+mainImageMonsterPosX)+"px";
     mainImageMonster.style.top = (iVerticalOffsetInnerScreen+mainImageMonsterPosY)+"px";
+*/
 
 /*
     mainImageMonsterBoss.style.left = (iHorizontalOffset+mainImageMonsterBossPosX)+"px";
@@ -4974,11 +3857,13 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 		}
 
 //-----------------
-
+/*
     if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, parseInt(mainImageMonster.style.left),parseInt(mainImageMonster.style.top))) {
 //        alert("HIT!");
       mainImageMonster.style.visibility="hidden";
     }
+*/
+
 
 /*
 	//edited by Mike, 20231128
@@ -5078,6 +3963,7 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 			}
 
 		  }	 
+// if (bIsBossBattleDone==false)
 		}
 	}
 
@@ -5092,13 +3978,7 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
   }
 
 
-  function processBossBattleResultFromInput(iXPos, iYPos) {
-
-	//added by Mike, 20231130
-  	if (bIsExecutingTransition) {
-		return;
-	}
-		
+  function processBossBattleResultFromInput(iXPos, iYPos) {		
 		
 /*
 if (iMouseClickStartTime!=0) {
@@ -5365,11 +4245,34 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 /*		
     }
 */
-    //added by Mike, 20231119
-    //reached this part
-    //bIsPuzzleTileTargetHit=false;
-  
   }
+
+	function executeHeroContinue() {
+		//CONTINUE
+		iCurrHeroLife=iCurrHeroLifeMax;
+		bIsGameOver=false;
+		
+		iHeroDeathCount++;
+
+		iHeroInvincibileCount=0;
+		bIsHeroAttacked=false;
+		bIsExecutingShake=false;
+		iDestroyHumanShakeDelayCount=0;
+		
+		var myFavicon = document.getElementById("faviconImageId");						
+		var textStatusDiv = document.getElementById("textStatusDivId");	
+
+		myFavicon.style.visibility="hidden";	
+		textStatusDiv.style.visibility="hidden";
+		
+/*		
+		//TODO: -add: NEW GAME; CONTINUE;
+		//remove the following to not start from the beginning;
+		//start from the beginning;
+		iCurrMapLocation=53;		
+		iStartTimeInMilliseconds=Date.now();		
+*/		
+	}
 
 	//added by Mike, 20231125
 	function initKeyboardInput() {
@@ -5517,11 +4420,11 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			//last accessed: 20221122
 			switch(event.pointerType) {
 				case 'mouse':
-        //note: ZOOM function causes position ERROR via screenX
-        var iXPos = event.clientX;//screenX;
+					//note: ZOOM function causes position ERROR via screenX
+					var iXPos = event.clientX;//screenX;
 
-        //note: screenY includes BROWSER address bar, et cetera;
-        var iYPos = event.pageY; //screenY;
+					//note: screenY includes BROWSER address bar, et cetera;
+					var iYPos = event.pageY; //screenY;
 
 /*
         //edited by Mike, 20230423
@@ -5529,54 +4432,32 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
         alert("iYPos: "+iYPos);
 */
 
-				  //added by Mike, 20231122
-				  if (bHasPressedStart) {
-					//alert(">");
-  					if (!bHasViewedHowToPlayGuide) {
-/*					
-  						//alert(">>>>>");
-  						var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
+					if (bIsGameOver) {
+						//init(); //note: error; iCurrMapLocation could not be set;
+						//restarts where hero died;						
+						
+						//current working solution
+						executeHeroContinue();
+						//return;
+					}
 
-							//removed by Mike, 20231127
-//							howToPlayGuideImage.style.visibility = "hidden";
-
-							
-							//added by Mike, 20231127
-							if (!bHasViewedHowToPlayGuide) {
-							  if (!bIsExecutingTransition) {
-								resetTransitionEffect();
-							  }
-							}
-*/							
-							
-							bHasViewedHowToPlayGuide=true;
-
-  						return;
-  					}
-				  }
-				  else {
-					  //added by Mike, 20231119
+				    //added by Mike, 20231122
+				    if (bHasPressedStart) {
+					  //alert(">");
+					  if (!bHasViewedHowToPlayGuide) {
+						bHasViewedHowToPlayGuide=true;
+						return;
+					  }
+				    }
+				    else {
 					  bHasPressedStart=true;
-
 					  return;
-				  }
-
+				    }
 
 					//added by Mike, 20231107
 					processResultFromInput(iXPos, iYPos);
-
-
-
-						//if (!bIsExecutingTransition) {
-							//resetTransitionEffect();
-							
-							//added by Mike, 20231127
-							var mainImageMonster = document.getElementById("mainImageMonster0");
-							mainImageMonster.style.visibility = "hidden";
-						//}
-
-
-
+				
+					//alert(">>>>>: "+iCurrMapLocation);
 					break;
 				case 'touch':
 /*
@@ -5825,7 +4706,7 @@ alert("screen.height: "+screen.height); //792
 
 		init();
 
-		iFacingDirection=iFACING_DOWN;
+		//iFacingDirection=iFACING_DOWN;
 
 		//added by Mike, 20230423
 		initMouseInput();
@@ -5836,7 +4717,7 @@ alert("screen.height: "+screen.height); //792
 		//added by Mike, 202301107
 		initTouchInput();
 
-		fFramesPerSecond=16.66; //100.00; //16.66;
+		//fFramesPerSecond=16.66; //100.00; //16.66;
 		clearInterval(iCurrentIntervalId);
 		iCurrentIntervalId=setInterval(myUpdateFunction, fFramesPerSecond);
 	}
@@ -5871,6 +4752,11 @@ incorrect output on Safari; macOS;
 
 opting to put assets folder in "html_application" folder instead
 -->
+
+	<img id="faviconImageId" class="ImageTileFrame1" src="assets/images/favicon.png">
+
+
+
 	<img id="doorImageRightId" class="Image32x32Tile" src="assets/images/tile.png">
 	<img id="doorImageLeftId" class="Image32x32Tile" src="assets/images/tile.png">
 	<img id="doorImageTopId" class="Image32x32Tile" src="assets/images/tile.png">
@@ -5887,8 +4773,9 @@ opting to put assets folder in "html_application" folder instead
 
 		<img id="batMonsterImageId" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241110">
 
+<!--
 		<img id="snakeMonsterImageId" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241110">
-
+-->
 		<img id="snakeMonsterImageId0" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241110">
 		<img id="snakeMonsterImageId1" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241110">
 
@@ -5898,47 +4785,14 @@ opting to put assets folder in "html_application" folder instead
 
     <!-- added by Mike, 20231125 -->
     <img id="mainImageMonsterBoss" class="ImageMonsterBoss" src="assets/images/inputImageLarge.png">
-    <img id="mainImageMonster0" class="ImageMonster0" src="assets/images/inputImageLarge.png">
 
-	<!-- added by Mike, 20231129 -->
-	<img id="mainImageSoldierId" class="ImageMainSoldier" src="assets/images/puzzleStageBG.png">
-
-
-<!--
-		<img id="explosionEffectImageId" class="ImageExplosion" src="assets/images/effects.png">
--->
 
 		<!-- added by Mike, 20231104;
 		  note: .html; not .php -->
 
-<!-- set 1 -->
-<img id="puzzleTileImageIdBg0" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg1" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg2" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg3" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg4" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-
-<!-- set 2 -->
-<img id="puzzleTileImageIdBg5" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg6" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg7" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg8" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<!-- set 3 -->
-<img id="puzzleTileImageIdBg9" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg10" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg11" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg12" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<!-- set 4 -->
-<img id="puzzleTileImageIdBg13" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg14" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg15" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-<img id="puzzleTileImageIdBg16" class="Image32x32Tile" onerror="" src="assets/images/tile.png" alt="" title="">
-
-
-
 	<img id="explosionEffectImageId" class="ImageExplosionSmall" src="assets/images/effectsSmall.png">
   
-  <img id="explosionEffectToMonsterImageId" class="ImageExplosion" src="assets/images/effects.png">
+	<img id="explosionEffectToMonsterImageId" class="ImageExplosion" src="assets/images/effects.png">
 
     <img id="explosionEffectToCityImageId" class="ImageExplosionToCity" src="assets/images/effects.png">
 
@@ -5946,17 +4800,6 @@ opting to put assets folder in "html_application" folder instead
 
 	<img id="heroAttackEffectImageId" class="ImageHeroAttack" src="assets/images/effectsSmall.png">
 
-	<!-- added by Mike, 20221119 -->
-	<div id="divPuzzleTileImageTargetBorderId" class="Image32x32TileTargetBorder"></div>
-
-	<!-- added by Mike, 20221121 -->
-	<div id="divPuzzleTileImageSpaceBorderId" class="Image32x32TileSpaceBorder"></div>
-
-
-<!-- removed by Mike, 20231127
-	<canvas id="myCanvasSnowEffectId" class="myCanvasSnowEffect">
-	</canvas>
- -->
  
 	<div id="divSnowEffectId0" class="myDivSnowEffect"></div>
 	<div id="divSnowEffectId1" class="myDivSnowEffect"></div>
@@ -5969,14 +4812,6 @@ opting to put assets folder in "html_application" folder instead
 	<div id="divSnowEffectId7" class="myDivSnowEffect"></div>
 	<div id="divSnowEffectId8" class="myDivSnowEffect"></div>
 	<div id="divSnowEffectId9" class="myDivSnowEffect"></div>
-
-	<!--
-	<div id="divSnowEffectId10" class="myDivSnowEffect"></div>
-	<div id="divSnowEffectId11" class="myDivSnowEffect"></div>
-	<div id="divSnowEffectId12" class="myDivSnowEffect"></div>
-	<div id="divSnowEffectId13" class="myDivSnowEffect"></div>
-	<div id="divSnowEffectId14" class="myDivSnowEffect"></div>
--->
 
 	<div id="divTransitionEffectId" class="myDivTransitionEffect"></div>
 
