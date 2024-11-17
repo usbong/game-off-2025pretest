@@ -781,6 +781,35 @@
     			border-radius: 3px;
 
 				visibility: hidden;
+				
+				z-index: 1;				
+			}
+
+			div.DivTextClickContinue
+			{
+				position: absolute;
+
+				background-color: #4d4d4d;
+
+				color: #fff484; /*#fff484; #ffffff;*/
+
+				opacity: 80%;
+
+				font-size: 20px;
+				font-weight: bold;
+
+				/* //noted by Mike, 20230130 */
+				padding: 10px;
+				padding-right: 40px;
+				padding-left: 40px;
+				
+    			border: 4px solid #ffffff; /*#4d4d4d;*/
+    			border-radius: 3px;
+
+
+				visibility: hidden;
+				
+				z-index: 99;				
 			}
 
 			div.DivTextScore
@@ -1430,9 +1459,12 @@ var bIsHeroFacingLeft=false;
 
 		var myFavicon = document.getElementById("faviconImageId");
 		var textTimeDiv = document.getElementById("textTimeDivId");
-		
+
 		var titleImage = document.getElementById("titleImageId");
 		var textEnterDiv = document.getElementById("textEnterDivId");
+		
+		var textNewGameDiv = document.getElementById("textNewGameDivId");
+		var textContinueGameDiv = document.getElementById("textContinueGameDivId");
 
 		//--------------------
 		mouseInputImage.style.visibility="hidden";
@@ -1459,9 +1491,12 @@ var bIsHeroFacingLeft=false;
 
 		myFavicon.style.visibility="hidden";
 		textTimeDiv.style.visibility="hidden";
-		
+
 		titleImage.style.visibility="hidden";
 		textEnterDiv.style.visibility="visible";
+		
+		textNewGameDiv.style.visibility="hidden";
+		textContinueGameDiv.style.visibility="hidden";
 				
 		//--------------------
 		myCanvasTwo.style.top = (iVerticalOffsetInnerScreen+0)+"px";
@@ -1480,6 +1515,14 @@ var bIsHeroFacingLeft=false;
 		mainImageTileHeroBody.style.top = mainImageTile.style.top;
 		
 		textTimeDiv.innerHTML = "00:00:00";
+		
+		textNewGameDiv.innerHTML = "NEW GAME";
+		textNewGameDiv.style.left = iHorizontalOffset+iStageMaxWidth/2-textNewGameDiv.clientWidth/2+"px";
+		//textNewGameDiv.style.top= iVerticalOffsetInnerScreen+iStageMaxHeight/2-textNewGameDiv.clientHeight+"px";						
+		textNewGameDiv.style.top= iVerticalOffsetInnerScreen+textNewGameDiv.clientHeight*2+"px";						
+		textContinueGameDiv.innerHTML = "CONTINUE";
+		textContinueGameDiv.style.left = iHorizontalOffset+iStageMaxWidth/2-textContinueGameDiv.clientWidth/2+"px";
+		textContinueGameDiv.style.top= iVerticalOffsetInnerScreen+textContinueGameDiv.clientHeight*4+"px";		
 
 		////var myCanvasTwo = document.getElementById("myCanvasTwoId");
 		////myCanvasTwo.style.visibility="hidden";
@@ -2376,6 +2419,8 @@ alert("iInputY: "+iInputY);
 		iHorizontalOffset=(640-iStageMaxHeight)/2;
 
 		var myFavicon = document.getElementById("faviconImageId");
+		var textNewGameDiv = document.getElementById("textNewGameDivId");
+		var textContinueGameDiv = document.getElementById("textContinueGameDivId");
 
 		var mainImageTile = document.getElementById("mainImageTileImageId");
 
@@ -2690,9 +2735,12 @@ alert("iInputY: "+iInputY);
 			mainImageTile.style.visibility="hidden";
 			mainImageTileTankBody.style.visibility="hidden";
 			mainImageTileHeroBody.style.visibility="hidden";
+			
+			textNewGameDiv.style.visibility="visible";
+			textContinueGameDiv.style.visibility="visible";
 
-			//var sText = "GAME OVER";
-			var sText = "CONTINUE?";
+			var sText = "GAME OVER";
+			//var sText = "CONTINUE?";
 			
 			//"The <font color='#4a50d9'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city...<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
  			
@@ -2703,9 +2751,11 @@ alert("iInputY: "+iInputY);
 
 			textStatusDiv.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-textStatusDiv.clientWidth/2;
 			
-			textStatusDiv.style.top = 0+(iStageMaxHeight*0.30)+"px";
+			//textStatusDiv.style.top = 0+(iStageMaxHeight*0.30)+"px";
+			textStatusDiv.style.top = 0+iInnerVerticalOffset+textStatusDiv.clientHeight+"px";
 			
-  			textStatusDiv.style.visibility="visible";
+  			//textStatusDiv.style.visibility="visible";
+  			textStatusDiv.style.visibility="hidden";
 
 			//red tint
 			myCanvasTwoContext.fillStyle = "#550000";
@@ -4247,7 +4297,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 */
   }
 
-	function executeHeroContinue() {
+	function executeHeroContinue(bIsContinue) {
 		//CONTINUE
 		iCurrHeroLife=iCurrHeroLifeMax;
 		bIsGameOver=false;
@@ -4261,17 +4311,36 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 		
 		var myFavicon = document.getElementById("faviconImageId");						
 		var textStatusDiv = document.getElementById("textStatusDivId");	
-
+		var textNewGameDiv = document.getElementById("textNewGameDivId");
+		var textContinueGameDiv = document.getElementById("textContinueGameDivId");
+		
+		var mainImageTile = document.getElementById("mainImageTileImageId");
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
+		
 		myFavicon.style.visibility="hidden";	
 		textStatusDiv.style.visibility="hidden";
+		textNewGameDiv.style.visibility="hidden";		
+		textContinueGameDiv.style.visibility="hidden";
 		
-/*		
-		//TODO: -add: NEW GAME; CONTINUE;
-		//remove the following to not start from the beginning;
-		//start from the beginning;
-		iCurrMapLocation=53;		
-		iStartTimeInMilliseconds=Date.now();		
-*/		
+		if (!bIsContinue) {		
+			//NEW GAME
+			mainImageTilePosX=iStageMaxWidth/2-iImageFrameWidth/2;
+			mainImageTilePosY=iStageMaxHeight/2-iImageFrameHeight;
+			
+			mainImageTile.style.left = (iHorizontalOffset+mainImageTilePosX)+"px";
+			mainImageTile.style.top = (iVerticalOffsetInnerScreen+mainImageTilePosY)+"px";
+			
+			mainImageTileTankBody.style.left = mainImageTile.style.left;
+			mainImageTileTankBody.style.top = mainImageTile.style.top;
+
+			mainImageTileHeroBody.style.left = mainImageTile.style.left;
+			mainImageTileHeroBody.style.top = mainImageTile.style.top;
+
+			//start from the beginning;
+			iCurrMapLocation=53;		
+			iStartTimeInMilliseconds=Date.now();		
+		}
 	}
 
 	//added by Mike, 20231125
@@ -4433,12 +4502,34 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 */
 
 					if (bIsGameOver) {
+						var textNewGameDiv = document.getElementById("textNewGameDivId");
+						var textContinueGameDiv = document.getElementById("textContinueGameDivId");
+
+						textNewGameDiv.style.visibility="visible";
+						textContinueGameDiv.style.visibility="visible";
+					
 						//init(); //note: error; iCurrMapLocation could not be set;
 						//restarts where hero died;						
-						
 						//current working solution
-						executeHeroContinue();
+						//executeHeroContinue();
 						//return;
+						
+						//alert("iXPos"+iXPos);
+												
+						if (isPointsOfRectIntersectingPointsOfRectDoor(iXPos,iYPos, parseInt(textNewGameDiv.style.left),parseInt(textNewGameDiv.style.top),textNewGameDiv.clientWidth,textNewGameDiv.clientHeight)) {
+						
+							executeHeroContinue(false);
+						
+							return;
+						}
+						else if (isPointsOfRectIntersectingPointsOfRectDoor(iXPos,iYPos, parseInt(textContinueGameDiv.style.left),parseInt(textContinueGameDiv.style.top),textContinueGameDiv.clientWidth,textContinueGameDiv.clientHeight)) {
+						
+							executeHeroContinue(true);
+						
+							return;
+						}
+
+						return;
 					}
 
 				    //added by Mike, 20231122
@@ -4755,8 +4846,6 @@ opting to put assets folder in "html_application" folder instead
 
 	<img id="faviconImageId" class="ImageTileFrame1" src="assets/images/favicon.png">
 
-
-
 	<img id="doorImageRightId" class="Image32x32Tile" src="assets/images/tile.png">
 	<img id="doorImageLeftId" class="Image32x32Tile" src="assets/images/tile.png">
 	<img id="doorImageTopId" class="Image32x32Tile" src="assets/images/tile.png">
@@ -4835,6 +4924,8 @@ opting to put assets folder in "html_application" folder instead
 	<!-- PRESS ENTER; PRESS START -->
 	<div id="textEnterDivId" class="DivTextClickStart">START</div>
 
+	<div id="textNewGameDivId" class="DivTextClickContinue">NEW GAME</div>
+	<div id="textContinueGameDivId" class="DivTextClickContinue">CONTINUE</div>
 
 	<div id="textScoreShadowDivId" class="DivStepCountStatusShadow">0</div>
 
