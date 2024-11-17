@@ -191,8 +191,18 @@
 			clip: rect(0px,32px,32px,0px);
 			visibility: hidden;
 			
-			z-index: 3; /*2;*/
+			z-index: 4; /*2;*/
 		}
+
+		.ImageTileBgFrame {
+			position: absolute;
+
+			clip: rect(0px,32px,32px,0px);
+			visibility: hidden;
+			
+			z-index: 2;
+		}
+
 		
 		.ImageHeroFrame1 {
 			position: absolute;
@@ -889,12 +899,10 @@
 
   <script>
 
-//added by Mike, 20221106
-//note: 5x3; //4x4;
 var iRowCount=0;
-const iRowCountMax=5;
+const iRowCountMax=10;
 var iColumnCount=0;
-const iColumnCountMax=3;
+const iColumnCountMax=10;
 
 var bIsGameOver=false;
 
@@ -1178,6 +1186,9 @@ var bIsHeroFacingLeft=false;
 	var arraySnakeMonsterCountId = [[],[]];
 	var iSnakeMonsterCountMax = 2;
 	
+	var arrayGrassMonsterCountId = [[],[],[],[]];
+	var iGrassMonsterCountMax = 4;
+	
 	const MONSTER_OBJECT=0;
 	const MONSTER_IS_ACTIVE=1;	
 	const MONSTER_POSX=2;
@@ -1205,6 +1216,9 @@ var bIsHeroFacingLeft=false;
 	//due to itch.io window top-left at 0;
 	var iHorizontalOffset=0;
 	var iVerticalOffsetInnerScreen=0;
+	
+	var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;		
+	var iInnerVerticalOffset=iImageFrameHeight/4;//2;
 
 	function resetProjectile() {
 		var mainImageTile = document.getElementById("mainImageTileImageId");
@@ -1270,6 +1284,48 @@ var bIsHeroFacingLeft=false;
 		}
 	}
 
+	function drawGridBuggy(myCanvasContext, iXPos, iYPos) {
+/*	
+		iMiniMapRoomWidth=5;
+		iMiniMapRoomHeight=5;		
+		iMiniMapSpacing=2;
+		
+		iMiniMapRowCountMax=5;
+		iMiniMapColumnCountMax=3;		
+*/
+
+		//myCanvasContext.fillStyle = "#0da200"; //"#ff0000";
+		
+		//alert(iInnerHorizontalOffset);
+		
+		//alert(iStageMaxHeight);
+		//alert(iStageMaxWidth);		
+		//alert(iInnerHorizontalOffset);
+		
+		//0+iHorizontalOffset+iStageMaxWidth/2
+		
+		myCanvasContext.strokeStyle = "#0da200";
+		
+		myCanvasContext.beginPath();
+		myCanvasContext.rect(0+iXPos, 0+iYPos, 0+iStageMaxHeight-iInnerHorizontalOffset*1.5, iStageMaxHeight);
+		myCanvasContext.stroke();
+		
+/*
+		//horizontal
+    	for (var iRowCount=0; iRowCount<iMiniMapRowCountMax; iRowCount++) {
+    		for (var iColumnCount=0; iColumnCount<iMiniMapColumnCountMax; iColumnCount++) {
+				myCanvasContext.fillStyle = "#ffffff"; //"#ff0000";
+				
+				myCanvasContext.fillRect(0+iXPos+iColumnCount*iMiniMapRoomWidth+iMiniMapSpacing*iColumnCount, 0+iYPos+iRowCount*iMiniMapRoomHeight+iMiniMapSpacing*iRowCount, iMiniMapRoomWidth, iMiniMapRoomHeight);
+			}
+		}		
+*/		
+		//alert(iCurrMapLocation)
+		
+		//myCanvasContext.fillStyle = "#ff0000"; //"#ffffff";		
+	}
+	
+
 	//added by Mike, 20241115
 	//reference: 
 	//1) Game Off 2023: Battle Tactics
@@ -1278,14 +1334,18 @@ var bIsHeroFacingLeft=false;
 		iMiniMapRoomWidth=5;
 		iMiniMapRoomHeight=5;		
 		iMiniMapSpacing=2;
+		
+		iMiniMapRowCountMax=5;
+		iMiniMapColumnCountMax=3;		
+		
 /*		
 		myCanvasContext.fillStyle = "#ffffff"; //"#ff0000";
 		myCanvasContext.fillRect(0+iXPos, 0+iYPos, iMiniMapRoomHeight, iMiniMapRoomHeight);
 */		
 
 		//horizontal
-    	for (var iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {
-    		for (var iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
+    	for (var iRowCount=0; iRowCount<iMiniMapRowCountMax; iRowCount++) {
+    		for (var iColumnCount=0; iColumnCount<iMiniMapColumnCountMax; iColumnCount++) {
 				myCanvasContext.fillStyle = "#ffffff"; //"#ff0000";
 				
 				myCanvasContext.fillRect(0+iXPos+iColumnCount*iMiniMapRoomWidth+iMiniMapSpacing*iColumnCount, 0+iYPos+iRowCount*iMiniMapRoomHeight+iMiniMapSpacing*iRowCount, iMiniMapRoomWidth, iMiniMapRoomHeight);
@@ -1444,6 +1504,8 @@ var bIsHeroFacingLeft=false;
 		var textStatusDiv = document.getElementById("textStatusDivId");
 		var textStatusBackgroundDiv = document.getElementById("textStatusBackgroundDivId");
 		var myCanvasTwo = document.getElementById("myCanvasTwoId");
+
+		//var grassBgImage = document.getElementById("grassBgImageId");			
 		
 		var mainImageTile = document.getElementById("mainImageTileImageId");
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
@@ -1476,6 +1538,8 @@ var bIsHeroFacingLeft=false;
 		textStatusDiv.style.visibility="hidden";
 		textStatusBackgroundDiv.style.visibility="hidden";
 		myCanvasTwo.style.visibility="hidden";
+		
+		//grassBgImage.style.visibility="hidden";
 		
 		mainImageTile.visibility="hidden";
 		mainImageTileTankBody.visibility="hidden";
@@ -1569,6 +1633,27 @@ var bIsHeroFacingLeft=false;
 			arraySnakeMonsterCountId[iCount][MONSTER_STEP_DELAY_MAX]=5;		
 		}
 	
+		for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
+			arrayGrassMonsterCountId[iCount][MONSTER_OBJECT]= document.getElementById("grassMonsterImageId"+iCount);
+			
+			arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="hidden";			
+			arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]=false;
+
+			arrayGrassMonsterCountId[iCount][MONSTER_POSX]=0;
+			arrayGrassMonsterCountId[iCount][MONSTER_POSY]=0;
+			arrayGrassMonsterCountId[iCount][MONSTER_STEPX]=2;
+			arrayGrassMonsterCountId[iCount][MONSTER_STEPY]=2;			
+			
+			arrayGrassMonsterCountId[iCount][MONSTER_ANIMATION_DELAY_COUNT]=10;
+			arrayGrassMonsterCountId[iCount][MONSTER_ANIMATION_DELAY_COUNT_MAX]=6;		
+
+			arrayGrassMonsterCountId[iCount][MONSTER_ANIMATION_COUNT]=-1;		
+			arrayGrassMonsterCountId[iCount][MONSTER_ANIMATION_COUNT_MAX]=5;		
+
+			arrayGrassMonsterCountId[iCount][MONSTER_STEP_DELAY]=0;		
+			arrayGrassMonsterCountId[iCount][MONSTER_STEP_DELAY_MAX]=5;		
+		}
+		
 		//added by Mike, 20231121
 ////		var mouseInputImage = document.getElementById("mouseInputImageId");
 
@@ -1997,6 +2082,38 @@ alert("iInputY: "+iInputY);
 		}
 		else if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_COUNT]==1) { 
 			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
+		}
+	}
+	
+	function executeGrassMonsterAnimation(inputArrayGrassMonsterWithIdCount) {		
+
+		inputArrayGrassMonsterWithIdCount[MONSTER_OBJECT].style.visibility="visible";
+				
+		if (inputArrayGrassMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]>=inputArrayGrassMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT_MAX]) {
+			inputArrayGrassMonsterWithIdCount[MONSTER_ANIMATION_COUNT]=(inputArrayGrassMonsterWithIdCount[MONSTER_ANIMATION_COUNT]+1)%2; //3; //last hidden
+
+			inputArrayGrassMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]=0;
+			
+			if (inputArrayGrassMonsterWithIdCount[MONSTER_STEP_DELAY]>=inputArrayGrassMonsterWithIdCount[MONSTER_STEP_DELAY_MAX]) {
+				inputArrayGrassMonsterWithIdCount[MONSTER_STEP_DELAY]=0;
+			}
+			else {
+				inputArrayGrassMonsterWithIdCount[MONSTER_STEP_DELAY]++;
+			}				
+		}
+		else {
+			inputArrayGrassMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]++;
+		}
+
+		//var iFrameY=0;
+		var iFrameY=iImageFrameHeight*2;//2;//64*2; 128;
+
+		//currently two frames only
+		if (inputArrayGrassMonsterWithIdCount[MONSTER_ANIMATION_COUNT]==0) { 
+			inputArrayGrassMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+		}
+		else if (inputArrayGrassMonsterWithIdCount[MONSTER_ANIMATION_COUNT]==1) { 
+			inputArrayGrassMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
 		}
 	}
 	
@@ -2437,6 +2554,8 @@ alert("iInputY: "+iInputY);
 
 		var bossBattleBgImagePart2 = document.getElementById("bossBattleBgImagePart2Id");		
 
+		//var grassBgImage = document.getElementById("grassBgImageId");	
+
     //added by Mike, 20231125
     var mainImageMonsterBoss = document.getElementById("mainImageMonsterBoss");
 
@@ -2632,8 +2751,10 @@ alert("iInputY: "+iInputY);
 			else {
 				//----------------------------------
 				myCanvasTwo.style.visibility="visible";
-				bossBattleBgImage.style.visibility = "visible"; //"hidden";			
-				bossBattleBgImagePart2.style.visibility = "visible"; //"hidden";			
+
+				bossBattleBgImage.style.visibility = "visible";
+				bossBattleBgImagePart2.style.visibility = "visible";
+				
 				bossBattleBgImagePart2.style.left = 0+"px"; 			
 				bossBattleBgImagePart2.style.top = 0+iStageMaxHeight-bossBattleBgImagePart2.clientHeight+"px";
 				howToPlayGuideImage.style.visibility = "hidden";
@@ -2719,11 +2840,12 @@ alert("iInputY: "+iInputY);
 			textStatusBackgroundDiv.style.height=iStageMaxHeight*0.6;			
 	  }
       else {
+/*	  
 		//INNER STAGE; MAX
 		//iHorizontalOffset=(640-iStageMaxHeight)/2;
-		var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;		
-		var iInnerVerticalOffset=iImageFrameHeight/4;//2;
-	  
+		iInnerHorizontalOffset=(640-iStageMaxHeight)/2;		
+		iInnerVerticalOffset=iImageFrameHeight/4;//2;
+*/	  
 		if (iCurrHeroLife<=0) {
 			
 			bIsGameOver=true;
@@ -2816,6 +2938,11 @@ alert("iInputY: "+iInputY);
 	drawMiniMap(myCanvasTwoContext,iStageMaxHeight-iInnerHorizontalOffset*0.75, 0+iStageMaxHeight/10);
 	drawHeroLifeBar(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60); 
 	
+	//alert(iHorizontalOffset);
+
+	//buggy
+	//drawGrid(myCanvasTwoContext,iInnerHorizontalOffset/2,0); 
+		
 //--------------------	
 
 		//added by Mike, 20241106
@@ -2863,6 +2990,9 @@ alert("iInputY: "+iInputY);
 		
 		var batMonsterImageTile = document.getElementById("batMonsterImageId");
 		batMonsterImageTile.style.visibility="hidden";
+		
+		//grassBgImage.style.visibility="hidden";
+		
 /*		
 		snakeMonsterImageTile.style.visibility="hidden";
 */		
@@ -2871,6 +3001,9 @@ alert("iInputY: "+iInputY);
 			arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="hidden";
 		}					
 
+		for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
+			arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="hidden";
+		}					
 
 		//reminder: innerStageWidth uses iStageMaxHeight
 
@@ -2942,7 +3075,7 @@ alert("iInputY: "+iInputY);
 				doorImageTop.style.visibility="visible";
 				doorImageBottom.style.visibility="visible";
 				doorImageLeft.style.visibility="visible";
-				
+								
 				if (!hasInitMapLocation) {
 					isBatMonsterTileActive=true;
 					batMonsterImageTile.style.visibility="visible";
@@ -3338,6 +3471,61 @@ alert("iInputY: "+iInputY);
 			case 42:			
 				doorImageRight.style.visibility="visible";
 				doorImageLeft.style.visibility="visible";
+				
+				//alert("DITO");
+
+				//grass
+/*				
+				grassBgImage.style.visibility="visible";
+				grassBgImage.style.left=iDoorImageRightPosStartX-iImageFrameWidthDefault*2;						
+grassBgImage.style.top=iInnerVerticalOffset+iImageFrameHeightDefault/2+iImageFrameHeightDefault*2;						
+*/
+
+				if (!hasInitMapLocation) {
+					for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
+						arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						arrayGrassMonsterCountId[iCount][MONSTER_STEPX]=0;
+						arrayGrassMonsterCountId[iCount][MONSTER_STEPY]=0;
+					}
+			
+					//TOP-LEFT
+					arrayGrassMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*3;
+					arrayGrassMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
+
+					//TOP-RIGHT					
+					arrayGrassMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*3;
+					arrayGrassMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
+					
+					//BOTTOM-LEFT
+					arrayGrassMonsterCountId[2][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*3;
+					arrayGrassMonsterCountId[2][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
+
+					//BOTTOM-RIGHT						
+					arrayGrassMonsterCountId[3][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*3;
+					arrayGrassMonsterCountId[3][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;					
+					
+					//alert("DITO");
+
+					hasInitMapLocation=true;
+				}
+
+				for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
+					if (arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						//alert(iCount);
+
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.top = 0+arrayGrassMonsterCountId[iCount][MONSTER_POSY]+"px"; //iInnerVerticalOffset
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.left = 0+arrayGrassMonsterCountId[iCount][MONSTER_POSX]+"px"; //iInnerHorizontalOffset
+				
+						executeGrassMonsterAnimation(arrayGrassMonsterCountId[iCount]);					
+						//TODO: -add: this
+						//verifyHeroCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
+					}
+				}
+
 				
 				//WALL
 				//square rooms; hence, iStageMaxHeight				
@@ -4868,6 +5056,11 @@ opting to put assets folder in "html_application" folder instead
 		<img id="snakeMonsterImageId0" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241110">
 		<img id="snakeMonsterImageId1" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241110">
 
+		<img id="grassMonsterImageId0" class="ImageTileBgFrame" src="assets/images/bgTile.png?lastmod=20241117">
+		<img id="grassMonsterImageId1" class="ImageTileBgFrame" src="assets/images/bgTile.png?lastmod=20241117">
+		<img id="grassMonsterImageId2" class="ImageTileBgFrame" src="assets/images/bgTile.png?lastmod=20241117">
+		<img id="grassMonsterImageId3" class="ImageTileBgFrame" src="assets/images/bgTile.png?lastmod=20241117">
+
 
 		<!-- added by Mike, 20231121 -->
 		<img id="mouseInputImageId" class="ImageMouseInput" src="assets/images/inputImageLarge.png">
@@ -4915,7 +5108,6 @@ opting to put assets folder in "html_application" folder instead
 	<img id="bossBattleBgImageId" class="ImageBossBattleBg" src="assets/images/bgImageCave.png?lastmod=20241104">
 	
 	<img id="bossBattleBgImagePart2Id" class="ImageBossBattleBgPart2" src="assets/images/bossBattleBgPart2.png">	
-
 	
 	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
 	<div id="textStatusBackgroundDivId" class="DivTextStatusBackground"></div>
