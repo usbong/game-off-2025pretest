@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241117; from 20241116
+' @date updated: 20241119; from 20241117
 ' @website: www.usbong.ph
 '
 '
@@ -915,6 +915,8 @@ var iColumnCount=0;
 const iColumnCountMax=10;
 
 var bIsGameOver=false;
+const iInputDelayAtGameOverCountMax=100;
+var iInputDelayAtGameOverCount=iInputDelayAtGameOverCountMax;
 
 //added by Mike, 20231124
 var bIsBossBattleDone=false;
@@ -946,7 +948,7 @@ var iShakeOffsetWidth=iShakeOffsetWidthMax;
 var iShakeOffsetHeight=iShakeOffsetHeightMax;
 
 var iHeroInvincibileCount=0;
-var iHeroInvincibileCountMax=10;
+var iHeroInvincibileCountMax=50;
 
 var iCurrHeroLifeMax=10;
 var iCurrHeroLife=iCurrHeroLifeMax;
@@ -998,6 +1000,9 @@ var iPearlAnimationDelayCountMax=2;
 var iPearlInvincibileCount=0;
 const iPearlInvincibileCountMax=10;
 var bHasObtainedPearlAtRoom42=false;
+var bHasObtainedPearlAtRoom41=false;
+var bHasObtainedPearlAtRoom33=false;
+var bHasObtainedPearlAtRoom43=false;
 
 //added by Mike, 20231127
 var iMonsterExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
@@ -1469,6 +1474,8 @@ var bIsHeroFacingLeft=false;
 	function init() {	
 		bIsGameOver=false;		
 		
+		iInputDelayAtGameOverCount=0;
+		
 		iHeroInvincibileCount=0;
 		bIsHeroAttacked=false;
 		bIsExecutingShake=false;
@@ -1498,6 +1505,9 @@ var bIsHeroFacingLeft=false;
 		iPearlInvincibileCount=0;
 		//iPearlInvincibileCountMax=10;
 		bHasObtainedPearlAtRoom42=false;
+		bHasObtainedPearlAtRoom41=false;
+		bHasObtainedPearlAtRoom33=false;
+		bHasObtainedPearlAtRoom43=false;
 
 		iBossMonsterAnimationCount=-1;//0; start at -1
 		iBossMonsterAnimationCountMax=5;
@@ -2563,11 +2573,20 @@ alert("iInputY: "+iInputY);
 	}
 
 	function heroHitByMonster(mainImageTilePosX, mainImageTilePosY, iMonsterImageTilePosX, iMonsterImageTilePosY) {			
+		if (iHeroInvincibileCount<iHeroInvincibileCountMax) {
+			return;
+		}
+
+		bIsHeroAttacked=true;
+		bIsExecutingShake=true;
+
 		iCurrHeroLife--;
 		
 		if (iCurrHeroLife<0) {
 			iCurrHeroLife=0;
 		}
+				
+		iHeroInvincibileCount=0;
 				
 		resetProjectile();	
 	}
@@ -2603,16 +2622,21 @@ alert("iInputY: "+iInputY);
 				//verify if hero attacked
 				if (bHasFired && (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTileProjectileStepDestinationX-iImageFrameWidthDefault/2,mainImageTileProjectileStepDestinationY-iImageFrameHeightDefault/2, batMonsterImageTilePosX,batMonsterImageTilePosY, iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault))) {
 					monsterHitByHero(mainImageTilePosX,mainImageTilePosY, batMonsterImageTilePosX,batMonsterImageTilePosY);
-					
-					
+										
 					setExplosionEffectPosition(batMonsterImageTilePosX,batMonsterImageTilePosY);
 					
 					batMonsterImageTile.style.visibility="hidden";				
 					isBatMonsterTileActive=false;
 				}
 				else {			
+/*				
+					if (iHeroInvincibileCount<iHeroInvincibileCountMax) {
+						return;
+					}
+
 					bIsHeroAttacked=true;
 					bIsExecutingShake=true;
+*/
 
 					//Usbong SFZ
 					//TODO: -add: hitBy(...)
@@ -2681,9 +2705,10 @@ alert("iInputY: "+iInputY);
 						inputArraySnakeMonsterWithIdCount[MONSTER_IS_ACTIVE]=false;
 					}
 					else {			
+/*					
 						bIsHeroAttacked=true;
 						bIsExecutingShake=true;
-
+*/
 						//Usbong SFZ
 						//TODO: -add: hitBy(...)
 						heroHitByMonster(mainImageTilePosX,mainImageTilePosY, inputArraySnakeMonsterWithIdCount[MONSTER_POSX],inputArraySnakeMonsterWithIdCount[MONSTER_POSY]);
@@ -2743,7 +2768,20 @@ alert("iInputY: "+iInputY);
 				pearlImageTileWithId.style.visibility="hidden";
 				//set is_active to false
 				
-				bHasObtainedPearlAtRoom42=true;
+				switch(iCurrMapLocation) {
+					case 42:
+						bHasObtainedPearlAtRoom42=true;
+						break;
+					case 41:
+						bHasObtainedPearlAtRoom41=true;
+						break;
+					case 33:
+						bHasObtainedPearlAtRoom33=true;
+						break;						
+					case 43:
+						bHasObtainedPearlAtRoom43=true;
+						break;						
+				}
 			}
 /*			
 		}
@@ -3080,9 +3118,12 @@ alert("iInputY: "+iInputY);
 			mainImageTileTankBody.style.visibility="hidden";
 			mainImageTileHeroBody.style.visibility="hidden";
 			
-			textNewGameDiv.style.visibility="visible";
-			textContinueGameDiv.style.visibility="visible";
-
+			if (iInputDelayAtGameOverCount>=iInputDelayAtGameOverCountMax) {
+				textNewGameDiv.style.visibility="visible";
+				textContinueGameDiv.style.visibility="visible";
+			}
+			iInputDelayAtGameOverCount++;
+			
 			var sText = "GAME OVER";
 			//var sText = "CONTINUE?";
 			
@@ -3149,10 +3190,11 @@ alert("iInputY: "+iInputY);
 
 	if (iHeroInvincibileCount<iHeroInvincibileCountMax) {
 		iHeroInvincibileCount++;
+		bIsHeroAttacked=false;
 	}
 	else {
-		iHeroInvincibileCount=0;
-		bIsHeroAttacked=false;
+		//iHeroInvincibileCount=0;
+		//bIsHeroAttacked=false;
 	}
 
 //--------------------
@@ -3201,7 +3243,7 @@ alert("iInputY: "+iInputY);
 
 		var iDoorImageTopPosStartX=0+iStageMaxWidth/2-iImageFrameWidthDefault*1;
 		var iDoorImageTopPosEndX=0+iStageMaxWidth/2+iImageFrameWidthDefault*1;
-		var iDoorImageTopPosStartY=0+iInnerVerticalOffset;
+		var iDoorImageTopPosStartY=0+iInnerVerticalOffset+iImageFrameHeightDefault;//+iImageFrameHeightDefault/2;
 
 		//## --
 
@@ -3309,6 +3351,13 @@ alert("iInputY: "+iInputY);
 				doorImageLeft.style.visibility="visible";
 								
 				if (!hasInitMapLocation) {
+					iPearlInvincibileCount=0;
+					
+					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*4;					
+					
+					pearlImageTile.style.top=iImageFrameHeightDefault+iImageFrameHeightDefault/2*2;
+									
+									
 					isBatMonsterTileActive=true;
 					batMonsterImageTile.style.visibility="visible";
 					
@@ -3331,6 +3380,21 @@ alert("iInputY: "+iInputY);
 			
 					executeBatMonsterWalkingAnimation();
 					verifyHeroCollideWithBatMonsters();
+				}
+				
+				//at center of field of grass
+				//if has not yet obtained pearl item in this room
+				if (!bHasObtainedPearlAtRoom43) {
+					if (!isBatMonsterTileActive) {
+
+						pearlImageTile.style.visibility="visible";
+						
+						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
+							verifyHeroCollideWithPearl(pearlImageTile);
+						}
+						
+						iPearlInvincibileCount++;
+					}
 				}
 				
 				//top door
@@ -3420,6 +3484,12 @@ alert("iInputY: "+iInputY);
 				doorImageBottom.style.visibility="visible";
 
 				if (!hasInitMapLocation) {
+				
+					iPearlInvincibileCount=0;
+					
+					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*0;			
+					pearlImageTile.style.top=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
+								
 					for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
 						arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
 						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
@@ -3437,6 +3507,21 @@ alert("iInputY: "+iInputY);
 					//alert("DITO");
 
 					hasInitMapLocation=true;
+				}
+
+				//if has not yet obtained pearl item in this room
+				if (!bHasObtainedPearlAtRoom33) {
+					//if both snakes are now inactive
+					if ((!arraySnakeMonsterCountId[0][MONSTER_IS_ACTIVE]) && (!arraySnakeMonsterCountId[1][MONSTER_IS_ACTIVE])) {
+
+						pearlImageTile.style.visibility="visible";
+						
+						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
+							verifyHeroCollideWithPearl(pearlImageTile);
+						}
+						
+						iPearlInvincibileCount++;
+					}
 				}
 
 				for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
@@ -3845,7 +3930,76 @@ alert("iInputY: "+iInputY);
 			case 41:			
 				doorImageTop.style.visibility="visible";
 				doorImageRight.style.visibility="visible";
+				
+				if (!hasInitMapLocation) {
+					//pearlImageTile.style.visibility="hidden";
+					
+					iPearlInvincibileCount=0;
+					
+					//at BOTTOM-RIGHT
+					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;					
+					
+					pearlImageTile.style.top=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
+									
+					for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
+						arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						arrayGrassMonsterCountId[iCount][MONSTER_STEPX]=0;
+						arrayGrassMonsterCountId[iCount][MONSTER_STEPY]=0;
+					}
+			
+					//BOTTOM					
+					arrayGrassMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;
+					arrayGrassMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
 
+					//RIGHT
+					arrayGrassMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*1;
+					arrayGrassMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
+					
+					//LEFT
+					arrayGrassMonsterCountId[2][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*3;
+					arrayGrassMonsterCountId[2][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
+
+					//TOP					
+					arrayGrassMonsterCountId[3][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;
+					arrayGrassMonsterCountId[3][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*5-iImageFrameHeightDefault/2;				
+					
+					//alert("DITO");
+
+					hasInitMapLocation=true;
+				}
+				
+				//at center of field of grass
+				//if has not yet obtained pearl item in this room
+				if (!bHasObtainedPearlAtRoom41) {
+					if (!arrayGrassMonsterCountId[3][MONSTER_IS_ACTIVE]) {
+
+						pearlImageTile.style.visibility="visible";
+						
+						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
+							verifyHeroCollideWithPearl(pearlImageTile);
+						}
+						
+						iPearlInvincibileCount++;
+					}
+				}
+
+				for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
+					if (arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						//alert(iCount);
+
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.top = 0+arrayGrassMonsterCountId[iCount][MONSTER_POSY]+"px"; //iInnerVerticalOffset
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.left = 0+arrayGrassMonsterCountId[iCount][MONSTER_POSX]+"px"; //iInnerHorizontalOffset
+				
+						executeGrassMonsterAnimation(arrayGrassMonsterCountId[iCount]);					
+						verifyHeroCollideWithGrassMonsters(arrayGrassMonsterCountId[iCount]);
+					}
+				}
+
+				
 				//square rooms; hence, iStageMaxHeight				
 				//top wall with door at center
 				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {					
@@ -4539,6 +4693,7 @@ alert(Date.now()-iMouseClickStartTime);
 		}		
 	}
 	else {	
+/*	
 		if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, parseInt(mainImageTileHeroBody.style.left),parseInt(mainImageTileHeroBody.style.top))) {
 			//alert("HIT!");
 			//no change
@@ -4549,7 +4704,7 @@ alert(Date.now()-iMouseClickStartTime);
 				}
 			//}	
 		}	
-	
+*/	
 		//added by Mike, 20241104
 		if (isPointsOfRectIntersectingPointsOfRect(iXPos,iYPos, iPrevMouseXPos,iPrevMouseYPos)) {
 			//TODO: -add: hit wall animation;
@@ -4777,10 +4932,17 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			mainImageTileHeroBody.style.top = mainImageTile.style.top;
 
 			//start from the beginning;
+			//reset
 			iCurrMapLocation=53;		
 			iStartTimeInMilliseconds=Date.now();	
 			//TODO: -update: this
 			bHasObtainedPearlAtRoom42=false;
+			bHasObtainedPearlAtRoom41=false;
+			bHasObtainedPearlAtRoom33=false;
+			bHasObtainedPearlAtRoom43=false;			
+			iInputDelayAtGameOverCount=0;
+			bHasFired=false;
+			bIsHeroAttacked=false;
 		}
 	}
 
@@ -4924,6 +5086,12 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			if (iInputDelayCount<iInputDelayCountMax) {
 				iInputDelayCount++;
 				return;
+			}
+			
+			if (bIsGameOver) {
+				if (iInputDelayAtGameOverCount<iInputDelayAtGameOverCountMax) {
+					return;
+				}
 			}
 
 			//reference: https://developer.mozilla.org/en-US/docs/Web/API/PointerEvent/pointerType;
