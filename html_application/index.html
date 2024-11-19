@@ -954,6 +954,7 @@ var iCurrHeroLifeMax=10;
 var iCurrHeroLife=iCurrHeroLifeMax;
 
 var iHeroDeathCount=0;
+var iCurrPearlCount=0;
 
 const sAudioEffectActionCannonFire ="assets/audio/usbongGameOff2023AudioEffectsCannon.mp3";
 const sAudioBGM="assets/audio/usbongGameOff2023BGM.mp3";
@@ -986,7 +987,7 @@ var iMiniMapAnimationDelayCountMax=5;
 var iExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iExplosionEffectAnimationCountMax=5;
 var iExplosionEffectAnimationDelayCount=0;
-var iExplosionEffectAnimationDelayCountMax=4;//1;
+var iExplosionEffectAnimationDelayCountMax=2;//4;//1;
 
 var iGrassCutEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iGrassCutEffectAnimationCountMax=5;
@@ -1003,6 +1004,11 @@ var bHasObtainedPearlAtRoom42=false;
 var bHasObtainedPearlAtRoom41=false;
 var bHasObtainedPearlAtRoom33=false;
 var bHasObtainedPearlAtRoom43=false;
+
+var iPearlStatusAnimationCount=-1; //0; //due to immediately +1 in execution;
+var iPearlStatusAnimationCountMax=5;
+var iPearlStatusAnimationDelayCount=0;
+var iPearlStatusAnimationDelayCountMax=2;
 
 //added by Mike, 20231127
 var iMonsterExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
@@ -1427,7 +1433,57 @@ var bIsHeroFacingLeft=false;
 		}		
 	}
 	
-	function drawHeroLifeBar(myCanvasContext, iXPos, iYPos) {
+	function drawHeroLifeBar(myCanvasContext, iXPos, iYPos) {	
+		var textLifeBarDiv = document.getElementById("textLifeBarDivId");
+		
+		textLifeBarDiv.style.visibility="visible";
+		textLifeBarDiv.style.left=0+iXPos+"px"; //+iImageFrameWidthDefault
+		textLifeBarDiv.style.top=0+iYPos+"px"; //+iImageFrameHeightDefault*0.9
+				
+		textLifeBarDiv.innerHTML = "LIFE";
+		
+		var iHeroLifeBarWidth=4;
+		var iHeroLifeBarHeight=4;		
+		var iHeroLifeBarSpacing=0;//1;
+			
+		//var iCurrHeroLife=10;
+
+		//myCanvasContext.fillStyle = "#00c7ff"; //00d9ff; //"#ff0000";
+
+		if (iCurrHeroLife>=5) {
+			myCanvasContext.fillStyle = "#00c7ff";		
+		}
+		else if (iCurrHeroLife>=2) {
+			myCanvasContext.fillStyle = "#ff6b00"; //orange
+		}
+		else {
+			myCanvasContext.fillStyle = "#ff0000"; //red
+		}
+		
+		//myCanvasContext.fillRect(0+iXPos, 0+iYPos, iHeroLifeBarWidth*iCurrHeroLife, iHeroLifeBarHeight);
+		
+		//textLifeBarDiv.clientWidth
+		
+		myCanvasContext.fillRect(0+iXPos+textLifeBarDiv.innerHTML.length*6, 0+iYPos, iHeroLifeBarWidth*iCurrHeroLife, iHeroLifeBarHeight);
+	}	
+
+	function drawPearlStatus(myCanvasContext, iXPos, iYPos) {	
+		var pearlStatusImageTile = document.getElementById("pearlStatusImageTileId");
+		var textPearlStatusDiv = document.getElementById("textPearlStatusDivId");
+				
+		pearlStatusImageTile.style.visibility="visible";				
+		pearlStatusImageTile.style.left=0+iXPos+"px";
+		pearlStatusImageTile.style.top=0+iYPos+iImageFrameHeightDefault*1+"px";
+		
+		textPearlStatusDiv.style.visibility="visible";
+		textPearlStatusDiv.style.left=0+iXPos+iImageFrameWidthDefault+"px";
+		//note: pearl position centered within image file vertically
+		textPearlStatusDiv.style.top=0+iYPos+iImageFrameHeightDefault*0.9+"px";
+				
+		textPearlStatusDiv.innerHTML = "x"+iCurrPearlCount;
+		
+		
+/*	
 		var iHeroLifeBarWidth=4;
 		var iHeroLifeBarHeight=4;		
 		var iHeroLifeBarSpacing=0;//1;
@@ -1447,6 +1503,7 @@ var bIsHeroFacingLeft=false;
 		}
 		
 		myCanvasContext.fillRect(0+iXPos, 0+iYPos, iHeroLifeBarWidth*iCurrHeroLife, iHeroLifeBarHeight);
+*/		
 	}	
 
 	function initTest() {
@@ -1572,9 +1629,12 @@ var bIsHeroFacingLeft=false;
 		
 		var grassCutEffectImage = document.getElementById("grassCutEffectImageId");
 		var pearlImageTile = document.getElementById("pearlImageTileId");
+		var pearlStatusImageTile = document.getElementById("pearlStatusImageTileId");
 
 		var myFavicon = document.getElementById("faviconImageId");
 		var textTimeDiv = document.getElementById("textTimeDivId");
+		var textPearlStatusDiv = document.getElementById("textPearlStatusDivId");
+		var textLifeBarDiv = document.getElementById("textLifeBarDivId");
 
 		var titleImage = document.getElementById("titleImageId");
 		var textEnterDiv = document.getElementById("textEnterDivId");
@@ -1610,9 +1670,13 @@ var bIsHeroFacingLeft=false;
 		explosionEffectImage.style.visibility="hidden";
 		grassCutEffectImage.style.visibility="hidden";
 		pearlImageTile.style.visibility="hidden";
+
+		pearlStatusImageTile.style.visibility="hidden";
 		
 		myFavicon.style.visibility="hidden";
 		textTimeDiv.style.visibility="hidden";
+		textPearlStatusDiv.style.visibility="hidden";
+		textLifeBarDiv.style.visibility="hidden";
 
 		titleImage.style.visibility="hidden";
 		textEnterDiv.style.visibility="visible";
@@ -1637,6 +1701,8 @@ var bIsHeroFacingLeft=false;
 		mainImageTileHeroBody.style.top = mainImageTile.style.top;
 		
 		textTimeDiv.innerHTML = "00:00:00";
+		textPearlStatusDiv.innerHTML = "x0";
+		//textLifeBarDiv.innerHTML = "LIFE";
 		
 		textNewGameDiv.innerHTML = "NEW GAME";
 		textNewGameDiv.style.left = iHorizontalOffset+iStageMaxWidth/2-textNewGameDiv.clientWidth/2+"px";
@@ -1728,7 +1794,7 @@ var bIsHeroFacingLeft=false;
 		
 		textTimeDiv.style.left = iHorizontalOffset+iStageMaxWidth-iTextTimeDivWidth*0.60+"px";
 		textTimeDiv.style.top= (0)+"px";
-	
+			
 		iStartTimeInMilliseconds=Date.now();
 	
 		if (bIsHeroInTank) {
@@ -1806,6 +1872,9 @@ var bIsHeroFacingLeft=false;
 		bHasReachedDestinationX=false;		
 		
 		iCurrHeroLife=iCurrHeroLifeMax;
+		
+		iHeroDeathCount=0;
+		iCurrPearlCount=0;
 				
 		//resetProjectile()				
 	}
@@ -2336,6 +2405,30 @@ alert("iInputY: "+iInputY);
 		}
 */		
 	}	
+	
+	function executePearlStatusAnimation() {
+		var pearlStatusImageTile = document.getElementById("pearlStatusImageTileId");
+
+		if (pearlStatusImageTile.style.visibility=="hidden") {
+			return;
+		}
+
+		//alert("DITO");
+
+		var iFrameY=0;
+		//var iFrameY=iImageFrameHeight*2;		
+		
+		if (iPearlStatusAnimationDelayCount>=iPearlStatusAnimationDelayCountMax) {			
+			iPearlStatusAnimationCount=(iPearlStatusAnimationCount+1)%3;
+
+			iPearlStatusAnimationDelayCount=0;
+		}
+		else {
+			iPearlStatusAnimationDelayCount++;
+		}
+		
+		pearlStatusImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*iPearlStatusAnimationCount + "px -" + iFrameY + "px";
+	}		
 
 
   function executeExplosionEffectToMonsterBoss() {
@@ -2592,7 +2685,12 @@ alert("iInputY: "+iInputY);
 	}
 	
 	function monsterHitByHero(mainImageTilePosX, mainImageTilePosY, iMonsterImageTilePosX, iMonsterImageTilePosY) {	
-
+		
+		//+iImageFrameWidthDefault/2
+		//iImageFrameHeightDefault/2
+		
+		setHeroAttackEffectPosition(iMonsterImageTilePosX,iMonsterImageTilePosY); 
+		
 		resetProjectile();
 	}
 	
@@ -2766,7 +2864,9 @@ alert("iInputY: "+iInputY);
 			if (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTilePosX,mainImageTilePosY, parseInt(pearlImageTileWithId.style.left), parseInt(pearlImageTileWithId.style.top), iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {		
 
 				pearlImageTileWithId.style.visibility="hidden";
-				//set is_active to false
+				//TODO: -set is_active to false
+				
+				iCurrPearlCount++;
 				
 				switch(iCurrMapLocation) {
 					case 42:
@@ -2868,6 +2968,7 @@ alert("iInputY: "+iInputY);
 */
 
 	var textTimeDiv = document.getElementById("textTimeDivId");
+	var textPearlStatusDiv = document.getElementById("textPearlStatusDivId");
 
     //added by Mike, 20230313
     //reference: https://www.w3schools.com/tags/canvas_fillrect.asp;
@@ -3026,6 +3127,9 @@ alert("iInputY: "+iInputY);
 				else {
 					mainImageTileHeroBody.style.visibility = "visible";
 				}			
+				
+				//pearlStatusImageTile.style.visibility="visible";
+				
 				//----------------------------------
 			}
 
@@ -3162,6 +3266,8 @@ alert("iInputY: "+iInputY);
 
 		executePearlAnimation();
 
+		executePearlStatusAnimation();
+
 	//executeExplosionEffectToMonsterBoss();
 
 	executeDustEffect();
@@ -3203,7 +3309,10 @@ alert("iInputY: "+iInputY);
 	}
 
 	drawMiniMap(myCanvasTwoContext,iStageMaxHeight-iInnerHorizontalOffset*0.75, 0+iStageMaxHeight/10);
+	
 	drawHeroLifeBar(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60); 
+	
+	drawPearlStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60); 
 	
 	//alert(iHorizontalOffset);
 
@@ -3261,8 +3370,10 @@ alert("iInputY: "+iInputY);
 
 		var pearlImageTile = document.getElementById("pearlImageTileId");
 		pearlImageTile.style.visibility="hidden";
-		
-		
+/*
+		var pearlStatusImageTile = document.getElementById("pearlStatusImageTileId");
+		pearlStatusImageTile.style.visibility="hidden";
+*/
 		//grassBgImage.style.visibility="hidden";
 		
 /*		
@@ -4932,7 +5043,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			mainImageTileHeroBody.style.top = mainImageTile.style.top;
 
 			//start from the beginning;
-			//reset
+			//reset; new game
 			iCurrMapLocation=53;		
 			iStartTimeInMilliseconds=Date.now();	
 			//TODO: -update: this
@@ -4942,7 +5053,9 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			bHasObtainedPearlAtRoom43=false;			
 			iInputDelayAtGameOverCount=0;
 			bHasFired=false;
-			bIsHeroAttacked=false;
+			bIsHeroAttacked=false;			
+			iHeroDeathCount=0;
+			iCurrPearlCount=0;
 		}
 	}
 
@@ -5495,6 +5608,8 @@ opting to put assets folder in "html_application" folder instead
 
 	<img id="pearlImageTileId" class="ImagePearlSmall" src="assets/images/bgTile.png">
 
+	<img id="pearlStatusImageTileId" class="ImagePearlSmall" src="assets/images/bgTile.png">
+
 	<img id="grassCutEffectImageId" class="ImageGrassCutEffectSmall" src="assets/images/bgTile.png">
 
 	<img id="explosionEffectImageId" class="ImageExplosionEffectResizedToSmall" src="assets/images/effectsSmall.png">
@@ -5530,7 +5645,7 @@ opting to put assets folder in "html_application" folder instead
 	
 	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">
 
-	<img id="bossBattleBgImageId" class="ImageBossBattleBg" src="assets/images/bgImageCave.png?lastmod=20241104">
+	<img id="bossBattleBgImageId" class="ImageBossBattleBg" src="assets/images/bgImageCave.png?lastmod=20241119">
 	
 	<img id="bossBattleBgImagePart2Id" class="ImageBossBattleBgPart2" src="assets/images/bossBattleBgPart2.png">	
 	
@@ -5549,7 +5664,8 @@ opting to put assets folder in "html_application" folder instead
 	<div id="textScoreDivId" class="DivTextScore">0</div>
 
 	<div id="textTimeDivId" class="DivTextTime">0</div>
-
+	<div id="textPearlStatusDivId" class="DivTextTime">0</div>
+	<div id="textLifeBarDivId" class="DivTextTime">LIFE</div>
 
 <!--
 	<div id="stepCountStatusDivId" class="DivStepCountStatus">0</div>
