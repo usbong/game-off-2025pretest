@@ -472,6 +472,24 @@
 
 			z-index: 2; /*3;*/
 		}
+		
+		.Image64x64Tile {
+			position: absolute;
+/*
+			width: 512px;
+			height: 512px;
+
+			object-fit: contain;
+*/
+			clip: rect(0px,64px,64px,0px);
+
+			visibility: hidden;
+
+			margin: 0px; /*1px;*/
+			padding: 0px;
+
+			z-index: 2; /*3;*/
+		}
 
 
     		/* noted by Mike, 20221105 */
@@ -3534,7 +3552,8 @@ alert("iInputY: "+iInputY);
 		doorImageRight.style.top = 0+(iStageMaxHeight/2-iImageFrameHeightDefault)+"px";
 		doorImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidthDefault) +"px";
 		doorImageRight.style.visibility="hidden";		
-		
+		doorImageRight.style.objectPosition = "-" + iImageFrameWidthLarge*3 + "px -" + 0 + "px";		
+				
 		var iDoorImageRightPosStartY=0+iStageMaxHeight/2-iImageFrameHeightDefault*1;
 		var iDoorImageRightPosEndY=0+iStageMaxHeight/2+iImageFrameHeightDefault*1+iImageFrameHeightDefault/2; //+iImageFrameHeightDefault/2 is for feet
 		var iDoorImageRightPosStartX=0+(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight;		
@@ -3545,6 +3564,7 @@ alert("iInputY: "+iInputY);
 		doorImageLeft.style.top = 0+(iStageMaxHeight/2-iImageFrameHeightDefault)+"px";
 		doorImageLeft.style.left = 0+(iInnerHorizontalOffset-iImageFrameWidthDefault) +"px";
 		doorImageLeft.style.visibility="hidden";
+		doorImageLeft.style.objectPosition = "-" + iImageFrameWidthLarge*2 + "px -" + 0 + "px";		
 
 		var iDoorImageLeftPosStartY=iDoorImageRightPosStartY;
 		var iDoorImageLeftPosEndY=iDoorImageRightPosEndY; 
@@ -3556,8 +3576,9 @@ alert("iInputY: "+iInputY);
 		//doorImageTop.style.top = 0+iInnerVerticalOffset-iImageFrameHeightDefault+"px";
 		doorImageTop.style.top = 0+iInnerVerticalOffset+iImageFrameHeightDefault/4+"px";		
 		doorImageTop.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault) +"px";
-		doorImageTop.style.visibility="hidden";		
-
+		doorImageTop.style.visibility="hidden";				
+		doorImageTop.style.objectPosition = "-" + iImageFrameWidthLarge*0 + "px -" + 0 + "px";
+		
 		var iDoorImageTopPosStartX=0+iStageMaxWidth/2-iImageFrameWidthDefault*1;
 		var iDoorImageTopPosEndX=0+iStageMaxWidth/2+iImageFrameWidthDefault*1;
 		var iDoorImageTopPosStartY=0+iInnerVerticalOffset+iImageFrameHeightDefault;//+iImageFrameHeightDefault/2;
@@ -3568,7 +3589,8 @@ alert("iInputY: "+iInputY);
 		doorImageBottom.style.top = 0+iStageMaxHeight-iImageFrameHeightDefault+"px";
 		doorImageBottom.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault) +"px";
 		doorImageBottom.style.visibility="hidden";
-
+		doorImageBottom.style.objectPosition = "-" + iImageFrameWidthLarge*1 + "px -" + 0 + "px";
+		
 		var iDoorImageBottomPosStartX=iDoorImageTopPosStartX;
 		var iDoorImageBottomPosEndX=iDoorImageTopPosEndX;
 		var iDoorImageBottomPosStartY=0+iStageMaxHeight-iInnerVerticalOffset*2-iImageFrameHeightDefault;
@@ -6061,10 +6083,10 @@ opting to put assets folder in "html_application" folder instead
 
 	<img id="faviconImageId" class="ImageTileFrame1" src="assets/images/favicon.png">
 
-	<img id="doorImageRightId" class="Image32x32Tile" src="assets/images/tile.png">
-	<img id="doorImageLeftId" class="Image32x32Tile" src="assets/images/tile.png">
-	<img id="doorImageTopId" class="Image32x32Tile" src="assets/images/tile.png">
-	<img id="doorImageBottomId" class="Image32x32Tile" src="assets/images/tile.png">
+	<img id="doorImageRightId" class="Image64x64Tile" src="assets/images/tile.png">
+	<img id="doorImageLeftId" class="Image64x64Tile" src="assets/images/tile.png">
+	<img id="doorImageTopId" class="Image64x64Tile" src="assets/images/tile.png?lastmod=20241120T2053">
+	<img id="doorImageBottomId" class="Image64x64Tile" src="assets/images/tile.png">
 	
 	
 		<img id="mainImageTileImageTankBodyId" class="ImageTankFrame1" src="assets/images/inputImageLarge.png?lastmod=20241110">
