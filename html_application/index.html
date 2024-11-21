@@ -4372,6 +4372,8 @@ alert("iInputY: "+iInputY);
 					
 					for (iCount=0; iCount<iSlimeMonsterCountMax; iCount++) {
 						//arraySlimeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
+						arraySlimeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=false;
+						arraySlimeMonsterCountId[0][MONSTER_OBJECT].style.visibility="hidden";
 						
 						arraySlimeMonsterCountId[iCount][MONSTER_STEPX]=1;
 						arraySlimeMonsterCountId[iCount][MONSTER_STEPY]=1;
