@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241121; from 20241120
+' @date updated: 20241122; from 20241121
 ' @website: www.usbong.ph
 '
 '
@@ -1063,7 +1063,9 @@ var bHasObtainedPearlAtRoom41=false;
 var bHasObtainedPearlAtRoom33=false;
 var bHasObtainedPearlAtRoom43=false;
 var bHasObtainedPearlAtRoom22=false;
-var bHasObtainedPearlAtRoom11=false;
+//var bHasObtainedPearlAtRoom11=false;
+var bHasObtainedKeyAtRoom11=false;
+var bHasUsedKeyAtRoom11=false;
 
 var iPearlStatusAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iPearlStatusAnimationCountMax=5;
@@ -1593,6 +1595,24 @@ var bIsHeroFacingLeft=false;
 */		
 	}	
 
+	function drawKeyStatus(myCanvasContext, iXPos, iYPos) {	
+		var keyStatusImageTile = document.getElementById("keyStatusImageTileId");
+		//var textPearlStatusDiv = document.getElementById("textPearlStatusDivId");
+				
+		keyStatusImageTile.style.visibility="visible";				
+		keyStatusImageTile.style.left=0+iXPos+"px";
+		keyStatusImageTile.style.top=0+iYPos+iImageFrameHeightDefault*1+"px";
+
+/*		
+		textPearlStatusDiv.style.visibility="visible";
+		textPearlStatusDiv.style.left=0+iXPos+iImageFrameWidthDefault+"px";
+		//note: pearl position centered within image file vertically
+		textPearlStatusDiv.style.top=0+iYPos+iImageFrameHeightDefault*0.9+"px";
+				
+		textPearlStatusDiv.innerHTML = "x"+iCurrPearlCount;
+*/		
+	}		
+
 	function initTest() {
 		iCurrHeroLife=iCurrHeroLifeMax;
 		
@@ -1653,7 +1673,9 @@ var bIsHeroFacingLeft=false;
 		bHasObtainedPearlAtRoom33=false;
 		bHasObtainedPearlAtRoom43=false;
 		bHasObtainedPearlAtRoom22=false;
-		bHasObtainedPearlAtRoom11=false;
+		//bHasObtainedPearlAtRoom11=false;
+		bHasObtainedKeyAtRoom11=false;
+		bHasUsedKeyAtRoom11=false;
 
 		iBossMonsterAnimationCount=-1;//0; start at -1
 		iBossMonsterAnimationCountMax=5;
@@ -1839,6 +1861,12 @@ var bIsHeroFacingLeft=false;
 
 		//alert("DITO");	
 		//-----------			
+		
+		//note: set this here;
+		keyImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*0 + "px -" + iImageFrameHeight*3 + "px";
+
+		keyStatusImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*0 + "px -" + iImageFrameHeight*3 + "px";
+		
 /*
 		var snakeMonsterImageTile = document.getElementById("snakeMonsterImageId");		
 		snakeMonsterImageTile.style.visibility="hidden";
@@ -2661,9 +2689,10 @@ alert("iInputY: "+iInputY);
 
 		//alert("DITO");
 
-		var iFrameY=0;
-		//var iFrameY=iImageFrameHeight*2;		
-		
+		//var iFrameY=0;
+		var iFrameY=iImageFrameHeight*3;		
+
+/*		
 		if (iKeyAnimationDelayCount>=iKeyAnimationDelayCountMax) {			
 			iKeyAnimationCount=(iKeyAnimationCount+1)%3;
 
@@ -2672,10 +2701,14 @@ alert("iInputY: "+iInputY);
 		else {
 			iKeyAnimationDelayCount++;
 		}
+*/
+		iKeyAnimationDelayCount=0;
 
 		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
-		
-		keyImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*iKeyAnimationCount + "px -" + iFrameY + "px";
+				
+		//keyImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*iKeyAnimationCount + "px -" + iFrameY + "px";
+
+		keyImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*0 + "px -" + iFrameY + "px";
 
 /*		
 		if (iPearlAnimationCount==0) { //%2		
@@ -3297,7 +3330,7 @@ alert("iInputY: "+iInputY);
 						bHasObtainedPearlAtRoom22=true;
 						break;						
 					case 11: //KEY
-						bHasObtainedPearlAtRoom11=true;
+						//bHasObtainedPearlAtRoom11=true;
 						break;												
 				}
 			}
@@ -3305,6 +3338,25 @@ alert("iInputY: "+iInputY);
 		}
 */		
 	}		
+	
+function verifyHeroCollideWithKey(keyImageTileWithId) {
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
+
+		if (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTilePosX,mainImageTilePosY, parseInt(keyImageTileWithId.style.left), parseInt(keyImageTileWithId.style.top), iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {		
+
+			keyImageTileWithId.style.visibility="hidden";
+			//TODO: -set is_active to false
+			
+			//iCurrKeyCount++;
+			
+			switch(iCurrMapLocation) {
+				case 11: //KEY
+					bHasObtainedKeyAtRoom11=true;
+					break;												
+			}
+		}
+	}			
 	
 	function myUpdateFunction() {
 		//using square for main dungeon
@@ -3686,6 +3738,10 @@ alert("iInputY: "+iInputY);
 
 		executePearlStatusAnimation();
 
+		executeKeyAnimation();
+		//executeKeyStatusAnimation();
+
+
 	//executeExplosionEffectToMonsterBoss();
 
 	executeDustEffect();
@@ -3759,7 +3815,11 @@ alert("iInputY: "+iInputY);
 	drawHeroLifeBar(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60); 
 	
 	drawPearlStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60); 
-	
+
+	if (bHasObtainedKeyAtRoom11) {
+		drawKeyStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60+iImageFrameHeightDefault); 
+	}
+		
 	//alert(iHorizontalOffset);
 
 	//buggy
@@ -3847,6 +3907,11 @@ alert("iInputY: "+iInputY);
 		var pearlStatusImageTile = document.getElementById("pearlStatusImageTileId");
 		pearlStatusImageTile.style.visibility="hidden";
 */
+
+		var keyImageTile = document.getElementById("keyImageTileId");
+		keyImageTile.style.visibility="hidden";
+
+
 		//grassBgImage.style.visibility="hidden";
 		
 /*		
@@ -4781,7 +4846,15 @@ alert("iInputY: "+iInputY);
 			case 31:
 				doorImageTop.style.visibility="visible";
 				doorImageBottom.style.visibility="visible";
-				//doorImageRight.style.visibility="visible";
+
+/*				//keep the key
+				if (bHasUsedKeyAtRoom11) {
+					doorImageRight.style.visibility="visible";
+				}
+				else {
+					doorLockedImageRight.style.visibility="visible";
+				}
+*/				
 				doorLockedImageRight.style.visibility="visible";
 				
 				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {					
@@ -4836,21 +4909,30 @@ alert("iInputY: "+iInputY);
 				}				
 				//square rooms; hence, iStageMaxHeight
 				//right wall with door at center
-				else if (mainImageTilePosX+iImageFrameWidthDefault>iDoorImageRightPosStartX) {					
-					
+				else if (mainImageTilePosX+iImageFrameWidthDefault>iDoorImageRightPosStartX) {										
 					if (((mainImageTilePosY>=iDoorImageRightPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageRightPosEndY)) ||	
 						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageRightPosStartX,iDoorImageRightPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
 						
-						//OK; wraps around
-						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
-						
-						mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
-						
-						resetProjectile();			
-						
-						//DOOR
-						iCurrMapLocation=32;
-						hasInitMapLocation=false;
+						if (bHasObtainedKeyAtRoom11) {						
+							//OK; wraps around
+							mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+							
+							mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
+							
+							resetProjectile();			
+							
+							//DOOR
+							iCurrMapLocation=32;
+							hasInitMapLocation=false;
+							
+							bHasUsedKeyAtRoom11=true;
+						}
+						//locked door becomes right wall
+						else {
+							//OK;
+							mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+							resetProjectile();		
+						}
 					}			
 					else {
 						//OK;
@@ -5147,14 +5229,14 @@ alert("iInputY: "+iInputY);
 				if (!hasInitMapLocation) {
 					//pearlImageTile.style.visibility="hidden";
 					
-					//TODO: -update: this to key
+					//alert("DITO");
 					
-					iPearlInvincibileCount=0;
+					iKeyInvincibileCount=0;
 					
 					//at center of field of grass
-					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*2;					
+					keyImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*2;					
 					
-					pearlImageTile.style.top=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
+					keyImageTile.style.top=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
 									
 					for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
 						arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
@@ -5201,17 +5283,17 @@ alert("iInputY: "+iInputY);
 				}
 			
 				//if has not yet obtained KEY item in this room
-				if (!bHasObtainedPearlAtRoom11) {
+				if (!bHasObtainedKeyAtRoom11) {
 					//if (!arrayGrassMonsterCountId[3][MONSTER_IS_ACTIVE]) {
 					//if both snakes are now inactive
 					if ((!arraySnakeMonsterCountId[0][MONSTER_IS_ACTIVE]) && (!arraySnakeMonsterCountId[1][MONSTER_IS_ACTIVE])) {
-						pearlImageTile.style.visibility="visible";
+						keyImageTile.style.visibility="visible";
 						
-						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
-							verifyHeroCollideWithPearl(pearlImageTile);
+						if (iKeyInvincibileCount>=iKeyInvincibileCountMax) {
+							verifyHeroCollideWithKey(keyImageTile);
 						}
 						
-						iPearlInvincibileCount++;
+						iKeyInvincibileCount++;
 					}
 				}
 
@@ -5444,7 +5526,7 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 			iImageFrameWidth=iImageFrameWidthDefault;
 		}
 
-//destination to the left of hero projectile
+		//destination to the left of hero projectile
 		//if (!bHasReachedDestinationX) {
 			if (newMainImageTileProjectilePosX<0) {
 				if (mainImageTileProjectilePosX+iImageFrameWidth/2<=mainImageTileProjectileStepDestinationX) {
@@ -5523,14 +5605,60 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 		}
 	}
 
-
-
   function processResultFromInput(iXPos, iYPos) {
-
       if (!bIsBossBattleDone) {
         processBossBattleResultFromInput(iXPos, iYPos);
       }
+  }
+  
+  function processResultFromInputRightMouseClick(iXPos, iYPos) {
+	var mainImageTile = document.getElementById("mainImageTileImageId");
+	var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+	var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
+	
+    if (!bHasFired) {
 
+		mainImageTileProjectileStepY=mainImageTileProjectileVelocityY;
+		mainImageTileProjectileStepX=mainImageTileProjectileVelocityX;
+
+		//reference: https://stackoverflow.com/questions/15994194/how-to-convert-x-y-coordinates-to-an-angle; last accessed: 20230428;
+		//--> answer by: Mohsen, 20130413T2357; from 20150322T2246;
+		//start position @center
+		//note: subtract margine offset
+		var iDeltaX=(iXPos-iHorizontalOffset)-(mainImageTilePosX+iImageFrameWidth/2);
+		var iDeltaY=(iYPos-iVerticalOffset)-(mainImageTilePosY+iImageFrameHeight/2);
+
+		iDeltaY*=-1;
+
+		var fMainImageTileStepAngleRad=Math.atan2(iDeltaX,iDeltaY);
+
+		iMainImageTileStepAngle=fMainImageTileStepAngleRad*(180/Math.PI);
+
+		//clockwise
+		iMainImageTileStepAngle=(iMainImageTileStepAngle)%360;
+
+		mainImageTile.style.transform = "rotate("+ (iMainImageTileStepAngle % 360) +"deg)";
+
+		newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
+
+    	newMainImageTileProjectilePosY*=-1;
+		newMainImageTileProjectilePosX=mainImageTileProjectileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
+
+		mainImageTileProjectilePosX = mainImageTile.style.left;
+		mainImageTileProjectilePosY = mainImageTile.style.top;
+
+		bHasFired=true;
+
+		var myAudioEffectCannonFire = document.getElementById("myAudioEffectCannonFireId");
+
+		myAudioEffectCannonFire.setAttribute("src", sAudioEffectActionCannonFire);
+
+		//fMyAudioEffectVolume=0.2;
+		fMyAudioEffectCannonFireVolume=1.0;
+		myAudioEffectCannonFire.volume=fMyAudioEffectCannonFireVolume;
+		myAudioEffectCannonFire.loop=false;
+		myAudioEffectCannonFire.play();
+    }
   }
 
 
@@ -5856,7 +5984,9 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			bHasObtainedPearlAtRoom33=false;
 			bHasObtainedPearlAtRoom43=false;			
 			bHasObtainedPearlAtRoom22=false;			
-			bHasObtainedPearlAtRoom11=false; //KEY
+			//bHasObtainedPearlAtRoom11=false; //KEY
+			bHasObtainedKeyAtRoom11=false;
+			
 			iInputDelayAtGameOverCount=0;
 			bHasFired=false;
 			bIsHeroAttacked=false;			
@@ -6005,6 +6135,35 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 
 	//added by Mike, 20230423
 	function initMouseInput() {
+
+/*		//TODO: -update: this		
+		//reference: https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_onmousedown_addeventlistener;
+		//last accessed: 20241122
+		document.body.addEventListener('mouseup', (event) => {		
+		  //alert("DITO!!!");
+		  
+			//reference Usbong SFZ
+			for (int i=0; i<MAX_PLASMA_COUNT; i++) {
+				if (!myPlasmaContainer[i].isActive()) {
+					if (iPlasmaCharge==iPlasmaChargeMax) {
+					  myPlasmaContainer[i].setChargedPlasma(true);
+					  bIsPlasmaChargeReleased=true;
+						  
+					  System.out.println("Plasma Charge Released!: "+iPlasmaCharge);  
+					}
+					  
+					myPlasmaContainer[i].processMouseInput(iMouseXPos, iMouseYPos, myRobotShip.getX(),myRobotShip.getY());
+						
+					bIsFiring=true;				    
+					break;
+				}
+			}		  	  
+				  
+		    iPlasmaCharge=0;	
+		    bHasPressedFiring=false;
+		});
+*/		
+	
 		//reference: https://stackoverflow.com/questions/70827887/detect-click-vs-touch-in-javascript;
 		//last accessed: 20221110
 		//answer by:  Jacob, 20220124T0110
@@ -6032,60 +6191,66 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 					//note: screenY includes BROWSER address bar, et cetera;
 					var iYPos = event.pageY; //screenY;
 
+					//alert(event.which);
+					
+					if (event.which===3) { //right-click
+						break;						
+					}
+					else { //if 1; left-click
 /*
         //edited by Mike, 20230423
         alert("iXPos: "+iXPos);
         alert("iYPos: "+iYPos);
 */
+						if (bIsGameOver) {
+							var textNewGameDiv = document.getElementById("textNewGameDivId");
+							var textContinueGameDiv = document.getElementById("textContinueGameDivId");
 
-					if (bIsGameOver) {
-						var textNewGameDiv = document.getElementById("textNewGameDivId");
-						var textContinueGameDiv = document.getElementById("textContinueGameDivId");
+							textNewGameDiv.style.visibility="visible";
+							textContinueGameDiv.style.visibility="visible";
+						
+							//init(); //note: error; iCurrMapLocation could not be set;
+							//restarts where hero died;						
+							//current working solution
+							//executeHeroContinue();
+							//return;
+							
+							//alert("iXPos"+iXPos);
+													
+							if (isPointsOfRectIntersectingPointsOfRectDoor(iXPos,iYPos, parseInt(textNewGameDiv.style.left),parseInt(textNewGameDiv.style.top),textNewGameDiv.clientWidth,textNewGameDiv.clientHeight)) {
+							
+								executeHeroContinue(false);
+							
+								return;
+							}
+							else if (isPointsOfRectIntersectingPointsOfRectDoor(iXPos,iYPos, parseInt(textContinueGameDiv.style.left),parseInt(textContinueGameDiv.style.top),textContinueGameDiv.clientWidth,textContinueGameDiv.clientHeight)) {
+							
+								executeHeroContinue(true);
+							
+								return;
+							}
 
-						textNewGameDiv.style.visibility="visible";
-						textContinueGameDiv.style.visibility="visible";
+							return;
+						}
+
+						//added by Mike, 20231122
+						if (bHasPressedStart) {
+						  //alert(">");
+						  if (!bHasViewedHowToPlayGuide) {
+							bHasViewedHowToPlayGuide=true;
+							return;
+						  }
+						}
+						else {
+						  bHasPressedStart=true;
+						  return;
+						}
+
+						//added by Mike, 20231107
+						processResultFromInput(iXPos, iYPos);
 					
-						//init(); //note: error; iCurrMapLocation could not be set;
-						//restarts where hero died;						
-						//current working solution
-						//executeHeroContinue();
-						//return;
-						
-						//alert("iXPos"+iXPos);
-												
-						if (isPointsOfRectIntersectingPointsOfRectDoor(iXPos,iYPos, parseInt(textNewGameDiv.style.left),parseInt(textNewGameDiv.style.top),textNewGameDiv.clientWidth,textNewGameDiv.clientHeight)) {
-						
-							executeHeroContinue(false);
-						
-							return;
-						}
-						else if (isPointsOfRectIntersectingPointsOfRectDoor(iXPos,iYPos, parseInt(textContinueGameDiv.style.left),parseInt(textContinueGameDiv.style.top),textContinueGameDiv.clientWidth,textContinueGameDiv.clientHeight)) {
-						
-							executeHeroContinue(true);
-						
-							return;
-						}
-
-						return;
+						//alert(">>>>>: "+iCurrMapLocation);
 					}
-
-				    //added by Mike, 20231122
-				    if (bHasPressedStart) {
-					  //alert(">");
-					  if (!bHasViewedHowToPlayGuide) {
-						bHasViewedHowToPlayGuide=true;
-						return;
-					  }
-				    }
-				    else {
-					  bHasPressedStart=true;
-					  return;
-				    }
-
-					//added by Mike, 20231107
-					processResultFromInput(iXPos, iYPos);
-				
-					//alert(">>>>>: "+iCurrMapLocation);
 					break;
 				case 'touch':
 /*
@@ -6430,11 +6595,11 @@ opting to put assets folder in "html_application" folder instead
 		<!-- added by Mike, 20231104;
 		  note: .html; not .php -->
 
-	<img id="pearlImageTileId" class="ImagePearlSmall" src="assets/images/bgTile.png">
-	<img id="pearlStatusImageTileId" class="ImagePearlSmall" src="assets/images/bgTile.png">
+	<img id="pearlImageTileId" class="ImagePearlSmall" src="assets/images/items.png">
+	<img id="pearlStatusImageTileId" class="ImagePearlSmall" src="assets/images/items.png">
 
-	<img id="keyImageTileId" class="ImageKeySmall" src="assets/images/bgTile.png">
-	<img id="keyStatusImageTileId" class="ImageKeySmall" src="assets/images/bgTile.png">
+	<img id="keyImageTileId" class="ImageKeySmall" src="assets/images/items.png">
+	<img id="keyStatusImageTileId" class="ImageKeySmall" src="assets/images/items.png">
 
 
 	<img id="grassCutEffectImageId" class="ImageGrassCutEffectSmall" src="assets/images/bgTile.png">
