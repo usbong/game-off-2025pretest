@@ -1125,6 +1125,7 @@ var iMouseAnimationDelayCountMax=2;//1;
 var iMouseClickStartTime=0;
 var iMouseClickMaxElapsedTime=250; //1/4 second
 var bIsHeroDash=false;
+var bHasHeroShotFireball=false;
 
 var iHeroAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iHeroAnimationCountMax=5;
@@ -1171,6 +1172,25 @@ var mainImageTileProjectileStepX=mainImageTileProjectileStepYMin;//20;
 
 var mainImageTileProjectileStepDestinationY=0;
 var mainImageTileProjectileStepDestinationX=0;
+
+//## --
+//note: acceleration
+//min 2; not 1
+var mainImageTileFireballProjectileStepYMax=10;//6;//4;//20;//20;
+var mainImageTileFireballProjectileStepXMax=10;//6;//4;//20;//20;
+
+var mainImageTileFireballProjectileVelocityY=mainImageTileFireballProjectileStepYMax;//2;//4;//20;//4;//1;
+var mainImageTileFireballProjectileVelocityX=mainImageTileFireballProjectileStepXMax;//2;//4;//20;//4;//1;
+
+var mainImageTileFireballProjectileStepYMin=2;//4;//12; //mainImageTileFireballProjectileVelocityY
+var mainImageTileFireballProjectileStepXMin=2;//4;//12; //mainImageTileFireballProjectileVelocityX
+
+var mainImageTileFireballProjectileStepY=mainImageTileFireballProjectileStepYMax;//Min;//20;
+var mainImageTileFireballProjectileStepX=mainImageTileFireballProjectileStepYMax;//Min; //20;
+
+var mainImageTileFireballProjectileStepDestinationY=0;
+var mainImageTileFireballProjectileStepDestinationX=0;
+
 
 var mainImageMonsterBossPosX=500;
 var mainImageMonsterBossPosY=10;
@@ -1260,9 +1280,15 @@ var mainImageTileStepY=2;//0; //2;
 
 var mainImageTileProjectilePosX=0;
 var mainImageTileProjectilePosY=0;
+
+var mainImageTileFireballProjectilePosX=0;
+var mainImageTileFireballProjectilePosY=0;
 	
 var bHasReachedDestinationY=false;
 var bHasReachedDestinationX=false;
+
+var bHasFireballReachedDestinationY=false;
+var bHasFireballReachedDestinationX=false;
 	
 var iPrevMouseXPos=-1;
 var iPrevMouseYPos=-1;
@@ -1352,6 +1378,7 @@ var bIsHeroFacingLeft=false;
 		mainImageTileProjectile.style.visibility="hidden";
 		bHasFired=false;		
 		bIsHeroDash=false;
+		//bHasHeroShotFireball=false;
 
 		iMainImageTileStepAngle=0;
 
@@ -1403,6 +1430,30 @@ var bIsHeroFacingLeft=false;
 			mainImageTileHeroBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
 		}
 	}
+	
+	function resetFireballProjectile() {
+		var mainImageTile = document.getElementById("mainImageTileImageId");
+		var mainImageTileFireballProjectile = document.getElementById("mainImageTileFireballProjectileImageId");
+
+		mainImageTileFireballProjectilePosX = mainImageTile.style.left;
+		mainImageTileFireballProjectilePosY = mainImageTile.style.top;
+
+		newMainImageTileFireballProjectilePosX=0; //mainImageTileProjectilePosX;
+		newMainImageTileFireballProjectilePosY=0; //mainImageTileProjectilePosY;
+
+		mainImageTileFireballProjectile.style.left = mainImageTileFireballProjectilePosX;
+		mainImageTileFireballProjectile.style.top = mainImageTileFireballProjectilePosY;
+
+		mainImageTileFireballProjectile.style.visibility="hidden";
+		bHasFired=false;
+		bIsActionKeyPressed=false;
+		bHasHeroShotFireball=false;
+
+		iMainImageTileStepAngle=0;
+
+		mainImageTileFireballProjectileStepY=mainImageTileFireballProjectileStepYMax; //Min;//20;
+		mainImageTileFireballProjectileStepX=mainImageTileFireballProjectileStepXMax; //Min;//20;
+	}	
 
 	function drawGridBuggy(myCanvasContext, iXPos, iYPos) {
 /*	
@@ -1651,6 +1702,7 @@ var bIsHeroFacingLeft=false;
 		bIsBossBattleDone=false;
 		bIsHeroInTank=false;
 		bIsHeroDash=false;
+		bHasHeroShotFireball=false;
 		
 		iBatMonsterAnimationCount=-1;//0; start at -1
 		iBatMonsterAnimationCountMax=5;
@@ -1728,6 +1780,7 @@ var bIsHeroFacingLeft=false;
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
+		var mainImageTileFireballProjectile = document.getElementById("mainImageTileFireballProjectileImageId");
 
 		var doorImageRight = document.getElementById("doorImageRightId");		
 		var doorImageLeft = document.getElementById("doorImageLeftId");
@@ -1777,6 +1830,7 @@ var bIsHeroFacingLeft=false;
 		mainImageTileTankBody.visibility="hidden";
 		mainImageTileHeroBody.visibility="hidden";
 		mainImageTileProjectile.visibility="hidden";		
+		mainImageTileFireballProjectile.visibility="hidden";		
 		
 		doorImageRight.style.visibility="hidden";
 		doorImageLeft.style.visibility="hidden";
@@ -2004,6 +2058,10 @@ var bIsHeroFacingLeft=false;
 		mainImageTileProjectilePosX = mainImageTile.style.left;
 		mainImageTileProjectilePosY = mainImageTile.style.top;
 
+		//mainImageTileFireballProjectile.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
+		mainImageTileFireballProjectile.style.objectPosition = "-" + 0 + "px -" + 32*2 + "px";
+		mainImageTileFireballProjectilePosX = mainImageTile.style.left;
+		mainImageTileFireballProjectilePosY = mainImageTile.style.top;
 
 		var iTextEnterDivWidth = (textEnterDiv.clientWidth);
 		var iTextEnterDivHeight = (textEnterDiv.clientHeight);
@@ -3375,6 +3433,8 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 
 		//added by Mike, 20230427
 		var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
+
+		var mainImageTileFireballProjectile = document.getElementById("mainImageTileFireballProjectileImageId");
 		
 		//added by Mike, 20231128
 		var bossBattleBgImage = document.getElementById("bossBattleBgImageId");
@@ -5461,12 +5521,56 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 
 //-----------------------
 
-			//added by Mike, 20230427
+		//added by Mike, 20230427			
+		if (bHasHeroShotFireball) {		
+			resetProjectile();
+		
+			mainImageTileFireballProjectile.style.visibility = "visible";
+			
+			mainImageTileFireballProjectilePosY=parseInt(mainImageTileFireballProjectilePosY)+newMainImageTileFireballProjectilePosY;
+			
+			mainImageTileFireballProjectilePosX=parseInt(mainImageTileFireballProjectilePosX)+newMainImageTileFireballProjectilePosX;
+
+			mainImageTileFireballProjectile.style.left = mainImageTileFireballProjectilePosX+"px";
+			mainImageTileFireballProjectile.style.top = mainImageTileFireballProjectilePosY+"px";
+		
+			//alert (mainImageTileFireballProjectilePosY);
+		
+			//return;
+		}
+		
+		if (mainImageTileFireballProjectilePosX+iImageFrameWidth>iStageMaxWidth-iInnerHorizontalOffset) {//iHorizontalOffset		
+			//alert("DITO");
+			resetFireballProjectile();
+		}
+		else if (mainImageTileFireballProjectilePosX<0+iInnerHorizontalOffset){ //iHorizontalOffset
+			resetFireballProjectile();
+		}
+
+		//iImageFrameHeight is offset
+		if (mainImageTileFireballProjectilePosY+iImageFrameHeight/2>iStageMaxHeight-iImageFrameHeight) {
+			resetFireballProjectile();
+		}
+		else if (mainImageTileFireballProjectilePosY<0+iImageFrameHeight) {
+			//alert ("DITO");
+			resetFireballProjectile();
+		}
+		
+		
 			//movement
 			if (bHasFired) {
-
-			  	//mainImageTileProjectile.style.visibility = "visible";
-			  	mainImageTileProjectile.style.visibility = "hidden";
+/*			
+				if (bIsActionKeyPressed) {
+					//alert("DITO");
+					
+					mainImageTileProjectile.style.visibility = "visible";					
+				}
+				else {
+					//mainImageTileProjectile.style.visibility = "visible";
+					mainImageTileProjectile.style.visibility = "hidden";
+				}
+*/				
+				mainImageTileProjectile.style.visibility = "hidden";
 
 
 mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTileProjectilePosY;
@@ -5477,21 +5581,37 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 		mainImageTileProjectile.style.left = mainImageTileProjectilePosX+"px";
 
 		mainImageTileProjectile.style.top = mainImageTileProjectilePosY+"px";
-
-		if ((mainImageTilePosX==mainImageTileProjectilePosX) && (mainImageTilePosY==mainImageTileProjectilePosY)) {
+		
+		if (bHasHeroShotFireball) {
+/*
 			resetProjectile();
-			return;
+		
+			mainImageTileFireballProjectile.style.visibility = "visible";
+			mainImageTileFireballProjectilePosY=parseInt(mainImageTileFireballProjectilePosY)+newMainImageTileFireballProjectilePosY;
+			mainImageTileFireballProjectilePosX=parseInt(mainImageTileFireballProjectilePosX)+newMainImageTileFireballProjectilePosX;
+
+			mainImageTileFireballProjectile.style.left = mainImageTileFireballProjectilePosX+"px";
+			mainImageTileFireballProjectile.style.top = mainImageTileFireballProjectilePosY+"px";
+		
+			//return;
+*/			
 		}
-		
-		mainImageTilePosX=mainImageTileProjectilePosX;		
-		mainImageTilePosY=mainImageTileProjectilePosY;
-		
-		
-		if (bIsHeroInTank) {
-			executeTankWalkingAnimation();
-		}
-		else {
-			executeHeroWalkingAnimation();
+		else {				
+			if ((mainImageTilePosX==mainImageTileProjectilePosX) && (mainImageTilePosY==mainImageTileProjectilePosY)) {
+				resetProjectile();
+				return;
+			}
+
+			mainImageTilePosX=mainImageTileProjectilePosX;		
+			mainImageTilePosY=mainImageTileProjectilePosY;
+			
+			
+			if (bIsHeroInTank) {
+				executeTankWalkingAnimation();
+			}
+			else {
+				executeHeroWalkingAnimation();
+			}
 		}
 
 //-----------------
@@ -5517,6 +5637,14 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 		}
 	}
 */
+
+/*
+		if ((bHasFireballReachedDestinationX) && (bHasFireballReachedDestinationY)) {
+				resetFireballProjectile();				
+		}				
+*/
+
+
 //-----------------
 
 		if (bIsHeroInTank) {
@@ -5611,7 +5739,7 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
       }
   }
   
-  function processResultFromInputRightMouseClick(iXPos, iYPos) {
+  function processResultFromInputRightMouseClickClick(iXPos, iYPos) {
 	var mainImageTile = document.getElementById("mainImageTileImageId");
 	var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 	var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
@@ -5713,8 +5841,9 @@ alert(Date.now()-iMouseClickStartTime);
 			//do this only if at the borders of the inner stage		
 			//INNER STAGE; MAX
 			//iHorizontalOffset=(640-iStageMaxHeight)/2;
-			var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
+			//var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
 			var iInnerVerticalOffset=iImageFrameHeightLarge/2;
+
 
 			//reminder: innerStageWidth uses iStageMaxHeight
 		
@@ -5755,7 +5884,7 @@ alert(Date.now()-iMouseClickStartTime);
 		
 			//INNER STAGE; MAX
 			//iHorizontalOffset=(640-iStageMaxHeight)/2;
-			var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
+			//var iInnerHorizontalOffset=(640-iStageMaxHeight)/2;
 			var iInnerVerticalOffset=iImageFrameHeight/2;
 
 			//reminder: innerStageWidth uses iStageMaxHeight
@@ -5775,33 +5904,66 @@ alert(Date.now()-iMouseClickStartTime);
 			}	
 		}
 	}	
-		
+
+/*		
 	iPrevMouseXPos=iXPos;
 	iPrevMouseYPos=iYPos;
-
+*/
 	//--------------------------------
 	bIsHeroDash=false;
+	//bHasHeroShotFireball=false;
 
 	if (!bIsHeroInRiver) {
+/*	
+		//TODO: -reverify: this
+		if (bHasFiredTemp) {
+			if ((Date.now()-iMouseClickStartTime)<=iMouseClickMaxElapsedTime) {
+				//alert(Date.now()-iMouseClickStartTime);
+				
+				//bIsHeroDash=true;
+
+				if ((iPrevMouseXPos==iXPos) && (iPrevMouseYPos=iYPos)) {
+					bIsHeroDash=true;
+				}
+				else {
+					bIsHeroDash=false;
+					mainImageTileProjectileStepY=mainImageTileProjectileStepYMin;
+					mainImageTileProjectileStepX=mainImageTileProjectileStepXMin;
+				}
+			}
+		}
+*/
 		if ((Date.now()-iMouseClickStartTime)<=iMouseClickMaxElapsedTime) {
 			//alert(Date.now()-iMouseClickStartTime);
 			bIsHeroDash=true;
-		}
+		}			
 	}
 	
 	iMouseClickStartTime=Date.now(); //in milliseconds
 	//--------------------------------
 
+	iPrevMouseXPos=iXPos;
+	iPrevMouseYPos=iYPos;
+	
 	//resetProjectile() sets bHasFired to false;
 	//if (!bHasFired) {
 	//becomes DASH attack;
-	//TODO: -add: elapsed time to be pressed rapidly to execute;
 	if (bHasFiredTemp) {
-		//quick double mouse click; within 1/4 second
-		if (bIsHeroDash) {
-			mainImageTileProjectileStepY=mainImageTileProjectileStepYMax;
-			mainImageTileProjectileStepX=mainImageTileProjectileStepXMax;
-		}
+			//quick double mouse click; within 1/4 second
+			if (bIsHeroDash) {
+				mainImageTileProjectileStepY=mainImageTileProjectileStepYMax;
+				mainImageTileProjectileStepX=mainImageTileProjectileStepXMax;
+
+	/*			//part of command to create fireball
+				mainImageTileProjectilePosY=mainImageTilePosY;
+				mainImageTileProjectilePosX=mainImageTilePosX;
+
+				resetProjectile();
+				
+				iMouseClickStartTime=iMouseClickMaxElapsedTime+1;
+				return;
+	*/			
+			}
 	}
 	else {
 
@@ -5812,6 +5974,23 @@ alert(Date.now()-iMouseClickStartTime);
 		mainImageTileProjectileStepY=mainImageTileProjectileVelocityY;
 		mainImageTileProjectileStepX=mainImageTileProjectileVelocityX;
 	}
+	
+/*	
+	if (bIsActionKeyPressed) {
+		if (!bHasHeroShotFireball) {
+			//part of command to create fireball
+			mainImageTileProjectilePosY=mainImageTilePosY;
+			mainImageTileProjectilePosX=mainImageTilePosX;
+
+			resetProjectile();
+			
+			iMouseClickStartTime=iMouseClickMaxElapsedTime+1;
+			
+			//bHasHeroShotFireball=true;
+			//return;
+		}
+	}
+*/	
 
     //reference: https://stackoverflow.com/questions/15994194/how-to-convert-x-y-coordinates-to-an-angle; last accessed: 20230428;
     //--> answer by: Mohsen, 20130413T2357; from 20150322T2246;
@@ -5857,29 +6036,49 @@ alert(Date.now()-iMouseClickStartTime);
     alert(iMainImageTileStepAngle);
     */
 
-    					mainImageTile.style.transform = "rotate("+ (iMainImageTileStepAngle % 360) +"deg)";
+    mainImageTile.style.transform = "rotate("+ (iMainImageTileStepAngle % 360) +"deg)";
 
 
+	
+		newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
 
-    newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
-
-    					newMainImageTileProjectilePosY*=-1;
-    					newMainImageTileProjectilePosX=mainImageTileProjectileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
+		newMainImageTileProjectilePosY*=-1;
+		newMainImageTileProjectilePosX=mainImageTileProjectileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
 
 		//added by Mike, 20231125
 		mainImageTileProjectilePosX = mainImageTile.style.left;
 		mainImageTileProjectilePosY = mainImageTile.style.top;
 
 
-	//added by Mike, 20241103
-	mainImageTileProjectileStepDestinationX=iXPos;//iDeltaX;//newMainImageTileProjectilePosX;//.iDeltaX;
-	mainImageTileProjectileStepDestinationY=iYPos;//iDeltaY;//newMainImageTileProjectilePosY;//iDeltaY;
+		//added by Mike, 20241103
+		mainImageTileProjectileStepDestinationX=iXPos;//iDeltaX;//newMainImageTileProjectilePosX;//.iDeltaX;
+		mainImageTileProjectileStepDestinationY=iYPos;//iDeltaY;//newMainImageTileProjectilePosY;//iDeltaY;
+
+
+	if (bIsActionKeyPressed) {
+		if (!bHasHeroShotFireball) {
+			//part of command to create fireball
+			//mainImageTileProjectilePosY=mainImageTilePosY;
+			//mainImageTileProjectilePosX=mainImageTilePosX;
+
+			resetProjectile();			
+			iMouseClickStartTime=iMouseClickMaxElapsedTime+1;	
+			bHasHeroShotFireball=true;		
+		
+			newMainImageTileFireballProjectilePosY=mainImageTileFireballProjectileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
+
+			newMainImageTileFireballProjectilePosY*=-1;
+			newMainImageTileFireballProjectilePosX=mainImageTileFireballProjectileStepX*Math.sin(fMainImageTileStepAngleRad).toFixed(3);
+
+			mainImageTileFireballProjectilePosX = mainImageTile.style.left;
+			mainImageTileFireballProjectilePosY = mainImageTile.style.top;
+
+			mainImageTileFireballProjectileStepDestinationX=iXPos;
+			mainImageTileFireballProjectileStepDestinationY=iYPos;
+		}
+	}
 	
-	//added by Mike, 20241113
-////heroAttackEffectImage.style.objectPosition = "-" + (512/2) + "px -" + (512/2) + "px";	
-//heroAttackEffectImage.style.transform = "rotate("+ (iMainImageTileStepAngle % 360) +"deg)";
-
-
+	
     					bHasFired=true;
 						
 						//added by Mike, 20241104
@@ -5986,6 +6185,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			bHasObtainedPearlAtRoom22=false;			
 			//bHasObtainedPearlAtRoom11=false; //KEY
 			bHasObtainedKeyAtRoom11=false;
+			bHasUsedKeyAtRoom11=false;
 			
 			iInputDelayAtGameOverCount=0;
 			bHasFired=false;
@@ -5994,6 +6194,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			iCurrPearlCount=0;
 			bIsHeroInRiver=false;
 			bHasHeroReachedBottomOfRoomRiver=false;
+			bIsActionKeyPressed=false;
 
 			for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {				
 				for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
@@ -6008,10 +6209,12 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 	function initKeyboardInput() {
 		document.body.onkeydown = function(e){
 			//alert("e.keyCode: "+e.keyCode);
-
+			
+			bIsActionKeyPressed=true;
+			
+/*
 				//added by Mike, 20221121
 				bIsActionKeyPressed=false;
-
 
 				//RIGHT ARROW; 39
 				//LEFT ARROW; 37
@@ -6037,7 +6240,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 				else if (e.keyCode==37) { //key LEFT
 					arrayKeyPressed[iKEY_A]=true;
 				}
-
+*/
 
 /*
 				if (e.keyCode==87) { //key w
@@ -6085,6 +6288,10 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			//added by Mike, 20220822
 			document.body.onkeyup = function(e){
 				//alert("KEYUP; e.keyCode: "+e.keyCode);
+				
+				bIsActionKeyPressed=false;
+				
+/*				
 				if (e.keyCode==68) { //key d
 					//edited by Mike, 20220823
 					//bKeyDownRight=false;
@@ -6101,6 +6308,8 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 				else if (e.keyCode==83) { //key s
 					arrayKeyPressed[iKEY_S]=false;
 				}
+*/				
+				
 /*
 				//added by Mike, 20221101
 				//RIGHT-SIDE BUTTONS
@@ -6564,6 +6773,9 @@ opting to put assets folder in "html_application" folder instead
 		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
 
 		<img id="mainImageTileProjectileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
+
+		<img id="mainImageTileFireballProjectileImageId" class="ImageTileFrame1" src="assets/images/fireballSmall.png?lastmod=20241122">
+
 
 		<img id="batMonsterImageId" class="ImageTileFrame1" src="assets/images/monsters.png?lastmod=20241120">
 
