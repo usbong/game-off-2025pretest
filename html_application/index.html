@@ -303,7 +303,7 @@
 			z-index: 10; /*4;*/
 		}
 		
-		.ImageGrassCutEffectSmall, .ImagePearlSmall {
+		.ImageGrassCutEffectSmall, .ImagePearlSmall, .ImageKeySmall {
 			position: absolute;
 
 			clip: rect(0px,32px,32px,0px);
@@ -1050,6 +1050,14 @@ var iPearlAnimationDelayCount=0;
 var iPearlAnimationDelayCountMax=2;
 var iPearlInvincibileCount=0;
 const iPearlInvincibileCountMax=10;
+
+var iKeyAnimationCount=-1; //0; //due to immediately +1 in execution;
+var iKeyAnimationCountMax=5;
+var iKeyAnimationDelayCount=0;
+var iKeyAnimationDelayCountMax=2;
+var iKeyInvincibileCount=0;
+const iKeyInvincibileCountMax=10;
+
 var bHasObtainedPearlAtRoom42=false;
 var bHasObtainedPearlAtRoom41=false;
 var bHasObtainedPearlAtRoom33=false;
@@ -1061,6 +1069,11 @@ var iPearlStatusAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iPearlStatusAnimationCountMax=5;
 var iPearlStatusAnimationDelayCount=0;
 var iPearlStatusAnimationDelayCountMax=2;
+
+var iKeyStatusAnimationCount=-1; //0; //due to immediately +1 in execution;
+var iKeyStatusAnimationCountMax=5;
+var iKeyStatusAnimationDelayCount=0;
+var iKeyStatusAnimationDelayCountMax=2;
 
 //added by Mike, 20231127
 var iMonsterExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
@@ -1698,7 +1711,8 @@ var bIsHeroFacingLeft=false;
 		var doorImageLeft = document.getElementById("doorImageLeftId");
 		var doorImageTop = document.getElementById("doorImageTopId");
 		var doorImageBottom = document.getElementById("doorImageBottomId");
-		
+
+		var doorLockedImageRight = document.getElementById("doorLockedImageRightId");				
 		var riverImageRight = document.getElementById("riverImageRightId");		
 
 
@@ -1709,6 +1723,9 @@ var bIsHeroFacingLeft=false;
 		var grassCutEffectImage = document.getElementById("grassCutEffectImageId");
 		var pearlImageTile = document.getElementById("pearlImageTileId");
 		var pearlStatusImageTile = document.getElementById("pearlStatusImageTileId");
+
+		var keyImageTile = document.getElementById("keyImageTileId");
+		var keyStatusImageTile = document.getElementById("keyStatusImageTileId"); //TODO: -add: this
 
 		var myFavicon = document.getElementById("faviconImageId");
 		var textTimeDiv = document.getElementById("textTimeDivId");
@@ -1744,13 +1761,18 @@ var bIsHeroFacingLeft=false;
 		doorImageTop.style.visibility="hidden";
 		doorImageBottom.style.visibility="hidden";
 
+		doorLockedImageRight.style.visibility="hidden";
+		riverImageRight.style.visibility="hidden";
+
 		batMonsterImageTile.style.visibility="hidden";
 		
 		explosionEffectImage.style.visibility="hidden";
 		grassCutEffectImage.style.visibility="hidden";
 		pearlImageTile.style.visibility="hidden";
-
 		pearlStatusImageTile.style.visibility="hidden";
+
+		keyImageTile.style.visibility="hidden";
+		keyStatusImageTile.style.visibility="hidden";
 		
 		myFavicon.style.visibility="hidden";
 		textTimeDiv.style.visibility="hidden";
@@ -2629,6 +2651,41 @@ alert("iInputY: "+iInputY);
 		}
 */		
 	}	
+
+	function executeKeyAnimation() {
+		var keyImageTile = document.getElementById("keyImageTileId");
+
+		if (keyImageTile.style.visibility=="hidden") {
+			return;
+		}
+
+		//alert("DITO");
+
+		var iFrameY=0;
+		//var iFrameY=iImageFrameHeight*2;		
+		
+		if (iKeyAnimationDelayCount>=iKeyAnimationDelayCountMax) {			
+			iKeyAnimationCount=(iKeyAnimationCount+1)%3;
+
+			iKeyAnimationDelayCount=0;
+		}
+		else {
+			iKeyAnimationDelayCount++;
+		}
+
+		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+		
+		keyImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*iKeyAnimationCount + "px -" + iFrameY + "px";
+
+/*		
+		if (iPearlAnimationCount==0) { //%2		
+			pearlImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*2 + "px -" + iFrameY + "px";
+		}
+		else {
+			pearlImageTile.style.visibility="hidden";
+		}
+*/		
+	}	
 	
 	function executePearlStatusAnimation() {
 		var pearlStatusImageTile = document.getElementById("pearlStatusImageTileId");
@@ -2652,8 +2709,31 @@ alert("iInputY: "+iInputY);
 		}
 		
 		pearlStatusImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*iPearlStatusAnimationCount + "px -" + iFrameY + "px";
-	}		
+	}	
 
+	function executeKeyStatusAnimation() {
+		var keyStatusImageTile = document.getElementById("keyStatusImageTileId");
+
+		if (keyStatusImageTile.style.visibility=="hidden") {
+			return;
+		}
+
+		//alert("DITO");
+
+		var iFrameY=0;
+		//var iFrameY=iImageFrameHeight*2;		
+		
+		if (iKeyStatusAnimationDelayCount>=iKeyStatusAnimationDelayCountMax) {			
+			iKeyStatusAnimationCount=(iKeyStatusAnimationCount+1)%3;
+
+			iKeyStatusAnimationDelayCount=0;
+		}
+		else {
+			iKeyStatusAnimationDelayCount++;
+		}
+		
+		keyStatusImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*iKeyStatusAnimationCount + "px -" + iFrameY + "px";
+	}		
 
   function executeExplosionEffectToMonsterBoss() {
 		var explosionEffectImage = document.getElementById("explosionEffectToMonsterImageId");
@@ -3700,6 +3780,17 @@ alert("iInputY: "+iInputY);
 
 		//## --
 
+		var doorLockedImageRight = document.getElementById("doorLockedImageRightId");
+		doorLockedImageRight.style.top = 0+(iStageMaxHeight/2-iImageFrameHeightDefault)+"px";
+		doorLockedImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-iImageFrameWidthDefault) +"px";
+		doorLockedImageRight.style.visibility="hidden";		
+		doorLockedImageRight.style.objectPosition = "-" + iImageFrameWidthLarge*3 + "px -" + iImageFrameHeightLarge*1 + "px";						
+		var iDoorLockedImageRightPosStartY=iDoorImageRightPosStartY;
+		var iDoorLockdImageRightPosEndY=iDoorImageRightPosEndY;
+		var iDoorLockedImageRightPosStartX=iDoorImageRightPosStartX;		
+
+		//## --
+		
 		var riverImageRight = document.getElementById("riverImageRightId");
 		riverImageRight.style.top = 0+iImageFrameHeightDefault+"px";
 		riverImageRight.style.left = 0+(iInnerHorizontalOffset+iStageMaxHeight-riverImageRight.clientWidth/2) +"px"; //divide by 2 due to includes clipped portion
@@ -4690,7 +4781,8 @@ alert("iInputY: "+iInputY);
 			case 31:
 				doorImageTop.style.visibility="visible";
 				doorImageBottom.style.visibility="visible";
-				doorImageRight.style.visibility="visible";
+				//doorImageRight.style.visibility="visible";
+				doorLockedImageRight.style.visibility="visible";
 				
 				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {					
 
@@ -5054,6 +5146,8 @@ alert("iInputY: "+iInputY);
 				
 				if (!hasInitMapLocation) {
 					//pearlImageTile.style.visibility="hidden";
+					
+					//TODO: -update: this to key
 					
 					iPearlInvincibileCount=0;
 					
@@ -6294,6 +6388,7 @@ opting to put assets folder in "html_application" folder instead
 	<img id="doorImageTopId" class="Image64x64Tile" src="assets/images/tile.png?lastmod=20241120T2053">
 	<img id="doorImageBottomId" class="Image64x64Tile" src="assets/images/tile.png">
 
+	<img id="doorLockedImageRightId" class="Image64x64Tile" src="assets/images/tile.png">
 	<img id="riverImageRightId" class="ImageRiverTile" src="assets/images/river.png">
 	
 	
@@ -6336,8 +6431,11 @@ opting to put assets folder in "html_application" folder instead
 		  note: .html; not .php -->
 
 	<img id="pearlImageTileId" class="ImagePearlSmall" src="assets/images/bgTile.png">
-
 	<img id="pearlStatusImageTileId" class="ImagePearlSmall" src="assets/images/bgTile.png">
+
+	<img id="keyImageTileId" class="ImageKeySmall" src="assets/images/bgTile.png">
+	<img id="keyStatusImageTileId" class="ImageKeySmall" src="assets/images/bgTile.png">
+
 
 	<img id="grassCutEffectImageId" class="ImageGrassCutEffectSmall" src="assets/images/bgTile.png">
 
