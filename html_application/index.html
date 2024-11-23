@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241122; from 20241121
+' @date updated: 20241123; from 20241122
 ' @website: www.usbong.ph
 '
 '
@@ -1039,6 +1039,11 @@ var iExplosionEffectAnimationCountMax=5;
 var iExplosionEffectAnimationDelayCount=0;
 var iExplosionEffectAnimationDelayCountMax=2;//4;//1;
 
+var iFireballExplosionEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
+var iFireballExplosionEffectAnimationCountMax=5;
+var iFireballExplosionEffectAnimationDelayCount=0;
+var iFireballExplosionEffectAnimationDelayCountMax=2;//4;//1;
+
 var iGrassCutEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iGrassCutEffectAnimationCountMax=5;
 var iGrassCutEffectAnimationDelayCount=0;
@@ -1101,6 +1106,9 @@ var iMonsterBossAttackDelayCountMax=120;
 
 var iImageExplosionEffectAnimationWidth=32;//64;
 var iImageExplosionEffectAnimationHeight=32;//64;
+
+var iImageFireballExplosionEffectAnimationWidth=32;//64;
+var iImageFireballExplosionEffectAnimationHeight=32;//64;
 
 var iImageGrassCutEffectAnimationWidth=32;//64;
 var iImageGrassCutEffectAnimationHeight=32;//64;
@@ -1435,8 +1443,8 @@ var bIsHeroFacingLeft=false;
 		var mainImageTile = document.getElementById("mainImageTileImageId");
 		var mainImageTileFireballProjectile = document.getElementById("mainImageTileFireballProjectileImageId");
 
-		mainImageTileFireballProjectilePosX = mainImageTile.style.left;
-		mainImageTileFireballProjectilePosY = mainImageTile.style.top;
+		mainImageTileFireballProjectilePosX = 0+"px";//mainImageTile.style.left;
+		mainImageTileFireballProjectilePosY = 0+"px";//mainImageTile.style.top;
 
 		newMainImageTileFireballProjectilePosX=0; //mainImageTileProjectilePosX;
 		newMainImageTileFireballProjectilePosY=0; //mainImageTileProjectilePosY;
@@ -1790,10 +1798,10 @@ var bIsHeroFacingLeft=false;
 		var doorLockedImageRight = document.getElementById("doorLockedImageRightId");				
 		var riverImageRight = document.getElementById("riverImageRightId");		
 
-
 		var batMonsterImageTile = document.getElementById("batMonsterImageId");
 
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
+		var fireballExplosionEffectImage = document.getElementById("fireballExplosionEffectImageId");
 		
 		var grassCutEffectImage = document.getElementById("grassCutEffectImageId");
 		var pearlImageTile = document.getElementById("pearlImageTileId");
@@ -2060,8 +2068,8 @@ var bIsHeroFacingLeft=false;
 
 		//mainImageTileFireballProjectile.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
 		mainImageTileFireballProjectile.style.objectPosition = "-" + 0 + "px -" + 32*2 + "px";
-		mainImageTileFireballProjectilePosX = mainImageTile.style.left;
-		mainImageTileFireballProjectilePosY = mainImageTile.style.top;
+		mainImageTileFireballProjectilePosX = 0+"px"; //mainImageTile.style.left;
+		mainImageTileFireballProjectilePosY = 0+"px"; //mainImageTile.style.top;
 
 		var iTextEnterDivWidth = (textEnterDiv.clientWidth);
 		var iTextEnterDivHeight = (textEnterDiv.clientHeight);
@@ -2120,6 +2128,28 @@ var bIsHeroFacingLeft=false;
 
     explosionEffectImage.style.left = iInputX-128-iImageExplosionEffectAnimationWidth/2;
     explosionEffectImage.style.top = iInputY-128-iImageExplosionEffectAnimationHeight/2;
+  }
+
+  function setFireballExplosionEffectPosition(iInputX, iInputY) {
+    var fireballExplosionEffectImage = document.getElementById("fireballExplosionEffectImageId"); 
+	
+    if (fireballExplosionEffectImage.style.visibility=="visible") {
+      return;
+    }
+
+    //explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+    fireballExplosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
+	
+	fireballExplosionEffectImage.style.transform = "scale(0.5,0.5)";	
+
+    fireballExplosionEffectImage.style.visibility="visible";
+	
+	iFireballExplosionEffectAnimationDelayCount=iFireballExplosionEffectAnimationDelayCountMax;
+
+	iFireballExplosionEffectAnimationCount=-1; //0;
+
+    fireballExplosionEffectImage.style.left = iInputX-128-iImageFireballExplosionEffectAnimationWidth/2;
+    fireballExplosionEffectImage.style.top = iInputY-128-iImageFireballExplosionEffectAnimationHeight/2;
 	
   }
 
@@ -2651,25 +2681,88 @@ alert("iInputY: "+iInputY);
 		}
 
 		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+		
+		//note: current output: fireball effect used in first frame only;
+		iFrameY=0;
+		//iFrameY=128;
+
+		//put fireballExplosion as 1st frame
+		if (iExplosionEffectAnimationCount==0) {
+			iFrameY=128;
+		}
 
 		if (iExplosionEffectAnimationCount==0) { //%2
-			explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+			explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
 		}
 		else if (iExplosionEffectAnimationCount==1) {
-			explosionEffectImage.style.objectPosition = "-" + 128 + "px -" + 0 + "px";
+			explosionEffectImage.style.objectPosition = "-" + 128 + "px -" + iFrameY + "px";
 			//alert(">>>>");
 		}
 		else if (iExplosionEffectAnimationCount==2) {
-			explosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + 0 + "px";
+			explosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + iFrameY + "px";
 			//alert(">>>>");
 		}
 		else if (iExplosionEffectAnimationCount==3) {
-			explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + 0 + "px";
+			explosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + iFrameY + "px";
 			//alert(">>>>");
 		}
 		else {
 			explosionEffectImage.style.visibility="hidden";
+			
+			//alert("HALLO");
 		}
+	}
+	
+	function executeFireballExplosionEffect() {
+		var fireballExplosionEffectImage = document.getElementById("fireballExplosionEffectImageId");
+
+		if (fireballExplosionEffectImage.style.visibility=="hidden") {
+			return;
+		}
+
+		if (iFireballExplosionEffectAnimationDelayCount==iFireballExplosionEffectAnimationDelayCountMax) {
+	//	if (iExplosionEffectAnimationDelayCount>=iExplosionEffectAnimationDelayCountMax) {
+			
+			iFireballExplosionEffectAnimationCount=(iFireballExplosionEffectAnimationCount+1)%5; //last hidden
+
+			iFireballExplosionEffectAnimationDelayCount=0;
+			/*
+			explosionEffectImage.style.visibility="visible";
+			*/
+			
+			//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+		}
+		else {
+			iFireballExplosionEffectAnimationDelayCount++;
+
+	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+
+		}
+
+		//alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+		
+		//iFrameY=0;
+		iFrameY=128;
+
+		if (iFireballExplosionEffectAnimationCount==0) { //%2
+			fireballExplosionEffectImage.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+		}
+		else if (iFireballExplosionEffectAnimationCount==1) {
+			fireballExplosionEffectImage.style.objectPosition = "-" + 128 + "px -" + iFrameY + "px";
+			//alert(">>>>");
+		}
+		else if (iFireballExplosionEffectAnimationCount==2) {
+			fireballExplosionEffectImage.style.objectPosition = "-" + 128*2 + "px -" + iFrameY + "px";
+			//alert(">>>>");
+		}
+		else if (iFireballExplosionEffectAnimationCount==3) {
+			fireballExplosionEffectImage.style.objectPosition = "-" + 128*3 + "px -" + iFrameY + "px";
+			//alert(">>>>");
+		}
+		else {
+			fireballExplosionEffectImage.style.visibility="hidden";			
+			//alert("HALLO");
+		}		
 	}
 
 	function executeGrassCutEffect() {
@@ -3104,6 +3197,17 @@ alert("iInputY: "+iInputY);
 		
 		resetProjectile();
 	}
+
+	function monsterHitByHeroFireball(mainImageTileFireballProjectilePosX, mainImageTileFireballProjectilePosY, iMonsterImageTilePosX, iMonsterImageTilePosY) {	
+		
+		//+iImageFrameWidthDefault/2
+		//iImageFrameHeightDefault/2
+		
+		setHeroAttackEffectPosition(iMonsterImageTilePosX,iMonsterImageTilePosY); 
+		
+		resetProjectile();
+		resetFireballProjectile();
+	}
 	
 	function verifyHeroCollideWithRiver() {
 		var riverImageTile = document.getElementById("riverImageRightId");
@@ -3197,6 +3301,46 @@ alert("iInputY: "+iInputY);
 				bIsHeroAttacked=false;		
 			}
 */			
+		}
+	}
+	
+	function verifyHeroFireballCollideWithBatMonsters() {
+		var batMonsterImageTile = document.getElementById("batMonsterImageId");
+
+		var mainImageTileFireballProjectile = document.getElementById("mainImageTileFireballProjectileImageId");
+
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
+
+		if (!isBatMonsterTileActive) {
+			return;
+		}		
+		else {
+			if (bIsHeroAttacked) {
+				//bIsHeroAttacked=false;
+				return;
+			}
+			
+			//bIsHeroAttacked=false;		
+
+			//+iImageFrameWidthDefault/2; iImageFrameHeightDefault/2
+			if (isPointsOfRectIntersectingPointsOfRectMonster(parseInt(mainImageTileFireballProjectilePosX),parseInt(mainImageTileFireballProjectilePosY), batMonsterImageTilePosX,batMonsterImageTilePosY, iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {			
+				
+				//verify if hero attacked
+				//if (bHasFired && bHasHeroShotFireball) {
+				if (bHasHeroShotFireball) {
+				
+					//alert("HALLO"); 	
+				
+					monsterHitByHeroFireball(parseInt(mainImageTileFireballProjectilePosX),parseInt(mainImageTileFireballProjectilePosY), batMonsterImageTilePosX,batMonsterImageTilePosY);
+					//setExplosionEffectPosition(batMonsterImageTilePosX,batMonsterImageTilePosY);
+					
+					setFireballExplosionEffectPosition(batMonsterImageTilePosX,batMonsterImageTilePosY);
+					
+					batMonsterImageTile.style.visibility="hidden";				
+					isBatMonsterTileActive=false;
+				}
+			}
 		}
 	}
 			
@@ -3462,6 +3606,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 
 		//added by Mike, 20231119
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
+		var fireballExplosionEffectImage = document.getElementById("explosionEffectImageId");
 		
 		var grassCutEffectImage = document.getElementById("grassCutEffectImageId");
 				
@@ -3791,6 +3936,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
         mainImageMonsterBoss.style.visibility = "hidden"; //"visible";
 
 		executeExplosionEffect();
+		executeFireballExplosionEffect();
 
 		executeGrassCutEffect();
 
@@ -3886,6 +4032,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 	//drawGrid(myCanvasTwoContext,iInnerHorizontalOffset/2,0); 
 		
 //--------------------	
+		var dustEffectImage = document.getElementById("dustEffectImageId");
 
 		//added by Mike, 20241106
 		var doorImageRight = document.getElementById("doorImageRightId");
@@ -4037,6 +4184,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=43;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4111,6 +4259,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 					iCurrMapLocation=53;
 					hasInitMapLocation=false;
 					bHasHeroReachedBottomOfRoomRiver=false;
+					dustEffectImage.style.visibility="hidden";
 				}
 				
 
@@ -4125,7 +4274,8 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 					batMonsterImageTile.style.left = 0+batMonsterImageTilePosX+"px"; //iInnerHorizontalOffset
 			
 					executeBatMonsterWalkingAnimation();
-					verifyHeroCollideWithBatMonsters();
+					verifyHeroCollideWithBatMonsters();					
+					verifyHeroFireballCollideWithBatMonsters();
 				}
 				
 				//at center of field of grass
@@ -4159,6 +4309,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=33;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";						
 					}			
 					else {
 						//OK;
@@ -4184,6 +4335,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=53;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";						
 					}	
 					//bottom wall
 					else {
@@ -4208,6 +4360,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=42;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4270,6 +4423,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 					iCurrMapLocation=43;
 					hasInitMapLocation=false;
 					bHasHeroReachedBottomOfRoomRiver=false;
+					dustEffectImage.style.visibility="hidden";
 				}
 
 				//if has not yet obtained pearl item in this room
@@ -4372,6 +4526,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=43;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4414,6 +4569,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=13;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4436,6 +4592,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=33;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4487,6 +4644,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=23;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4511,6 +4669,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=12;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4704,6 +4863,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=41;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4728,6 +4888,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=43;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4855,6 +5016,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=31;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4894,6 +5056,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=42;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4931,6 +5094,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=21;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4953,6 +5117,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=41;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -4984,6 +5149,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 							//DOOR
 							iCurrMapLocation=32;
 							hasInitMapLocation=false;
+							dustEffectImage.style.visibility="hidden";
 							
 							bHasUsedKeyAtRoom11=true;
 						}
@@ -5044,6 +5210,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=31;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -5072,6 +5239,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=11;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -5094,6 +5262,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=31;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -5125,6 +5294,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=22;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -5274,6 +5444,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=21;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -5409,6 +5580,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 						//DOOR
 						iCurrMapLocation=21;
 						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
 					}			
 					else {
 						//OK;
@@ -6643,7 +6815,7 @@ function initTouchInput() {
   		return false;
   	}
 
-  	return true;
+    return true;
   }
 
 
@@ -6817,6 +6989,8 @@ opting to put assets folder in "html_application" folder instead
 	<img id="grassCutEffectImageId" class="ImageGrassCutEffectSmall" src="assets/images/bgTile.png">
 
 	<img id="explosionEffectImageId" class="ImageExplosionEffectResizedToSmall" src="assets/images/effectsSmall.png">
+
+	<img id="fireballExplosionEffectImageId" class="ImageExplosionEffectResizedToSmall" src="assets/images/effectsSmall.png">
   
 	<img id="explosionEffectToMonsterImageId" class="ImageExplosion" src="assets/images/effects.png">
 
