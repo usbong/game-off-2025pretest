@@ -993,6 +993,8 @@ var iHeroInvincibileCountMax=50;
 
 var iCurrHeroLifeMax=10;
 var iCurrHeroLife=iCurrHeroLifeMax;
+var iCurrHeroLifeAnimationDelayCount=0;
+var iCurrHeroLifeAnimationDelayCountMax=2;
 
 var iHeroDeathCount=0;
 var iCurrPearlCount=0;
@@ -1605,7 +1607,15 @@ var bIsHeroFacingLeft=false;
 			myCanvasContext.fillStyle = "#ff6b00"; //orange
 		}
 		else {
-			myCanvasContext.fillStyle = "#ff0000"; //red
+			//myCanvasContext.fillStyle = "#ff0000"; //red
+			iCurrHeroLifeAnimationDelayCount=(iCurrHeroLifeAnimationDelayCount+1)%iCurrHeroLifeAnimationDelayCountMax;
+
+			if (iCurrHeroLifeAnimationDelayCount==0) {
+				myCanvasContext.fillStyle = "#000000"; //black
+			}			
+			else {
+				myCanvasContext.fillStyle = "#ff0000"; //red		
+			}
 		}
 		
 		//myCanvasContext.fillRect(0+iXPos, 0+iYPos, iHeroLifeBarWidth*iCurrHeroLife, iHeroLifeBarHeight);
@@ -3396,6 +3406,43 @@ alert("iInputY: "+iInputY);
 		//}
 	}		
 	
+	function verifyHeroFireballCollideWithSnakeMonsters(inputArraySnakeMonsterWithIdCount) {
+			
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
+	
+		//alert(inputArraySnakeMonsterWithIdCount[MONSTER_IS_ACTIVE]);
+
+		if (!inputArraySnakeMonsterWithIdCount[MONSTER_IS_ACTIVE]) {
+			return;
+		}		
+		else { //if (isBatMonsterTileActive) {						
+
+			if (bIsHeroAttacked) {
+				//bIsHeroAttacked=false;
+				return;
+			}
+			
+			//bIsHeroAttacked=false;		
+			
+			if (isPointsOfRectIntersectingPointsOfRectMonster(parseInt(mainImageTileFireballProjectilePosX),parseInt(mainImageTileFireballProjectilePosY), inputArraySnakeMonsterWithIdCount[MONSTER_POSX],inputArraySnakeMonsterWithIdCount[MONSTER_POSY], iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {			
+				//verify if hero attacked
+				//if (bHasFired && bHasHeroShotFireball) {
+				if (bHasHeroShotFireball) {
+					//alert("HALLO"); 	
+					monsterHitByHeroFireball(parseInt(mainImageTileFireballProjectilePosX),parseInt(mainImageTileFireballProjectilePosY), inputArraySnakeMonsterWithIdCount[MONSTER_POSX],inputArraySnakeMonsterWithIdCount[MONSTER_POSY]);
+					//setExplosionEffectPosition(batMonsterImageTilePosX,batMonsterImageTilePosY);
+					
+					setFireballExplosionEffectPosition(inputArraySnakeMonsterWithIdCount[MONSTER_POSX],inputArraySnakeMonsterWithIdCount[MONSTER_POSY]);
+					
+					inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.visibility="hidden";				
+
+					inputArraySnakeMonsterWithIdCount[MONSTER_IS_ACTIVE]=false;
+				}
+			}
+		}
+	}			
+	
 	function verifyHeroCollideWithGrassMonsters(inputArrayGrassMonsterWithIdCount) {
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
@@ -3427,6 +3474,62 @@ alert("iInputY: "+iInputY);
 	}			
 	
 	function verifyHeroCollideWithSlimeMonsters(iSlimeCount, inputArraySlimeMonsterWithIdCount) {
+			
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
+	
+		//alert(inputArraySnakeMonsterWithIdCount[MONSTER_IS_ACTIVE]);
+
+	
+//		for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
+			//inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT]= document.getElementById("snakeMonsterImageId"+iCount);
+
+			//alert(arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]);
+
+			if (!inputArraySlimeMonsterWithIdCount[MONSTER_IS_ACTIVE]) {
+				return;
+			}		
+			else { //if (isBatMonsterTileActive) {						
+
+				if (bIsHeroAttacked) {
+					//bIsHeroAttacked=false;
+					return;
+				}
+			
+			//bIsHeroAttacked=false;		
+			
+			if (isPointsOfRectIntersectingPointsOfRectMonster(parseInt(mainImageTileFireballProjectilePosX),parseInt(mainImageTileFireballProjectilePosY), inputArraySlimeMonsterWithIdCount[MONSTER_POSX],inputArraySlimeMonsterWithIdCount[MONSTER_POSY], iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {			
+				//verify if hero attacked
+				//if (bHasFired && bHasHeroShotFireball) {
+				if (bHasHeroShotFireball) {
+					//alert("HALLO"); 	
+					monsterHitByHeroFireball(parseInt(mainImageTileFireballProjectilePosX),parseInt(mainImageTileFireballProjectilePosY), inputArraySlimeMonsterWithIdCount[MONSTER_POSX],inputArraySlimeMonsterWithIdCount[MONSTER_POSY]);
+					//setExplosionEffectPosition(batMonsterImageTilePosX,batMonsterImageTilePosY);
+					
+					setFireballExplosionEffectPosition(inputArraySlimeMonsterWithIdCount[MONSTER_POSX],inputArraySlimeMonsterWithIdCount[MONSTER_POSY]);
+					
+					inputArraySlimeMonsterWithIdCount[MONSTER_OBJECT].style.visibility="hidden";				
+
+					inputArraySlimeMonsterWithIdCount[MONSTER_IS_ACTIVE]=false;
+										
+					if (iSlimeCount==0) {
+						//show the rest of the children slime
+						arraySlimeMonsterCountId[1][MONSTER_OBJECT].style.visibility="visible";
+						arraySlimeMonsterCountId[1][MONSTER_IS_ACTIVE]=true;
+						arraySlimeMonsterCountId[1][MONSTER_POSX]=inputArraySlimeMonsterWithIdCount[MONSTER_POSX]+iImageFrameWidthDefault*1; //3
+						arraySlimeMonsterCountId[1][MONSTER_POSY]=inputArraySlimeMonsterWithIdCount[MONSTER_POSY];
+						
+						arraySlimeMonsterCountId[2][MONSTER_OBJECT].style.visibility="visible";
+						arraySlimeMonsterCountId[2][MONSTER_IS_ACTIVE]=true;
+						arraySlimeMonsterCountId[2][MONSTER_POSX]=inputArraySlimeMonsterWithIdCount[MONSTER_POSX]-iImageFrameWidthDefault*1; //3
+						arraySlimeMonsterCountId[2][MONSTER_POSY]=inputArraySlimeMonsterWithIdCount[MONSTER_POSY];
+					}											
+				}
+			}
+		}
+	}		
+
+	function verifyHeroFireballCollideWithSlimeMonsters(iSlimeCount, inputArraySlimeMonsterWithIdCount) {
 			
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
@@ -4452,6 +4555,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 				
 						executeSnakeMonsterWalkingAnimation(arraySnakeMonsterCountId[iCount]);					
 						verifyHeroCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
+						verifyHeroFireballCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
 					}
 				}
 /*				
@@ -4829,6 +4933,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 				
 						executeSlimeMonsterAnimation(arraySlimeMonsterCountId[iCount]);
 						verifyHeroCollideWithSlimeMonsters(iCount, arraySlimeMonsterCountId[iCount]);
+						verifyHeroFireballCollideWithSlimeMonsters(iCount, arraySlimeMonsterCountId[iCount]);
 					}
 				}
 				
@@ -4997,6 +5102,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 				
 						executeSnakeMonsterWalkingAnimation(arraySnakeMonsterCountId[iCount]);					
 						verifyHeroCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
+						verifyHeroFireballCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
 					}
 				}				
 
@@ -5402,6 +5508,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 				
 						executeSnakeMonsterWalkingAnimation(arraySnakeMonsterCountId[iCount]);					
 						verifyHeroCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
+						verifyHeroFireballCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
 					}
 				}			
 			
@@ -5553,6 +5660,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 				
 						executeSnakeMonsterWalkingAnimation(arraySnakeMonsterCountId[iCount]);					
 						verifyHeroCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
+						verifyHeroFireballCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
 					}
 				}			
 				
