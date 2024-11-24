@@ -937,6 +937,7 @@ var iInputDelayAtGameOverCount=iInputDelayAtGameOverCountMax;
 
 var bIsHeroInRiver=false;
 var bHasHeroReachedBottomOfRoomRiver=false;
+var bHasHeroReachedTopOfRoomRiver=false;
 
 //added by Mike, 20231124
 var bIsBossBattleDone=false;
@@ -1056,6 +1057,9 @@ var iKeyAnimationDelayCountMax=2;
 var iKeyInvincibileCount=0;
 const iKeyInvincibileCountMax=10;
 
+var iAmuletInvincibileCount=0;
+const iAmuletInvincibileCountMax=10;
+
 var bHasObtainedPearlAtRoom42=false;
 var bHasObtainedPearlAtRoom41=false;
 var bHasObtainedPearlAtRoom33=false;
@@ -1064,6 +1068,7 @@ var bHasObtainedPearlAtRoom22=false;
 //var bHasObtainedPearlAtRoom11=false;
 var bHasObtainedKeyAtRoom11=false;
 var bHasUsedKeyAtRoom11=false;
+var bHasObtainedAmuletAtRoom32=false; //Pendant; Agimat
 
 var iPearlStatusAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iPearlStatusAnimationCountMax=5;
@@ -1209,7 +1214,7 @@ var iMouseInputImageWidth=64;
 var iMouseInputImageHeight=64;
 
 var iMonsterAttackDamageDefault=1;
-var iMonsterAttackDamageBoss=3;
+var iMonsterAttackDamageBoss=2;//3;
 
 //added by Mike, 20231128
 var iCurrTextCharacterCount=0;
@@ -1774,6 +1779,7 @@ var bIsHeroFacingLeft=false;
 		//bHasObtainedPearlAtRoom11=false;
 		bHasObtainedKeyAtRoom11=false;
 		bHasUsedKeyAtRoom11=false;
+		bHasObtainedAmuletAtRoom32=false;
 
 		iBossMonsterAnimationCount=-1;//0; start at -1
 		iBossMonsterAnimationCountMax=5;
@@ -1842,6 +1848,8 @@ var bIsHeroFacingLeft=false;
 
 		var batMonsterImageTile = document.getElementById("batMonsterImageId");
 
+		var bossMonsterImageTile = document.getElementById("bossMonsterImageId");
+
 		var explosionEffectImage = document.getElementById("explosionEffectImageId");
 		var fireballExplosionEffectImage = document.getElementById("fireballExplosionEffectImageId");
 		
@@ -1852,7 +1860,10 @@ var bIsHeroFacingLeft=false;
 		var textMonsterDeathStatusDiv = document.getElementById("textMonsterDeathStatusDivId");
 
 		var keyImageTile = document.getElementById("keyImageTileId");
-		var keyStatusImageTile = document.getElementById("keyStatusImageTileId"); //TODO: -add: this
+		var keyStatusImageTile = document.getElementById("keyStatusImageTileId");
+
+		var amuletImageTile = document.getElementById("amuletImageTileId");
+		var amuletStatusImageTile = document.getElementById("amuletStatusImageTileId"); //TODO: -add: this
 
 		var myFavicon = document.getElementById("faviconImageId");
 		var textTimeDiv = document.getElementById("textTimeDivId");
@@ -1894,6 +1905,7 @@ var bIsHeroFacingLeft=false;
 		riverImageRight.style.visibility="hidden";
 
 		batMonsterImageTile.style.visibility="hidden";
+		bossMonsterImageTile.style.visibility="hidden";
 		
 		explosionEffectImage.style.visibility="hidden";
 		grassCutEffectImage.style.visibility="hidden";
@@ -2120,7 +2132,13 @@ var bIsHeroFacingLeft=false;
 		mainImageTileFireballProjectile.style.objectPosition = "-" + 0 + "px -" + 32*2 + "px";
 		mainImageTileFireballProjectilePosX = 0+"px"; //mainImageTile.style.left;
 		mainImageTileFireballProjectilePosY = 0+"px"; //mainImageTile.style.top;
-
+		
+		iBossMonsterImageTileStepAngle=-70; //facing left door of Boss Room
+		//flip vertically;
+		iBossMonsterImageTileStepAngle=(iBossMonsterImageTileStepAngle+180)%360;		
+		bossMonsterImageTile.style.transform = "rotate("+iBossMonsterImageTileStepAngle+"deg)";	
+		bossMonsterImageTile.style.transformOrigin = "12.5% 12.5%"; 
+				
 		var iTextEnterDivWidth = (textEnterDiv.clientWidth);
 		var iTextEnterDivHeight = (textEnterDiv.clientHeight);
 
@@ -2137,8 +2155,6 @@ var bIsHeroFacingLeft=false;
 		
 		textEnterDiv.style.transform = "scale("+iTransitionScale+","+iTransitionScale+")";	
 		
-
-
 		mouseInputImage.style.left = (iHorizontalOffset+iStageMaxWidth/2-iTextEnterDivWidth/2+iMouseInputImageWidth/2)+"px";
 		mouseInputImage.style.top = (iVerticalOffsetInnerScreen+iStageMaxHeight+iTextEnterDivHeight/2)+"px";
 		mouseInputImage.style.objectPosition = "-" + 0 + "px -" + 192 + "px";
@@ -2438,7 +2454,7 @@ alert("iInputY: "+iInputY);
 
 		var iFrameY=0;
 		
-		if (bIsHeroInRiver) {
+		if (bIsHeroInRiver){
 			if (bIsHeroFacingLeft) {
 				iFrameY=iImageFrameHeight*0;
 			}
@@ -2453,7 +2469,7 @@ alert("iInputY: "+iInputY);
 			else {
 				iFrameY=iImageFrameHeight*3;//64*3; 192;
 			}
-		}
+		}			
 
 		if (iHeroAnimationCount==0) { 
 			mainImageTileHeroBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
@@ -3092,6 +3108,22 @@ alert("iInputY: "+iInputY);
 			pearlImageTile.style.visibility="hidden";
 		}
 */		
+	}	
+	
+	function executeAmuletAnimation() {
+		var amuletImageTile = document.getElementById("amuletImageTileId");
+
+		if (amuletImageTile.style.visibility=="hidden") {
+			return;
+		}
+
+		//alert("DITO");
+
+		//var iFrameY=0;
+		var iFrameY=iImageFrameHeight*3;		
+		
+		//iAmuletAnimationDelayCount=0;
+		amuletImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*0 + "px -" + iFrameY + "px";	
 	}	
 	
 	function executePearlStatusAnimation() {
@@ -3957,13 +3989,13 @@ alert("iInputY: "+iInputY);
 */		
 	}		
 	
-	function verifyHeroCollideWithKey(keyImageTileWithId) {
+	function verifyHeroCollideWithSpecialItem(specialItemImageTileWithId) {
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
 
-		if (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTilePosX,mainImageTilePosY, parseInt(keyImageTileWithId.style.left), parseInt(keyImageTileWithId.style.top), iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {		
+		if (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTilePosX,mainImageTilePosY, parseInt(specialItemImageTileWithId.style.left), parseInt(specialItemImageTileWithId.style.top), iImageFrameWidth, iImageFrameHeight, iImageFrameWidthDefault, iImageFrameHeightDefault)) {		
 
-			keyImageTileWithId.style.visibility="hidden";
+			specialItemImageTileWithId.style.visibility="hidden";
 			//TODO: -set is_active to false
 			
 			//iCurrKeyCount++;
@@ -3971,7 +4003,10 @@ alert("iInputY: "+iInputY);
 			switch(iCurrMapLocation) {
 				case 11: //KEY
 					bHasObtainedKeyAtRoom11=true;
-					break;												
+					break;		
+				case 32: //amulet
+					bHasObtainedAmuletAtRoom32=true;
+					break;						
 			}
 		}
 	}			
@@ -4363,6 +4398,7 @@ alert("iInputY: "+iInputY);
 		executeKeyAnimation();
 		//executeKeyStatusAnimation();
 
+		executeAmuletAnimation();
 
 	//executeExplosionEffectToMonsterBoss();
 
@@ -4384,18 +4420,48 @@ alert("iInputY: "+iInputY);
 	//AI; movement due to river
 	if (bIsHeroInRiver) {
 		//IF has reached bottom
-		if (mainImageTilePosY+iImageFrameHeightDefault>iStageMaxHeight-iImageFrameHeightDefault) {
+		if (!bHasObtainedAmuletAtRoom32) {
+			if (mainImageTilePosY+iImageFrameHeightDefault>iStageMaxHeight-iImageFrameHeightDefault) {
+				mainImageTileProjectilePosY=mainImageTilePosY;
+
+				//bHasHeroReachedTopOfRoomRiver=false;
+				bHasHeroReachedBottomOfRoomRiver=true;
+			}
+			else {
+				mainImageTilePosY+=mainImageTileStepY;						
+				mainImageTileProjectilePosY=mainImageTilePosY;
+			}
+		}
+		else {
+			if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset-iImageFrameHeightDefault/2) {
+				mainImageTileProjectilePosY=mainImageTilePosY;
+
+				//bHasHeroReachedTopOfRoomRiver=false;
+				bHasHeroReachedBottomOfRoomRiver=true;
+			}
+		}
+/*
+		if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset-iImageFrameHeightDefault/2) {
 			mainImageTileProjectilePosY=mainImageTilePosY;
-			
+
+			//bHasHeroReachedTopOfRoomRiver=false;
 			bHasHeroReachedBottomOfRoomRiver=true;
 		}
 		else {
-			mainImageTilePosY+=mainImageTileStepY;						
-			mainImageTileProjectilePosY=mainImageTilePosY;
+			if (!bHasObtainedAmuletAtRoom32) {
+				mainImageTilePosY+=mainImageTileStepY;						
+				mainImageTileProjectilePosY=mainImageTilePosY;
+			}
 		}
+*/		
 
-////		if (mainImageTilePosY<0) {
-////		}	
+		//IF has reached top
+		if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {		
+			mainImageTileProjectilePosY=mainImageTilePosY;
+			
+			bHasHeroReachedTopOfRoomRiver=true;
+			//bHasHeroReachedBottomOfRoomRiver=false;
+		}
 	}
 
 	if (mainImageTileProjectileStepY<mainImageTileProjectileStepYMax) {
@@ -4441,6 +4507,12 @@ alert("iInputY: "+iInputY);
 	if (bHasObtainedKeyAtRoom11) {
 		drawKeyStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60+iImageFrameHeightDefault); 
 	}
+
+/*	//TODO: -add: this
+	if (bHasObtainedAmuletAtRoom32) {
+		drawKeyStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60+iImageFrameHeightDefault); 
+	}
+*/
 
 	//drawMonsterDeathStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60+iImageFrameHeightDefault*2); 
 	
@@ -4539,6 +4611,9 @@ alert("iInputY: "+iInputY);
 		var keyImageTile = document.getElementById("keyImageTileId");
 		keyImageTile.style.visibility="hidden";
 
+		var amuletImageTile = document.getElementById("amuletImageTileId");
+		amuletImageTile.style.visibility="hidden";
+
 
 		//grassBgImage.style.visibility="hidden";
 		
@@ -4578,7 +4653,8 @@ alert("iInputY: "+iInputY);
 		arrayHasVisitedRoom[iColumnCount][iRowCount]=1;
 
 		//debug
-		bHasObtainedKeyAtRoom11=true;
+		//bHasObtainedKeyAtRoom11=true;
+		//bHasObtainedAmuletAtRoom32=true;
 
 		switch(iCurrMapLocation) {
 			//OK; TOP DOOR; REST of the sides WALLS
@@ -4587,11 +4663,24 @@ alert("iInputY: "+iInputY);
 				//top-most					
 				doorImageTop.style.visibility="visible";
 				
+				hasInitMapLocation=true;
+
 				executeRiverAnimation();
 				verifyHeroCollideWithRiver();
-					
-				hasInitMapLocation=true;
-	
+				
+				if (bHasHeroReachedTopOfRoomRiver) {
+					//RIVER as DOOR
+					//OK; wraps around
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*3-iImageFrameHeightDefault;
+						
+					resetProjectile();		
+						
+					iCurrMapLocation=43;
+					hasInitMapLocation=false;
+					bHasHeroReachedTopOfRoomRiver=false;
+					dustEffectImage.style.visibility="hidden";
+				}
+						
 				//if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault/2) {					
 				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {					
 
@@ -4686,7 +4775,20 @@ alert("iInputY: "+iInputY);
 					dustEffectImage.style.visibility="hidden";
 				}
 				
-
+				if (bHasHeroReachedTopOfRoomRiver) {
+					//RIVER as DOOR
+					//OK; wraps around
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*3-iImageFrameHeightDefault;
+						
+					resetProjectile();		
+						
+					iCurrMapLocation=33;
+					hasInitMapLocation=false;
+					bHasHeroReachedTopOfRoomRiver=false;
+					dustEffectImage.style.visibility="hidden";
+				}
+				
+				
 				if (isBatMonsterTileActive) {
 					batMonsterImageTile.style.visibility="visible";
 
@@ -4849,6 +4951,19 @@ alert("iInputY: "+iInputY);
 					bHasHeroReachedBottomOfRoomRiver=false;
 					dustEffectImage.style.visibility="hidden";
 				}
+				
+				if (bHasHeroReachedTopOfRoomRiver) {
+					//RIVER as DOOR
+					//OK; wraps around
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*3-iImageFrameHeightDefault;
+						
+					resetProjectile();		
+						
+					iCurrMapLocation=23;
+					hasInitMapLocation=false;
+					bHasHeroReachedTopOfRoomRiver=false;
+					dustEffectImage.style.visibility="hidden";
+				}
 
 				//if has not yet obtained pearl item in this room
 				if (!bHasObtainedPearlAtRoom33) {
@@ -4978,8 +5093,39 @@ alert("iInputY: "+iInputY);
 			//OK; TOP, BOTTOM DOORS; REST of the sides WALLS
 			case 23: //SECRET PASSAGE
 				doorImageTop.style.visibility="visible";
-				doorImageBottom.style.visibility="visible";
+				//doorImageBottom.style.visibility="visible";
 			
+				executeRiverAnimation();
+				verifyHeroCollideWithRiver();
+				
+				if (bHasHeroReachedBottomOfRoomRiver) {
+					//RIVER as DOOR
+					//OK; wraps around
+					mainImageTilePosY=0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2;						
+					
+					//mainImageTilePosX=iDoorImageBottomPosStartX+iImageFrameWidthDefault/2;
+						
+					resetProjectile();		
+						
+					iCurrMapLocation=33;
+					hasInitMapLocation=false;
+					bHasHeroReachedBottomOfRoomRiver=false;
+					dustEffectImage.style.visibility="hidden";
+				}
+				
+				if (bHasHeroReachedTopOfRoomRiver) {
+					//RIVER as DOOR
+					//OK; wraps around
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*3-iImageFrameHeightDefault;
+						
+					resetProjectile();		
+						
+					iCurrMapLocation=13;
+					hasInitMapLocation=false;
+					bHasHeroReachedTopOfRoomRiver=false;
+					dustEffectImage.style.visibility="hidden";
+				}
+				
 				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {					
 
 					if (((mainImageTilePosX>=iDoorImageTopPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageTopPosEndX)) || 					
@@ -5002,6 +5148,15 @@ alert("iInputY: "+iInputY);
 						resetProjectile();						
 					}					
 				}
+				//bottom wall
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset-iImageFrameHeightDefault/2) {
+					//OK;
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*3-iImageFrameHeightDefault;
+					
+					//alert("mainImageTilePosX: "+mainImageTilePosX);				
+					resetProjectile();
+				}
+/*				
 				//bottom door
 				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset-iImageFrameHeightDefault/2) {
 						
@@ -5025,6 +5180,7 @@ alert("iInputY: "+iInputY);
 						resetProjectile();						
 					}						
 				}					
+*/
 				
 				//left wall
 				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
@@ -5046,6 +5202,24 @@ alert("iInputY: "+iInputY);
 				doorImageLeft.style.visibility="visible";
 				doorImageBottom.style.visibility="visible";
 
+				executeRiverAnimation();
+				verifyHeroCollideWithRiver();
+				
+				if (bHasHeroReachedBottomOfRoomRiver) {
+					//RIVER as DOOR
+					//OK; wraps around
+					mainImageTilePosY=0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2;						
+					
+					//mainImageTilePosX=iDoorImageBottomPosStartX+iImageFrameWidthDefault/2;
+						
+					resetProjectile();		
+						
+					iCurrMapLocation=23;
+					hasInitMapLocation=false;
+					bHasHeroReachedBottomOfRoomRiver=false;
+					dustEffectImage.style.visibility="hidden";
+				}
+				
 				//WALL
 				//square rooms; hence, iStageMaxHeight				
 				//top wall
@@ -5112,7 +5286,9 @@ alert("iInputY: "+iInputY);
 				}		
 				break;				
 			//OK; ALL of the sides WALLS
-			case 12: //SECRET ROOM; BEST ENDING
+			case 12: //SECRET ROOM; BEST ENDING??
+				doorImageRight.style.visibility="visible";
+			
 				//WALL
 				//square rooms; hence, iStageMaxHeight				
 				//top wall
@@ -5131,11 +5307,35 @@ alert("iInputY: "+iInputY);
 				//WALL
 				//right-most
 				//square rooms; hence, iStageMaxHeight
+/*				
 				if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
 					//OK;
 					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
 					resetProjectile();			
 				}
+*/
+				if (mainImageTilePosX+iImageFrameWidthDefault>iDoorImageRightPosStartX) {		
+					if (((mainImageTilePosY>=iDoorImageRightPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageRightPosEndY)) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageRightPosStartX,iDoorImageRightPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
+						
+						//OK; wraps around
+						mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+						
+						mainImageTilePosY=iDoorImageLeftPosStartY+iImageFrameHeightDefault/2;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=13;
+						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
+					}			
+					else {
+						//OK;
+						mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+						resetProjectile();						
+					}					
+				}					
 				//left-most
 				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
 					//OK;
@@ -5600,8 +5800,14 @@ alert("iInputY: "+iInputY);
 				//bossMonsterImageTile.style.visibility = "visible";
 			
 				if (!hasInitMapLocation) {
+
+					iAmuletInvincibileCount=0;
+					//amuletImageTile.style.visibility="visible";
+					amuletImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth/2+"px";
+					amuletImageTile.style.top=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameHeight/2+"px";
+				
 					//if Boss Monster already slain
-					if (iCurrBossMonsterLife<=0) {	
+					if (iCurrBossMonsterLife<=0) {
 					}
 					else {					
 						isBossMonsterTileActive=true;
@@ -5668,23 +5874,20 @@ alert("iInputY: "+iInputY);
 					hasInitMapLocation=true;
 				}
 				
-/*				
-				//at center of field of grass
-				//if has not yet obtained pearl item in this room
-				if (!bHasObtainedPearlAtRoom41) {
-					//if (!arrayGrassMonsterCountId[3][MONSTER_IS_ACTIVE]) {
-					//if both snakes are now inactive
-					if ((!arraySnakeMonsterCountId[0][MONSTER_IS_ACTIVE]) && (!arraySnakeMonsterCountId[1][MONSTER_IS_ACTIVE])) {
-						pearlImageTile.style.visibility="visible";
+				//if has not yet obtained KEY item in this room
+				if (!bHasObtainedAmuletAtRoom32) {
+				
+					if (!isBossMonsterTileActive) {
+						amuletImageTile.style.visibility="visible";
 						
-						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
-							verifyHeroCollideWithPearl(pearlImageTile);
+						if (iAmuletInvincibileCount>=iAmuletInvincibileCountMax) {
+							verifyHeroCollideWithSpecialItem(amuletImageTile);
 						}
 						
-						iPearlInvincibileCount++;
+						iAmuletInvincibileCount++;
 					}
 				}
-*/				
+	
 /*
 				for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
 					if (arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
@@ -6065,7 +6268,7 @@ alert("iInputY: "+iInputY);
 						keyImageTile.style.visibility="visible";
 						
 						if (iKeyInvincibileCount>=iKeyInvincibileCountMax) {
-							verifyHeroCollideWithKey(keyImageTile);
+							verifyHeroCollideWithSpecialItem(keyImageTile);
 						}
 						
 						iKeyInvincibileCount++;
@@ -6630,7 +6833,7 @@ alert(Date.now()-iMouseClickStartTime);
 	bIsHeroDash=false;
 	//bHasHeroShotFireball=false;
 
-	if (!bIsHeroInRiver) {
+	if ((!bIsHeroInRiver) || (bHasObtainedAmuletAtRoom32)){
 /*	
 		//TODO: -reverify: this
 		if (bHasFiredTemp) {
@@ -6908,6 +7111,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			//bHasObtainedPearlAtRoom11=false; //KEY
 			bHasObtainedKeyAtRoom11=false;
 			bHasUsedKeyAtRoom11=false;
+			bHasObtainedAmuletAtRoom32=false;
 			
 			iInputDelayAtGameOverCount=0;
 			bHasFired=false;
@@ -6918,6 +7122,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 
 			bIsHeroInRiver=false;
 			bHasHeroReachedBottomOfRoomRiver=false;
+			bHasHeroReachedTopOfRoomRiver=false;
 			bIsActionKeyPressed=false;
 
 			for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {				
@@ -7573,6 +7778,9 @@ opting to put assets folder in "html_application" folder instead
 
 	<img id="keyImageTileId" class="ImageKeySmall" src="assets/images/items.png">
 	<img id="keyStatusImageTileId" class="ImageKeySmall" src="assets/images/items.png">
+
+	<img id="amuletImageTileId" class="ImageKeySmall" src="assets/images/items.png">
+	<img id="amuletStatusImageTileId" class="ImageKeySmall" src="assets/images/items.png">
 
 
 	<img id="grassCutEffectImageId" class="ImageGrassCutEffectSmall" src="assets/images/bgTile.png">
