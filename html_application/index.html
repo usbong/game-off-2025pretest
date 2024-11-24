@@ -11,31 +11,10 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241123; from 20241122
+' @date updated: 20241124; from 20241123
 ' @website: www.usbong.ph
 '
-'
-' Notes:
-' 1) website address: http://localhost/usbong_2DAnimationTool/html_application/usbongMotionTweenTool.html;
-' last accessed: 20230410
-'
-' References:
-' 1) https://phantomjs.org/; last accessed: 20200724
-' downloaded phantomjs zipped file's examples: netsniff.js; last accessed: 20200725
-'
-' 2) https://nodejs.org/en/download/; last accessed: 20221214
-' execute: .js file via: node halimbawa.js
-' https://askubuntu.com/questions/1297994/what-is-the-simplest-way-to-run-javascript-code-on-ubuntu; last accessed: 20221214
-'
-' 3) http://localhost/usbong_2DAnimationTool/html_application/usbong2DAnimationTool.html;
-' last accessed: 20230311
-'
-' 4) https://stackoverflow.com/questions/5027950/coordinates-for-my-javascript-game-based-on-an-angle-when-do-i-use-sin-cos-an;
-' last accessed: 20230426
-' answer by: Jimmy, 20110217T1212; from 20110217T1106
-'
-' 5) https://www.mathsisfun.com/sine-cosine-tangent.html;
-' last accessed: 20230426
+' References: GitHub itch.io Game Off 2021, 2022, 2023
 '
 '*/
 
@@ -234,7 +213,7 @@
 
 			visibility: hidden;
 			
-			z-index: 2;
+			z-index: 4; /*2;*/
 		}
 
     .ImageMonster0 {
@@ -994,7 +973,7 @@ var iHeroInvincibileCountMax=50;
 var iCurrHeroLifeMax=10;
 var iCurrHeroLife=iCurrHeroLifeMax;
 var iCurrHeroLifeAnimationDelayCount=0;
-var iCurrHeroLifeAnimationDelayCountMax=2;
+var iCurrHeroLifeAnimationDelayCountMax=5;
 
 var iHeroDeathCount=0;
 var iCurrPearlCount=0;
@@ -1202,8 +1181,8 @@ var mainImageTileFireballProjectileStepDestinationY=0;
 var mainImageTileFireballProjectileStepDestinationX=0;
 
 
-var mainImageMonsterBossPosX=500;
-var mainImageMonsterBossPosY=10;
+var bossMonsterImageTilePosX=500;
+var bossMonsterImageTilePosY=10;
 
 var iImageFrameWidth=32;// 64; //0;
 var iImageFrameHeight=32;// 64;
@@ -1313,6 +1292,14 @@ var bIsHeroFacingLeft=false;
 	var batMonsterTileStepDelay=0;	
 	var batMonsterTileStepDelayMax=5;	
 	var isBatMonsterTileActive=false;
+	
+	var bossMonsterImageTilePosX=0;
+	var bossMonsterImageTilePosY=0;
+	var bossMonsterTileStepX=2;
+	var bossMonsterTileStepY=2;
+	var bossMonsterTileStepDelay=0;	
+	var bossMonsterTileStepDelayMax=5;	
+	var isBossMonsterTileActive=false;	
 
 /*	
 	var snakeMonsterImageTilePosX=0;
@@ -1607,6 +1594,7 @@ var bIsHeroFacingLeft=false;
 			myCanvasContext.fillStyle = "#ff6b00"; //orange
 		}
 		else {
+/*		
 			//myCanvasContext.fillStyle = "#ff0000"; //red
 			iCurrHeroLifeAnimationDelayCount=(iCurrHeroLifeAnimationDelayCount+1)%iCurrHeroLifeAnimationDelayCountMax;
 
@@ -1616,6 +1604,18 @@ var bIsHeroFacingLeft=false;
 			else {
 				myCanvasContext.fillStyle = "#ff0000"; //red		
 			}
+*/
+			//Game Off 2021; TUGON
+			if (iCurrHeroLifeAnimationDelayCount<10) {//5) {
+				myCanvasContext.fillStyle = "#ff0000"; //red	
+			}
+			else {
+				if (iCurrHeroLifeAnimationDelayCount>20) {//10) {
+					iCurrHeroLifeAnimationDelayCount=0;
+				}
+				myCanvasContext.fillStyle = "#000000"; //black
+			}			
+			iCurrHeroLifeAnimationDelayCount=iCurrHeroLifeAnimationDelayCount+1;			
 		}
 		
 		//myCanvasContext.fillRect(0+iXPos, 0+iYPos, iHeroLifeBarWidth*iCurrHeroLife, iHeroLifeBarHeight);
@@ -2139,6 +2139,27 @@ var bIsHeroFacingLeft=false;
     explosionEffectImage.style.left = iInputX-128-iImageExplosionEffectAnimationWidth/2;
     explosionEffectImage.style.top = iInputY-128-iImageExplosionEffectAnimationHeight/2;
   }
+  
+  function setExplosionEffectPositionLarge(iInputX, iInputY) {
+    var explosionEffectImage = document.getElementById("explosionEffectImageId");
+
+    if (explosionEffectImage.style.visibility=="visible") {
+      return;
+    }
+
+    explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+
+	//explosionEffectImage.style.transform = "scale(0.5,0.5)";	
+
+    explosionEffectImage.style.visibility="visible";
+	
+	iExplosionEffectAnimationDelayCount=iExplosionEffectAnimationDelayCountMax;
+
+	iExplosionEffectAnimationCount=-1; //0;
+
+    explosionEffectImage.style.left = iInputX-iImageExplosionEffectAnimationWidth/2;//-128-iImageExplosionEffectAnimationWidth/2;
+    explosionEffectImage.style.top = iInputY-iImageExplosionEffectAnimationHeight/2;//-128-iImageExplosionEffectAnimationHeight/2;
+  }  
 
   function setFireballExplosionEffectPosition(iInputX, iInputY) {
     var fireballExplosionEffectImage = document.getElementById("fireballExplosionEffectImageId"); 
@@ -2160,6 +2181,29 @@ var bIsHeroFacingLeft=false;
 
     fireballExplosionEffectImage.style.left = iInputX-128-iImageFireballExplosionEffectAnimationWidth/2;
     fireballExplosionEffectImage.style.top = iInputY-128-iImageFireballExplosionEffectAnimationHeight/2;
+	
+  }
+  
+  function setFireballExplosionEffectPositionLarge(iInputX, iInputY) {
+    var fireballExplosionEffectImage = document.getElementById("fireballExplosionEffectImageId"); 
+	
+    if (fireballExplosionEffectImage.style.visibility=="visible") {
+      return;
+    }
+
+    //explosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 0 + "px";
+    fireballExplosionEffectImage.style.objectPosition = "-" + 0 + "px -" + 128 + "px";
+	
+	//fireballExplosionEffectImage.style.transform = "scale(0.5,0.5)";	
+
+    fireballExplosionEffectImage.style.visibility="visible";
+	
+	iFireballExplosionEffectAnimationDelayCount=iFireballExplosionEffectAnimationDelayCountMax;
+
+	iFireballExplosionEffectAnimationCount=-1; //0;
+
+    fireballExplosionEffectImage.style.left = iInputX-iImageFireballExplosionEffectAnimationWidth/2;//-128-iImageFireballExplosionEffectAnimationWidth/2;
+    fireballExplosionEffectImage.style.top = iInputY-iImageFireballExplosionEffectAnimationHeight/2;//-128-iImageFireballExplosionEffectAnimationHeight/2;
 	
   }
 
@@ -2506,6 +2550,88 @@ alert("iInputY: "+iInputY);
 		}
 */		
 	}
+	
+	function executeBossMonsterWalkingAnimation() {
+		var bossMonsterImageTile = document.getElementById("bossMonsterImageId");
+		
+		//hero tile position
+		var mainImageTile = document.getElementById("mainImageTileImageId");
+
+		bossMonsterImageTile.style.visibility="visible";
+
+		//iMonsterAnimationDelayCountMax=15;
+		
+		if (iBossMonsterAnimationDelayCount>=iBossMonsterAnimationDelayCountMax) {
+			iBossMonsterAnimationCount=(iBossMonsterAnimationCount+1)%2; //3; //last hidden
+
+			iBossMonsterAnimationDelayCount=0;			
+			
+			//==============================
+			//AI; movement
+			if (bossMonsterTileStepDelay>=bossMonsterTileStepDelayMax) {
+				bossMonsterTileStepDelay=0;
+
+				if (bossMonsterImageTilePosY<parseInt(mainImageTile.style.top)) {//mainImageTilePosY) {
+					bossMonsterImageTilePosY+=bossMonsterTileStepY;				
+				}
+				else {
+					bossMonsterImageTilePosY-=bossMonsterTileStepY;
+				}
+				
+				bossMonsterImageTile.style.top=bossMonsterImageTilePosY+"px";
+
+				if (bossMonsterImageTilePosX<mainImageTilePosX) {
+					bossMonsterImageTilePosX+=bossMonsterTileStepX;
+				}
+				else {
+					bossMonsterImageTilePosX-=bossMonsterTileStepX;
+				}
+				
+				bossMonsterImageTile.style.left=bossMonsterImageTilePosX+"px";							
+			}
+			else {
+				bossMonsterTileStepDelay++;
+			}			
+			//==============================
+		}
+		else {
+			iBossMonsterAnimationDelayCount++;
+
+	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+		}
+
+		var iFrameY=0;
+		//var iFrameY=iImageFrameHeight*2;//64*2; 128;
+
+		//currently two frames only
+		if (iBossMonsterAnimationCount==0) { 
+			bossMonsterImageTile.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+		}
+		else if (iBossMonsterAnimationCount==1) { 
+			//use actual image dimensions in file; not scaled down dimensions
+			bossMonsterImageTile.style.objectPosition = "-" + iImageFrameWidthLarge*2 + "px -" + iFrameY + "px";
+		}
+		
+		//==================================================
+/*		
+		iTransitionRotate=(iTransitionRotate+10)%360; //30
+		bossMonsterImageTile.style.transform = "rotate("+iTransitionRotate+"deg)";	
+		bossMonsterImageTile.style.transformOrigin = "12.5% 12.5%"; 
+*/
+
+/*
+		if (iTransitionScale<1) {
+			iTransitionScale+=0.1
+		}
+		else if (iTransitionScale>0) {
+			iTransitionScale-=0.1
+		}
+		//iTransitionScale=0.5;
+		
+		bossMonsterImageTile.style.transform = "scale("+iTransitionScale+","+iTransitionScale+")";			
+		bossMonsterImageTile.style.transformOrigin = "12.5% 12.5%"; 
+*/		
+	}	
 	
 	function executeSnakeMonsterWalkingAnimation(inputArraySnakeMonsterWithIdCount) {		
 		//hero tile position
@@ -3353,6 +3479,84 @@ alert("iInputY: "+iInputY);
 			}
 		}
 	}
+
+	function verifyHeroCollideWithBossMonster() {
+		var bossMonsterImageTile = document.getElementById("bossMonsterImageId");
+
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
+
+		if (!isBossMonsterTileActive) {
+			return;
+		}		
+		else { 
+
+			if (bIsHeroAttacked) {
+				//bIsHeroAttacked=false;
+				return;
+			}
+			
+			//bIsHeroAttacked=false;		
+
+			//note iImageFrameWidthLarge*2;  iImageFrameHeightLarge*2
+			if (isPointsOfRectIntersectingPointsOfRectMonsterLarge(mainImageTilePosX,mainImageTilePosY, bossMonsterImageTilePosX,bossMonsterImageTilePosY, iImageFrameWidth, iImageFrameHeight, iImageFrameWidthLarge*2, iImageFrameHeightLarge*2)) {			
+				//alert("HALLO"); 	
+				
+				//verify if hero attacked
+				if (bHasFired && (isPointsOfRectIntersectingPointsOfRectMonster(mainImageTileProjectileStepDestinationX-iImageFrameWidthDefault/2,mainImageTileProjectileStepDestinationY-iImageFrameHeightDefault/2, bossMonsterImageTilePosX,bossMonsterImageTilePosY, iImageFrameWidth, iImageFrameHeight, iImageFrameWidthLarge, iImageFrameHeightLarge))) {
+					
+					//large
+					monsterHitByHero(mainImageTilePosX,mainImageTilePosY, bossMonsterImageTilePosX+iImageFrameWidthLarge/2*2,bossMonsterImageTilePosY+iImageFrameHeightLarge/2*2);
+	
+	//monsterHitByHeroFireball(parseInt(mainImageTileFireballProjectilePosX),parseInt(mainImageTileFireballProjectilePosY), bossMonsterImageTilePosX+iImageFrameWidthLarge/2*2,bossMonsterImageTilePosY+iImageFrameHeightLarge/2*2);
+										
+					setExplosionEffectPositionLarge(bossMonsterImageTilePosX+iImageFrameWidthLarge/2,bossMonsterImageTilePosY+iImageFrameHeightLarge/2);
+					
+					bossMonsterImageTile.style.visibility="hidden";				
+					isBossMonsterTileActive=false;
+				}
+				else {			
+					heroHitByMonster(mainImageTilePosX,mainImageTilePosY, bossMonsterImageTilePosX,bossMonsterImageTilePosY);
+				}
+			}
+		}
+	}
+			
+	function verifyHeroFireballCollideWithBossMonster() {
+		var bossMonsterImageTile = document.getElementById("bossMonsterImageId");
+
+		var mainImageTileFireballProjectile = document.getElementById("mainImageTileFireballProjectileImageId");
+
+		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
+		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
+
+		if (!isBossMonsterTileActive) {
+			return;
+		}		
+		else {
+			if (bIsHeroAttacked) {
+				return;
+			}
+			
+			if (isPointsOfRectIntersectingPointsOfRectMonster(parseInt(mainImageTileFireballProjectilePosX),parseInt(mainImageTileFireballProjectilePosY), bossMonsterImageTilePosX,bossMonsterImageTilePosY, iImageFrameWidth, iImageFrameHeight, iImageFrameWidthLarge, iImageFrameHeightLarge)) {			
+
+				//verify if hero attacked
+				//if (bHasFired && bHasHeroShotFireball) {
+				if (bHasHeroShotFireball) {
+				
+					//alert("HALLO"); 	
+					
+					//large
+					monsterHitByHeroFireball(parseInt(mainImageTileFireballProjectilePosX),parseInt(mainImageTileFireballProjectilePosY), bossMonsterImageTilePosX+iImageFrameWidthLarge/2*2,bossMonsterImageTilePosY+iImageFrameHeightLarge/2*2);
+					
+					setFireballExplosionEffectPositionLarge(bossMonsterImageTilePosX+iImageFrameWidthLarge/2,bossMonsterImageTilePosY+iImageFrameHeightLarge/2);
+					
+					bossMonsterImageTile.style.visibility="hidden";				
+					isBossMonsterTileActive=false;
+				}
+			}
+		}
+	}			
 			
 	function verifyHeroCollideWithSnakeMonsters(inputArraySnakeMonsterWithIdCount) {
 			
@@ -3644,7 +3848,7 @@ alert("iInputY: "+iInputY);
 */		
 	}		
 	
-function verifyHeroCollideWithKey(keyImageTileWithId) {
+	function verifyHeroCollideWithKey(keyImageTileWithId) {
 		var mainImageTileTankBody = document.getElementById("mainImageTileImageTankBodyId");
 		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");	
 
@@ -3690,8 +3894,8 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 
 		//var grassBgImage = document.getElementById("grassBgImageId");	
 
-    //added by Mike, 20231125
-    var mainImageMonsterBoss = document.getElementById("mainImageMonsterBoss");
+		//added by Mike, 20231125
+		var bossMonsterImageTile = document.getElementById("bossMonsterImageId");
 
 /*
 	var batMonsterImageTile = document.getElementById("batMonsterImageId");
@@ -4035,8 +4239,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 	  	bossBattleBgImage.style.opacity = "1.0";
 		bossBattleBgImage.style.filter  = 'alpha(opacity=100)'; // IE fallback
 	
-
-        mainImageMonsterBoss.style.visibility = "hidden"; //"visible";
+        bossMonsterImageTile.style.visibility = "hidden"; //"visible";
 
 		executeExplosionEffect();
 		executeFireballExplosionEffect();
@@ -4258,6 +4461,9 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 		alert("iColumnCount: "+iColumnCount);
 */
 		arrayHasVisitedRoom[iColumnCount][iRowCount]=1;
+
+		//debug
+		bHasObtainedKeyAtRoom11=true;
 
 		switch(iCurrMapLocation) {
 			//OK; TOP DOOR; REST of the sides WALLS
@@ -5276,6 +5482,117 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 			//OK; LEFT DOOR, REST of the sides WALLS
 			case 32: //BOSS ROOM; BOSS KEY NECESSARY
 				doorImageLeft.style.visibility="visible";
+				//bossMonsterImageTile.style.visibility = "visible";
+			
+				if (!hasInitMapLocation) {
+					isBossMonsterTileActive=true;
+					bossMonsterImageTile.style.visibility="visible";
+					
+					//TilePosX; width; square based on iStageMaxHeight
+					bossMonsterImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthLarge/2;
+					bossMonsterImageTilePosY=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameHeightLarge/2;
+					
+					
+/*				
+					//pearlImageTile.style.visibility="hidden";
+					
+					iPearlInvincibileCount=0;
+					
+					//at BOTTOM-RIGHT
+					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;					
+					
+					pearlImageTile.style.top=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
+									
+					for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
+						arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						arrayGrassMonsterCountId[iCount][MONSTER_STEPX]=0;
+						arrayGrassMonsterCountId[iCount][MONSTER_STEPY]=0;
+					}
+			
+					for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
+						arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
+						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+					}
+			
+					//BOTTOM					
+					arrayGrassMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;
+					arrayGrassMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
+
+					//RIGHT
+					arrayGrassMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*1;
+					arrayGrassMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
+					
+					//LEFT
+					arrayGrassMonsterCountId[2][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*3;
+					arrayGrassMonsterCountId[2][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
+
+					//TOP					
+					arrayGrassMonsterCountId[3][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;
+					arrayGrassMonsterCountId[3][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*5-iImageFrameHeightDefault/2;				
+					
+					//SNAKE
+					arraySnakeMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2-iImageFrameWidthDefault;
+					arraySnakeMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
+					
+					arraySnakeMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2+iImageFrameWidthDefault;
+					arraySnakeMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
+					
+					arraySnakeMonsterCountId[1][MONSTER_STEPX]=1;
+					arraySnakeMonsterCountId[1][MONSTER_STEPY]=1;		
+*/					
+										
+					//alert("DITO");
+
+					hasInitMapLocation=true;
+				}
+				
+/*				
+				//at center of field of grass
+				//if has not yet obtained pearl item in this room
+				if (!bHasObtainedPearlAtRoom41) {
+					//if (!arrayGrassMonsterCountId[3][MONSTER_IS_ACTIVE]) {
+					//if both snakes are now inactive
+					if ((!arraySnakeMonsterCountId[0][MONSTER_IS_ACTIVE]) && (!arraySnakeMonsterCountId[1][MONSTER_IS_ACTIVE])) {
+						pearlImageTile.style.visibility="visible";
+						
+						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
+							verifyHeroCollideWithPearl(pearlImageTile);
+						}
+						
+						iPearlInvincibileCount++;
+					}
+				}
+*/				
+/*
+				for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
+					if (arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
+						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						//alert(iCount);
+
+						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.top = 0+arraySnakeMonsterCountId[iCount][MONSTER_POSY]+"px"; //iInnerVerticalOffset
+						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.left = 0+arraySnakeMonsterCountId[iCount][MONSTER_POSX]+"px"; //iInnerHorizontalOffset
+				
+						executeSnakeMonsterWalkingAnimation(arraySnakeMonsterCountId[iCount]);					
+						verifyHeroCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
+						verifyHeroFireballCollideWithSnakeMonsters(arraySnakeMonsterCountId[iCount]);
+					}
+				}	
+*/
+
+				if (isBossMonsterTileActive) {
+					bossMonsterImageTile.style.visibility="visible";
+
+					bossMonsterImageTile.style.top = 0+bossMonsterImageTilePosY+"px"; //iInnerVerticalOffset
+					bossMonsterImageTile.style.left = 0+bossMonsterImageTilePosX+"px"; //iInnerHorizontalOffset
+			
+					executeBossMonsterWalkingAnimation();
+					verifyHeroCollideWithBossMonster();					
+					verifyHeroFireballCollideWithBossMonster();
+				}
+				
 			
 				//WALL
 				//square rooms; hence, iStageMaxHeight				
@@ -5749,7 +6066,7 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 /*
     if (bIsMonsterBossHit) {
       //alert(iAnimationCount);
-      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iBossMonsterAnimationCount) + "px -" + 128 + "px";
+      bossMonsterImageTile.style.objectPosition = "-" + 128*(iBossMonsterAnimationCount) + "px -" + 128 + "px";
 
       if (iAnimationCount==1) {
         bIsMonsterBossHit=false;
@@ -5762,20 +6079,20 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 		
 
 		//edited by Mike, 20231128
-//		if (mainImageMonsterBoss.style.visibility!="hidden") {
+//		if (bossMonsterImageTile.style.visibility!="hidden") {
 		if (!bIsBossBattleDone) {
-			setMonsterExplosionEffectPosition(parseInt(mainImageMonsterBoss.style.left)+iMonsterBossTileWidth/4,parseInt(mainImageMonsterBoss.style.top)+iMonsterBossTileHeight/4);
+			setMonsterExplosionEffectPosition(parseInt(bossMonsterImageTile.style.left)+iMonsterBossTileWidth/4,parseInt(bossMonsterImageTile.style.top)+iMonsterBossTileHeight/4);
 		}
 
         if (iBossLife<=0) {
             //alert("MISSION COMPLETE!");
-			mainImageMonsterBoss.style.visibility="hidden";
+			bossMonsterImageTile.style.visibility="hidden";
 			bIsBossBattleDone=true;
         }
       }
     }
     else {
-      mainImageMonsterBoss.style.objectPosition = "-" + 128*(iBossMonsterAnimationCount) + "px -" + 0 + "px";
+      bossMonsterImageTile.style.objectPosition = "-" + 128*(iBossMonsterAnimationCount) + "px -" + 0 + "px";
     }
 */
 
@@ -5795,8 +6112,8 @@ function verifyHeroCollideWithKey(keyImageTileWithId) {
 */
 
 /*
-    mainImageMonsterBoss.style.left = (iHorizontalOffset+mainImageMonsterBossPosX)+"px";
-    mainImageMonsterBoss.style.top = (iVerticalOffsetInnerScreen+mainImageMonsterBossPosY)+"px";
+    bossMonsterImageTile.style.left = (iHorizontalOffset+bossMonsterImageTilePosX)+"px";
+    bossMonsterImageTile.style.top = (iVerticalOffsetInnerScreen+bossMonsterImageTilePosY)+"px";
 */
 
 //-----------------------
@@ -5906,9 +6223,9 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 /*
 	//edited by Mike, 20231128
 	if (!bIsBossBattleDone) {
-		if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, parseInt(mainImageMonsterBoss.style.left),parseInt(mainImageMonsterBoss.style.top))) {
+		if (isPointsOfRectIntersectingPointsOfRect(mainImageTileProjectilePosX,mainImageTileProjectilePosY, parseInt(bossMonsterImageTile.style.left),parseInt(bossMonsterImageTile.style.top))) {
 	//        alert("HIT!");
-		  //mainImageMonsterBoss.style.visibility="hidden";
+		  //bossMonsterImageTile.style.visibility="hidden";
 		  //added by Mike, 20231126
 		  bIsMonsterBossHit=true;
 
@@ -6925,7 +7242,45 @@ function initTouchInput() {
 
     return true;
   }
+  
+  //@return bool
+  //note input iImageFrameWidth2*2 and iImageFrameHeight2*2
+  function isPointsOfRectIntersectingPointsOfRectMonsterLarge(iXPos1, iYPos1, iXPos2, iYPos2, iImageFrameWidth1, iImageFrameHeight1, iImageFrameWidth2, iImageFrameHeight2) {
+  	let mdo1XPos = iXPos1;
+  	let mdo1YPos = iYPos1;
 
+  	//edited by Mike, 20230524
+  	//set as a point; not a tile
+  	let mdo1Width = iImageFrameWidth1; //1;//iPuzzleTileWidth;
+  	let mdo1Height = iImageFrameHeight1; //1;//iPuzzleTileHeight;
+
+  	let mdo2XPos = iXPos2;
+  	let mdo2YPos = iYPos2;
+
+  	let mdo2Width = iImageFrameWidth2; //iPuzzleTileWidth;
+  	let mdo2Height = iImageFrameHeight2; //iPuzzleTileHeight;
+
+  	let iOffsetXPosAsPixel = iImageFrameWidth1*0.4;//0.1;//0;
+  	let iOffsetYPosAsPixel = iImageFrameHeight1*0.4;//0.1;//0;
+
+  	//alert("mdo1XPos: "+mdo1XPos);
+
+  /*
+  	alert("mdo1XPos: "+mdo1XPos+"; "+"mdo1Width: "+mdo1Width);
+  	alert("mdo2XPos: "+mdo2XPos+"; "+"mdo2Width: "+mdo2Width);
+  */
+
+  	if ((mdo2YPos+mdo2Height < mdo1YPos+iOffsetYPosAsPixel) || //is the bottom of mdo2 above the top of mdo1?
+  		(mdo2YPos > mdo1YPos+mdo1Height-iOffsetYPosAsPixel) || //is the top of mdo2 below the bottom of mdo1?
+  		(mdo2XPos+mdo2Width < mdo1XPos+iOffsetXPosAsPixel) || //is the right of mdo2 to the left of mdo1?
+  		(mdo2XPos > mdo1XPos+mdo1Width-iOffsetXPosAsPixel)) //is the left of mdo2 to the right of mdo1?
+  	{
+  		//no collision
+  		return false;
+  	}
+
+    return true;
+  }  
 
 	function onLoad() {
 //alert(navigator.userAgent);
@@ -7080,8 +7435,7 @@ opting to put assets folder in "html_application" folder instead
 		<!-- added by Mike, 20231121 -->
 		<img id="mouseInputImageId" class="ImageMouseInput" src="assets/images/inputImageLarge.png">
 
-    <!-- added by Mike, 20231125 -->
-    <img id="mainImageMonsterBoss" class="ImageMonsterBoss" src="assets/images/inputImageLarge.png">
+		<img id="bossMonsterImageId" class="ImageMonsterBoss" src="assets/images/inputImageLarge.png">
 
 
 		<!-- added by Mike, 20231104;
