@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241125; from 20241124
+' @date updated: 20241126; from 20241125
 ' @website: www.usbong.ph
 '
 ' References: GitHub itch.io Game Off 2021, 2022, 2023
@@ -978,6 +978,8 @@ var iCurrHeroManaMax=10;
 var iCurrHeroMana=iCurrHeroManaMax;
 var iCurrHeroManaAnimationDelayCount=0;
 var iCurrHeroManaAnimationDelayCountMax=5;
+var iCurrHeroProjectileManaAnimationDelayCount=0;
+var iCurrHeroProjectileManaAnimationDelayCountMax=5;
 
 var iCurrBossMonsterLifeMax=20;
 var iCurrBossMonsterLife=iCurrBossMonsterLifeMax;
@@ -1585,7 +1587,7 @@ var bIsHeroFacingLeft=false;
 		
 		if (iMiniMapAnimationCount==0) {
 			//myCanvasContext.fillStyle = "#ff0000"; //"#ffffff";
-			
+/*			
 			myCanvasContext.strokeStyle = "#ff0000";
 			
 			myCanvasContext.beginPath();
@@ -1593,6 +1595,10 @@ var bIsHeroFacingLeft=false;
 			myCanvasContext.rect(0+iXPos+iColumnCount*iMiniMapRoomWidth+iMiniMapSpacing*iColumnCount, 0+iYPos+iRowCount*iMiniMapRoomHeight+iMiniMapSpacing*iRowCount, iMiniMapRoomWidth, iMiniMapRoomHeight);
 
 			myCanvasContext.stroke();
+*/			
+			myCanvasContext.fillStyle = "#ff7f27"; //"#000000"; //"#00c7ff"; //"#ff0000";
+			myCanvasContext.fillRect(0+iXPos+iColumnCount*iMiniMapRoomWidth+iMiniMapSpacing*iColumnCount, 0+iYPos+iRowCount*iMiniMapRoomHeight+iMiniMapSpacing*iRowCount, iMiniMapRoomWidth, iMiniMapRoomHeight);			
+
 		}
 		else {			
 			myCanvasContext.fillStyle = "#ffffff";
@@ -1627,7 +1633,7 @@ var bIsHeroFacingLeft=false;
 		//myCanvasContext.fillStyle = "#00c7ff"; //00d9ff; //"#ff0000";
 
 		if (iCurrHeroLife>=5) {
-			myCanvasContext.fillStyle = "#00c7ff";		
+			myCanvasContext.fillStyle = "#00c7ff"; //sky blue
 		}
 		else if (iCurrHeroLife>=2) {
 			myCanvasContext.fillStyle = "#ff6b00"; //orange
@@ -1654,7 +1660,7 @@ var bIsHeroFacingLeft=false;
 				}
 				myCanvasContext.fillStyle = "#000000"; //black
 			}			
-			iCurrHeroLifeAnimationDelayCount=iCurrHeroLifeAnimationDelayCount+1;			
+			iCurrHeroLifeAnimationDelayCount++;			
 		}
 		
 		//myCanvasContext.fillRect(0+iXPos, 0+iYPos, iHeroLifeBarWidth*iCurrHeroLife, iHeroLifeBarHeight);
@@ -1664,6 +1670,7 @@ var bIsHeroFacingLeft=false;
 		myCanvasContext.fillRect(0+iXPos, 0+iYPos, iHeroLifeBarWidth*iCurrHeroLife, iHeroLifeBarHeight);
 	}	
 	
+
 	function drawHeroManaBar(myCanvasContext, iXPos, iYPos) {	
 
 		var mainImageTileFireballProjectile = document.getElementById("mainImageTileFireballProjectileImageId");
@@ -1701,17 +1708,17 @@ var bIsHeroFacingLeft=false;
 			//iCurrHeroMana=iCurrHeroManaMax;
 		if (mainImageTileFireballProjectile.style.visibility=="hidden") {
 		
-			if (iCurrHeroManaAnimationDelayCount==iCurrHeroManaAnimationDelayCountMax) {
+			if (iCurrHeroProjectileManaAnimationDelayCount==iCurrHeroProjectileManaAnimationDelayCountMax) {
 				if (iCurrHeroMana<iCurrHeroManaMax) {
 					iCurrHeroMana++;
 				}			
-				iCurrHeroManaAnimationDelayCount=0;
+				iCurrHeroProjectileManaAnimationDelayCount=0;
 			}
 			else {
-				iCurrHeroManaAnimationDelayCount++;
+				iCurrHeroProjectileManaAnimationDelayCount++;
 			}
 		}
-
+			
 /*
 		myCanvasContext.fillStyle = "#ffffff"; //white		
 		myCanvasContext.fillRect(0+iXPos+textManaBarDiv.innerHTML.length*6-iHeroManaBarPaddingX, 0+iYPos-iHeroManaBarPaddingY, iHeroManaBarWidth*iCurrHeroManaMax+iHeroManaBarPaddingX, iHeroManaBarHeight+iHeroManaBarPaddingY);
@@ -1719,7 +1726,20 @@ var bIsHeroFacingLeft=false;
 
 		//myCanvasContext.fillStyle = "#000000"; //black		
 		//myCanvasContext.fillStyle = "#ff6b00"; //orange
-		myCanvasContext.fillStyle = "#00dd00";
+		//myCanvasContext.fillStyle = "#00dd00";
+
+		//Game Off 2021; TUGON
+		if (iCurrHeroManaAnimationDelayCount<10) {//5) {
+			myCanvasContext.fillStyle = "#00dd00";
+		}
+		else {
+			if (iCurrHeroManaAnimationDelayCount>20) {//10) {
+				iCurrHeroManaAnimationDelayCount=0;
+			}
+			myCanvasContext.fillStyle = "#00cc00";
+		}	
+		iCurrHeroManaAnimationDelayCount++;
+
 
 		myCanvasContext.fillRect(0+iXPos, 0+iYPos, iHeroManaBarWidth*iCurrHeroMana, iHeroManaBarHeight);
 		
@@ -2632,7 +2652,8 @@ alert("iInputY: "+iInputY);
 		riverImageRight.style.visibility="visible";
 
 		//iMonsterAnimationDelayCountMax=15;
-		
+
+/*		
 		if (iRiverAnimationDelayCount>=iRiverAnimationDelayCountMax) {
 			iRiverAnimationCount=(iRiverAnimationCount+1)%2; //3; //last hidden
 
@@ -2658,6 +2679,20 @@ alert("iInputY: "+iInputY);
 		else  { 
 			riverImageRight.style.objectPosition = "-" + iRiverImageFrameWidth + "px -" + iFrameY + "px";
 		}
+*/
+			var iFrameY=0;
+
+			//Game Off 2021; TUGON
+			if (iRiverAnimationDelayCount<10) {//5) {
+				riverImageRight.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+			}
+			else {
+				if (iRiverAnimationDelayCount>20) {//10) {
+					iRiverAnimationDelayCount=0;
+				}
+				riverImageRight.style.objectPosition = "-" + iRiverImageFrameWidth + "px -" + iFrameY + "px";
+			}			
+			iRiverAnimationDelayCount++;				
 	}	
 
 	function executeBatMonsterWalkingAnimation() {
@@ -3569,6 +3604,16 @@ alert("iInputY: "+iInputY);
 		setHeroAttackEffectPosition(iMonsterImageTilePosX,iMonsterImageTilePosY); 
 		
 		resetProjectile();
+		
+		var myAudioEffectCannonFire = document.getElementById("myAudioEffectCannonFireId");
+
+		myAudioEffectCannonFire.setAttribute("src", sAudioEffectActionCannonFire);
+
+		//fMyAudioEffectVolume=0.2;
+		fMyAudioEffectCannonFireVolume=1.0;
+		myAudioEffectCannonFire.volume=fMyAudioEffectCannonFireVolume;
+		myAudioEffectCannonFire.loop=false;
+		myAudioEffectCannonFire.play();
 	}
 
 	function monsterHitByHeroFireball(mainImageTileFireballProjectilePosX, mainImageTileFireballProjectilePosY, iMonsterImageTilePosX, iMonsterImageTilePosY) {	
@@ -3580,6 +3625,16 @@ alert("iInputY: "+iInputY);
 		
 		resetProjectile();
 		resetFireballProjectile();
+		
+		var myAudioEffectCannonFire = document.getElementById("myAudioEffectCannonFireId");
+
+		myAudioEffectCannonFire.setAttribute("src", sAudioEffectActionCannonFire);
+
+		//fMyAudioEffectVolume=0.2;
+		fMyAudioEffectCannonFireVolume=1.0;
+		myAudioEffectCannonFire.volume=fMyAudioEffectCannonFireVolume;
+		myAudioEffectCannonFire.loop=false;
+		myAudioEffectCannonFire.play();		
 	}
 	
 	function verifyHeroCollideWithRiver() {
@@ -4388,7 +4443,8 @@ alert("iInputY: "+iInputY);
 
 		//executeTransitionEffect();
 
-	//bIsMissionDone=true;
+	  //debug
+	  //bIsMissionDone=true;
 
 	  if (iCurrPearlCount>=iCurrPearlCountMax) {
 		bIsMissionDone=true;
@@ -4473,8 +4529,10 @@ alert("iInputY: "+iInputY);
 	
 			heroLifeBarStatusImageTile.style.visibility="visible";
 	
+			//iCurrHeroLife=iCurrHeroLifeMax;
 			drawHeroLifeBar(myCanvasTwoContext,parseInt(heroLifeBarStatusImageTile.style.left), 0+iStageMaxHeight/60); 
-		
+
+			//iCurrHeroMana=iCurrHeroManaMax;		
 			drawHeroManaBar(myCanvasTwoContext,parseInt(heroLifeBarStatusImageTile.style.left), 0+parseInt(textLifeBarDiv.style.bottom)+5); 			
 	
 			drawPearlStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60); 
@@ -6978,6 +7036,7 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 
 		bHasFired=true;
 
+/*		//TODO: -use: movement sound
 		var myAudioEffectCannonFire = document.getElementById("myAudioEffectCannonFireId");
 
 		myAudioEffectCannonFire.setAttribute("src", sAudioEffectActionCannonFire);
@@ -6987,6 +7046,7 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 		myAudioEffectCannonFire.volume=fMyAudioEffectCannonFireVolume;
 		myAudioEffectCannonFire.loop=false;
 		myAudioEffectCannonFire.play();
+*/		
     }
   }
 
@@ -7305,6 +7365,7 @@ alert(Date.now()-iMouseClickStartTime);
 						//need to also display movement in animation;
 						iHeroAnimationCount=1;
 				
+/*	//TODO: -update: to use fireball sound
 				var myAudioEffectCannonFire = document.getElementById("myAudioEffectCannonFireId");
 
 				myAudioEffectCannonFire.setAttribute("src", sAudioEffectActionCannonFire);
@@ -7314,6 +7375,7 @@ alert(Date.now()-iMouseClickStartTime);
 				myAudioEffectCannonFire.volume=fMyAudioEffectCannonFireVolume;
 				myAudioEffectCannonFire.loop=false;
 				myAudioEffectCannonFire.play();
+*/				
 
 /*
 		if (newMainImageTileProjectilePosX+iImageFrameWidth/2<0) {
