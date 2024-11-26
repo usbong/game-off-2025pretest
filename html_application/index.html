@@ -258,7 +258,7 @@
 		}
 
 
-		.ImageExplosion {
+		.ImageExplosion, .ImageInitFireball {
 			position: absolute;
 
 			/*	//edited by Mike, 20231120
@@ -1076,7 +1076,7 @@ var bHasObtainedPearlAtRoom33=false;
 var bHasObtainedPearlAtRoom43=false;
 var bHasObtainedPearlAtRoom22=false;
 //var bHasObtainedPearlAtRoom11=false;
-var bHasObtainedKeyAtRoom11=false;
+var bHasObtainedKeyAtRoom1=false;
 var bHasUsedKeyAtRoom11=false;
 var bHasObtainedAmuletAtRoom32=false; //Pendant; Agimat
 var bHasObtainedPearlAtRoom12=false;
@@ -1087,6 +1087,16 @@ var iPearlStatusAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iPearlStatusAnimationCountMax=5;
 var iPearlStatusAnimationDelayCount=0;
 var iPearlStatusAnimationDelayCountMax=2;
+
+var iAmuletStatusAnimationCount=-1; //0; //due to immediately +1 in execution;
+var iAmuletStatusAnimationCountMax=5;
+var iAmuletStatusAnimationDelayCount=0;
+var iAmuletStatusAnimationDelayCountMax=2;
+
+var iHeroFireballProjectileAnimationCount=-1; //0; //due to immediately +1 in execution;
+var iHeroFireballProjectileAnimationCountMax=5;
+var iHeroFireballProjectileAnimationDelayCount=0;
+var iHeroFireballProjectileAnimationDelayCountMax=2;
 
 var iKeyStatusAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iKeyStatusAnimationCountMax=5;
@@ -1105,6 +1115,11 @@ var iDustEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iDustEffectAnimationCountMax=5;
 var iDustEffectAnimationDelayCount=0;
 var iDustEffectAnimationDelayCountMax=4;//1;
+
+var iInitFireballEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
+var iInitFireballEffectAnimationCountMax=5;
+var iInitFireballEffectAnimationDelayCount=0;
+var iInitFireballEffectAnimationDelayCountMax=4;//1;
 
 //added by Mike, 20241113
 var iHeroAttackEffectAnimationCount=-1; //0; //due to immediately +1 in execution;
@@ -1823,7 +1838,39 @@ var bIsHeroFacingLeft=false;
 
 	function drawAmuletStatus(myCanvasContext, iXPos, iYPos) {	
 		var amuletStatusImageTile = document.getElementById("amuletStatusImageTileId");
-				
+
+		//var iFrameY=0;
+		var iFrameY=iImageFrameHeight*3;	
+
+/*		
+		if (iAmuletStatusAnimationDelayCount>=iAmuletStatusAnimationDelayCountMax) {			
+			iAmuletStatusAnimationCount=(iAmuletStatusAnimationCount+1)%2;
+
+			iAmuletStatusAnimationDelayCount=0;
+		}
+		else {
+			iAmuletStatusAnimationDelayCount++;
+		}
+		
+		amuletStatusImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*2-iImageFrameWidthDefault*(iAmuletStatusAnimationCount) + "px -" + iFrameY + "px";
+*/
+		//Game Off 2021; TUGON
+		if (iAmuletStatusAnimationDelayCount<5) {//5) {
+			//riverImageRight.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+			iAmuletStatusAnimationCount=0;
+		}
+		else {
+			if (iAmuletStatusAnimationDelayCount>10) {//10) {
+				iAmuletStatusAnimationDelayCount=0;
+			}
+			//riverImageRight.style.objectPosition = "-" + iRiverImageFrameWidth + "px -" + iFrameY + "px";
+			iAmuletStatusAnimationCount=1;
+		}			
+		iAmuletStatusAnimationDelayCount++;	
+
+		amuletStatusImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*2-iImageFrameWidthDefault*(iAmuletStatusAnimationCount) + "px -" + iFrameY + "px";		
+
+						
 		amuletStatusImageTile.style.visibility="visible";				
 		amuletStatusImageTile.style.left=0+iXPos+"px";
 		amuletStatusImageTile.style.top=0+iYPos+iImageFrameHeightDefault*1+"px";
@@ -1892,7 +1939,7 @@ var bIsHeroFacingLeft=false;
 		bHasObtainedPearlAtRoom43=false;
 		bHasObtainedPearlAtRoom22=false;
 		//bHasObtainedPearlAtRoom11=false;
-		bHasObtainedKeyAtRoom11=false;
+		bHasObtainedKeyAtRoom1=false;
 		bHasUsedKeyAtRoom11=false;
 		bHasObtainedAmuletAtRoom32=false;
 		bHasObtainedPearlAtRoom12=false;
@@ -2495,6 +2542,31 @@ alert("iInputY: "+iInputY);
 		dustEffectImage.style.left = iInputX;//+iImageDustEffectAnimationWidth/2;
 		dustEffectImage.style.top = iInputY+iImageDustEffectAnimationHeight/4; //near feet
 	}
+	
+	function setInitFireballEffectPosition(iInputX, iInputY) {
+		var initFireballEffectImage = document.getElementById("initFireballEffectImageId");
+
+		if (initFireballEffectImage.style.visibility=="visible") {
+		  return;
+		}
+		
+		var iFrameY=128*3;
+
+		initFireballEffectImage.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+
+		initFireballEffectImage.style.visibility="visible";
+
+		iInitFireballEffectAnimationDelayCount=iInitFireballEffectAnimationDelayCountMax;
+
+		iInitFireballEffectAnimationCount=-1; //0;
+/*
+alert("iInputX: "+iInputX);
+alert("iInputY: "+iInputY);
+*/
+		initFireballEffectImage.style.left = iInputX-iImageFrameWidthLarge/2-iImageFrameWidthDefault/2;
+		initFireballEffectImage.style.top = iInputY-iImageFrameHeightLarge/2-iImageFrameHeightDefault/2;
+	}
+	
   
 	//added by Mike, 20240513
 	function setHeroAttackEffectPosition(iInputX, iInputY) {
@@ -2888,6 +2960,7 @@ alert("iInputY: "+iInputY);
 
 		inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.visibility="visible";
 				
+/*				
 		if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]>=inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT_MAX]) {
 			inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_COUNT]=(inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_COUNT]+1)%2; //3; //last hidden
 
@@ -2903,32 +2976,37 @@ alert("iInputY: "+iInputY);
 		else {
 			inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]++;
 		}
+*/		
 
 		//==============================
 		//AI; movement		
 		if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]>=inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT_MAX]/2) {
 		
 			if (inputArraySnakeMonsterWithIdCount[MONSTER_POSY]<parseInt(mainImageTile.style.top)) {//mainImageTilePosY) {
-				inputArraySnakeMonsterWithIdCount[MONSTER_POSY]+=inputArraySnakeMonsterWithIdCount[MONSTER_STEPY];				
+				inputArraySnakeMonsterWithIdCount[MONSTER_POSY]+=inputArraySnakeMonsterWithIdCount[MONSTER_STEPY];								
 			}
 			else {
-				inputArraySnakeMonsterWithIdCount[MONSTER_POSY]-=inputArraySnakeMonsterWithIdCount[MONSTER_STEPY];
+				inputArraySnakeMonsterWithIdCount[MONSTER_POSY]-=inputArraySnakeMonsterWithIdCount[MONSTER_STEPY];				
 			}
 			
-			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.top=inputArraySnakeMonsterWithIdCount[MONSTER_POSY]+"px";
+			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.top=inputArraySnakeMonsterWithIdCount[MONSTER_POSY]+"px";		
 
 			if (inputArraySnakeMonsterWithIdCount[MONSTER_POSX]<mainImageTilePosX) {
 				inputArraySnakeMonsterWithIdCount[MONSTER_POSX]+=inputArraySnakeMonsterWithIdCount[MONSTER_STEPX];
+				
 			}
 			else {
 				inputArraySnakeMonsterWithIdCount[MONSTER_POSX]-=inputArraySnakeMonsterWithIdCount[MONSTER_STEPX];
+				
 			}
 			
 			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.left=inputArraySnakeMonsterWithIdCount[MONSTER_POSX]+"px";	
 			
+			
 		}
 		//==============================
-			
+		
+/*
 		//var iFrameY=0;
 		var iFrameY=iImageFrameHeight*3;//2;//64*2; 128;
 
@@ -2939,6 +3017,34 @@ alert("iInputY: "+iInputY);
 		else if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_COUNT]==1) { 
 			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
 		}
+*/		
+
+		var iFrameY=iImageFrameHeight*3;
+
+		//Game Off 2021; TUGON
+		if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]<20) {//30//40) {
+			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+		}
+		else {
+			if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]>40) {//60//80) {
+				inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]=0;
+			}
+			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
+		}	
+		inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_DELAY_COUNT]++;
+		
+/*			
+		//var iFrameY=0;
+		var iFrameY=iImageFrameHeight*3;//2;//64*2; 128;
+
+		//currently two frames only
+		if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_COUNT]==0) { 
+			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+		}
+		else if (inputArraySnakeMonsterWithIdCount[MONSTER_ANIMATION_COUNT]==1) { 
+			inputArraySnakeMonsterWithIdCount[MONSTER_OBJECT].style.objectPosition = "-" + iImageFrameWidthDefault + "px -" + iFrameY + "px";
+		}
+*/						
 	}
 	
 	function executeGrassMonsterAnimation(inputArrayGrassMonsterWithIdCount) {		
@@ -3269,7 +3375,36 @@ alert("iInputY: "+iInputY);
 		var iFrameY=iImageFrameHeight*3;		
 		
 		//iAmuletAnimationDelayCount=0;
-		amuletImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*2 + "px -" + iFrameY + "px";	
+		//amuletImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*2 + "px -" + iFrameY + "px";	
+/*		
+		if (iAmuletStatusAnimationDelayCount>=iAmuletStatusAnimationDelayCountMax) {			
+			iAmuletStatusAnimationCount=(iAmuletStatusAnimationCount+1)%3;
+
+			iAmuletStatusAnimationDelayCount=0;
+		}
+		else {
+			iAmuletStatusAnimationDelayCount++;
+		}
+		
+		amuletImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*2-iImageFrameWidthDefault*iAmuletStatusAnimationCount + "px -" + iFrameY + "px";
+*/
+		
+		//Game Off 2021; TUGON
+		if (iAmuletStatusAnimationDelayCount<5) {//5) {
+			//riverImageRight.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+			iAmuletStatusAnimationCount=0;
+		}
+		else {
+			if (iAmuletStatusAnimationDelayCount>10) {//10) {
+				iAmuletStatusAnimationDelayCount=0;
+			}
+			//riverImageRight.style.objectPosition = "-" + iRiverImageFrameWidth + "px -" + iFrameY + "px";
+			iAmuletStatusAnimationCount=1;
+		}			
+		iAmuletStatusAnimationDelayCount++;	
+
+		amuletImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*2-iImageFrameWidthDefault*(iAmuletStatusAnimationCount) + "px -" + iFrameY + "px";		
+		
 	}	
 	
 	function executePearlStatusAnimation() {
@@ -3319,6 +3454,30 @@ alert("iInputY: "+iInputY);
 		
 		keyStatusImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*iKeyStatusAnimationCount + "px -" + iFrameY + "px";
 	}		
+	
+	function executeHeroFireballProjectileAnimation() {
+		var mainImageTileFireballProjectile = document.getElementById("mainImageTileFireballProjectileImageId");
+
+		if (mainImageTileFireballProjectile.style.visibility=="hidden") {
+			return;
+		}
+
+		//alert("DITO");
+
+		//var iFrameY=0;
+		var iFrameY=iImageFrameHeight*2;		
+		
+		if (iHeroFireballProjectileAnimationDelayCount>=iHeroFireballProjectileAnimationDelayCountMax) {			
+			iHeroFireballProjectileAnimationCount=(iHeroFireballProjectileAnimationCount+1)%2;
+
+			iHeroFireballProjectileAnimationDelayCount=0;
+		}
+		else {
+			iHeroFireballProjectileAnimationDelayCount++;
+		}		
+		
+		mainImageTileFireballProjectile.style.objectPosition = "-" + iImageFrameWidthDefault*iHeroFireballProjectileAnimationCount + "px -" + iFrameY + "px";
+	 }		
 
   function executeExplosionEffectToMonsterBoss() {
 		var explosionEffectImage = document.getElementById("explosionEffectToMonsterImageId");
@@ -3468,6 +3627,54 @@ alert("iInputY: "+iInputY);
 ////		}	
 		else {
 			dustEffectImage.style.visibility="hidden";
+		}		
+	}
+	
+	function executeInitFireballEffect() {
+		var initFireballEffectImage = document.getElementById("initFireballEffectImageId");
+
+		if (initFireballEffectImage.style.visibility=="hidden") {
+			return;
+		}
+
+		if (iInitFireballEffectAnimationDelayCount==iInitFireballEffectAnimationDelayCountMax) {
+			iInitFireballEffectAnimationCount=(iInitFireballEffectAnimationCount+1)%4;//5; //last hidden
+
+			iInitFireballEffectAnimationDelayCount=0;
+			
+		}
+		else {
+			iInitFireballEffectAnimationDelayCount++;
+
+	//		alert("iExplosionEffectAnimationCount: "+iExplosionEffectAnimationCount);
+		}
+		
+		//dustEffectImage.style.objectPosition = "-" + 0 + "px -" + 256 + "px";
+
+		//alert("iInitFireballEffectAnimationCount: "+iInitFireballEffectAnimationCount);
+		
+		var iFrameY=128*2+32*4;
+		//var iFrameY=0;
+
+		if (iInitFireballEffectAnimationCount==0) { //%2
+			initFireballEffectImage.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+		}
+		else if (iInitFireballEffectAnimationCount==1) {
+			initFireballEffectImage.style.objectPosition = "-" + 128 + "px -" + iFrameY + "px";
+			//alert(">>>>");
+		}
+		else if (iInitFireballEffectAnimationCount==2) {
+			initFireballEffectImage.style.objectPosition = "-" + 128*2 + "px -" + iFrameY + "px";
+			//alert(">>>>");
+		}
+/*		
+		else if (iInitFireballEffectAnimationCount==3) {
+			initFireballEffectImage.style.objectPosition = "-" + 128*3 + "px -" + iFrameY + "px";
+////			//alert(">>>>");
+		}	
+*/		
+		else {
+			initFireballEffectImage.style.visibility="hidden";
 		}		
 	}
 	
@@ -4175,8 +4382,8 @@ alert("iInputY: "+iInputY);
 			//iCurrKeyCount++;
 			
 			switch(iCurrMapLocation) {
-				case 11: //KEY
-					bHasObtainedKeyAtRoom11=true;
+				case 1: //KEY
+					bHasObtainedKeyAtRoom1=true;
 					break;		
 				case 32: //amulet
 					bHasObtainedAmuletAtRoom32=true;
@@ -4422,10 +4629,12 @@ alert("iInputY: "+iInputY);
 				myCanvasTwo.style.visibility="visible";
 
 				bossBattleBgImage.style.visibility = "visible";
-				bossBattleBgImagePart2.style.visibility = "visible";
 				
+				bossBattleBgImagePart2.style.visibility = "visible";
+				bossBattleBgImagePart2.style.visibility = "hidden";				
 				bossBattleBgImagePart2.style.left = 0+"px"; 			
 				bossBattleBgImagePart2.style.top = 0+iStageMaxHeight-bossBattleBgImagePart2.clientHeight+"px";
+
 				howToPlayGuideImage.style.visibility = "hidden";
 				howToPlayGuideImageFrame2.style.visibility = "hidden";
 				
@@ -4537,7 +4746,7 @@ alert("iInputY: "+iInputY);
 	
 			drawPearlStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60); 
 
-			if (bHasObtainedKeyAtRoom11) {
+			if (bHasObtainedKeyAtRoom1) {
 				drawKeyStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60+iImageFrameHeightDefault); 
 			}
 
@@ -4622,11 +4831,14 @@ alert("iInputY: "+iInputY);
 		//executeKeyStatusAnimation();
 
 		executeAmuletAnimation();
+		
+		executeHeroFireballProjectileAnimation();
 
 	//executeExplosionEffectToMonsterBoss();
 
 	executeDustEffect();
 	executeHeroAttackEffect();
+	executeInitFireballEffect();
 
 	//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);
 
@@ -4651,8 +4863,17 @@ alert("iInputY: "+iInputY);
 				bHasHeroReachedBottomOfRoomRiver=true;
 			}
 			else {
+/*			
 				mainImageTilePosY+=mainImageTileStepY;						
 				mainImageTileProjectilePosY=mainImageTilePosY;
+*/
+				if (mainImageTileFireballProjectile.style.visibility=="visible") {
+					mainImageTileProjectilePosY=mainImageTilePosY;
+				}
+				else {
+					mainImageTilePosY+=mainImageTileStepY;						
+					mainImageTileProjectilePosY=mainImageTilePosY;
+				}
 			}
 		}
 		else {
@@ -4729,7 +4950,7 @@ alert("iInputY: "+iInputY);
 	
 	drawPearlStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60); 
 
-	if (bHasObtainedKeyAtRoom11) {
+	if (bHasObtainedKeyAtRoom1) {
 		drawKeyStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60+iImageFrameHeightDefault); 
 	}
 
@@ -4883,6 +5104,10 @@ alert("iInputY: "+iInputY);
 		//debug
 		//bHasObtainedKeyAtRoom11=true;
 		//bHasObtainedAmuletAtRoom32=true;
+
+		//iCurrMapLocation=11;
+		//iCurrMapLocation=1;
+		//iCurrMapLocation=32;
 
 		switch(iCurrMapLocation) {
 			//OK; TOP DOOR; REST of the sides WALLS
@@ -5166,7 +5391,7 @@ alert("iInputY: "+iInputY);
 						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
 					}
 			
-					arraySnakeMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault;
+					arraySnakeMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;
 					arraySnakeMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
 					
 					arraySnakeMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault;
@@ -6081,7 +6306,7 @@ alert("iInputY: "+iInputY);
 					if (((mainImageTilePosY>=iDoorImageRightPosStartY) && (mainImageTilePosY+iImageFrameWidthDefault<=iDoorImageRightPosEndY)) ||	
 						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageRightPosStartX,iDoorImageRightPosStartY, iImageFrameWidthDefault, iImageFrameHeightDefault*2))) { 
 						
-						if (bHasObtainedKeyAtRoom11) {						
+						if (bHasObtainedKeyAtRoom1) {						
 							//OK; wraps around
 							mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
 							
@@ -6289,12 +6514,54 @@ alert("iInputY: "+iInputY);
 				break;		
 			//OK; TOP, BOTTOM, RIGHT DOORS; REST of the sides WALLS
 			case 21:
-				doorImageTop.style.visibility="visible";
+				//secret; top door
+				doorImageTop.style.visibility="hidden";//"visible";
 				doorImageBottom.style.visibility="visible";
 				doorImageRight.style.visibility="visible";
 				
-				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {					
+				if (!hasInitMapLocation) {
+					for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
+						arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						arrayGrassMonsterCountId[iCount][MONSTER_STEPX]=0;
+						arrayGrassMonsterCountId[iCount][MONSTER_STEPY]=0;
+					}
+			
+					//BOTTOM					
+					arrayGrassMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+					arrayGrassMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
 
+					//RIGHT
+					arrayGrassMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*3;
+					arrayGrassMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iImageFrameWidthDefault*4+iImageFrameHeightDefault/2;
+					
+					//LEFT
+					arrayGrassMonsterCountId[2][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*3;
+					arrayGrassMonsterCountId[2][MONSTER_POSY]=iInnerVerticalOffset+iImageFrameWidthDefault*4+iImageFrameHeightDefault/2;
+
+					//TOP					
+					arrayGrassMonsterCountId[3][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+					arrayGrassMonsterCountId[3][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameWidthDefault*2-iImageFrameHeightDefault*1;						
+
+					hasInitMapLocation=true;
+				}
+			
+				for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
+					if (arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						//alert(iCount);
+
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.top = 0+arrayGrassMonsterCountId[iCount][MONSTER_POSY]+"px"; //iInnerVerticalOffset
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.left = 0+arrayGrassMonsterCountId[iCount][MONSTER_POSX]+"px"; //iInnerHorizontalOffset
+				
+						executeGrassMonsterAnimation(arrayGrassMonsterCountId[iCount]);					
+						verifyHeroCollideWithGrassMonsters(arrayGrassMonsterCountId[iCount]);
+					}
+				}				
+				
+				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {					
 					if (((mainImageTilePosX>=iDoorImageTopPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageTopPosEndX)) || 					
 						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageTopPosStartX,iDoorImageTopPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault*2))) { 
 						//OK; wraps around
@@ -6534,8 +6801,124 @@ alert("iInputY: "+iInputY);
 					}					
 				}				
 				break;		
+			//OK; TOP, BOTTOM DOOR; REST of the sides WALLS
+			//secret passage
+			case 11:				
+				bossBattleBgImage.style.visibility="hidden";
+				doorImageTop.style.visibility="visible";
+				doorImageBottom.style.visibility="visible";
+				//doorImageRight.style.visibility="visible";
+				
+				if (!hasInitMapLocation) {
+					for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
+						arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						arrayGrassMonsterCountId[iCount][MONSTER_STEPX]=0;
+						arrayGrassMonsterCountId[iCount][MONSTER_STEPY]=0;
+					}
+			
+					//BOTTOM					
+					arrayGrassMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+					arrayGrassMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*2-iImageFrameHeightDefault/2;
+
+					//RIGHT
+					arrayGrassMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+					arrayGrassMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iImageFrameWidthDefault*4+iImageFrameHeightDefault/2;
+					
+					//LEFT
+					arrayGrassMonsterCountId[2][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+					arrayGrassMonsterCountId[2][MONSTER_POSY]=iInnerVerticalOffset+iImageFrameWidthDefault*6+iImageFrameHeightDefault/2;
+
+					//TOP					
+					arrayGrassMonsterCountId[3][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+					arrayGrassMonsterCountId[3][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameWidthDefault*2-iImageFrameHeightDefault*1;						
+
+					hasInitMapLocation=true;
+				}
+			
+				for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
+					if (arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						//alert(iCount);
+
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.top = 0+arrayGrassMonsterCountId[iCount][MONSTER_POSY]+"px"; //iInnerVerticalOffset
+						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.left = 0+arrayGrassMonsterCountId[iCount][MONSTER_POSX]+"px"; //iInnerHorizontalOffset
+				
+						executeGrassMonsterAnimation(arrayGrassMonsterCountId[iCount]);					
+						verifyHeroCollideWithGrassMonsters(arrayGrassMonsterCountId[iCount]);
+					}
+				}				
+				
+				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {					
+					if (((mainImageTilePosX>=iDoorImageTopPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageTopPosEndX)) || 					
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageTopPosStartX,iDoorImageTopPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault*2))) { 
+						//OK; wraps around
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*3-iImageFrameHeightDefault;
+						
+						mainImageTilePosX=iDoorImageTopPosStartX+iImageFrameWidthDefault/2;
+						
+						resetProjectile();			
+						
+						//DOOR
+						iCurrMapLocation=1;
+						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
+						mainImageTileFireballProjectile.style.visibility="hidden";
+						mainImageTileFireballProjectilePosY=0;
+						mainImageTileFireballProjectilePosX=0;					
+					}			
+					else {
+						//OK;
+						mainImageTilePosY=0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2;
+						resetProjectile();						
+					}					
+				}
+				//bottom door
+				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset-iImageFrameHeightDefault/2) {
+						
+					if ((((mainImageTilePosX>=iDoorImageBottomPosStartX) && (mainImageTilePosX+iImageFrameWidthDefault<=iDoorImageBottomPosEndX))) ||	
+						(isPointsOfRectIntersectingPointsOfRectDoor(mainImageTilePosX+iImageFrameWidthDefault/2,mainImageTilePosY+iImageFrameHeightDefault/2, iDoorImageBottomPosStartX,iDoorImageBottomPosStartY, iImageFrameWidthDefault*2, iImageFrameHeightDefault))) { 
+						//OK; wraps around
+						mainImageTilePosY=0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2;
+						
+						mainImageTilePosX=iDoorImageBottomPosStartX+iImageFrameWidthDefault/2;
+						
+						resetProjectile();			
+												
+						//DOOR
+						iCurrMapLocation=21;
+						hasInitMapLocation=false;
+						dustEffectImage.style.visibility="hidden";
+						mainImageTileFireballProjectile.style.visibility="hidden";
+						mainImageTileFireballProjectilePosY=0;
+						mainImageTileFireballProjectilePosX=0;					
+					}			
+					else {
+						//OK;
+						mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*3-iImageFrameHeightDefault;
+						resetProjectile();						
+					}						
+				}	
+
+				//left wall with door at center
+				if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
+					//OK;
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+					resetProjectile();
+				}	
+				//WALL
+				//right-most
+				//square rooms; hence, iStageMaxHeight
+				else if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
+					//OK;
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+					resetProjectile();			
+				}
+				break;
 			//OK; BOTTOM DOOR; REST of the sides WALLS
-			case 11:
+			case 1:
 				doorImageBottom.style.visibility="visible";
 				
 				if (!hasInitMapLocation) {
@@ -6546,9 +6929,8 @@ alert("iInputY: "+iInputY);
 					iKeyInvincibileCount=0;
 					
 					//at center of field of grass
-					keyImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*2;					
-					
-					keyImageTile.style.top=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
+					keyImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;					
+					keyImageTile.style.top=iInnerVerticalOffset+iImageFrameWidthDefault*4+iImageFrameHeightDefault/2;
 									
 					for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
 						arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
@@ -6564,38 +6946,60 @@ alert("iInputY: "+iInputY);
 					}
 			
 					//BOTTOM					
-					arrayGrassMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*2;
-					arrayGrassMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
+					arrayGrassMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+					arrayGrassMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
 
 					//RIGHT
-					arrayGrassMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*1;
-					arrayGrassMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
+					arrayGrassMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*3;
+					arrayGrassMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iImageFrameWidthDefault*4+iImageFrameHeightDefault/2;
 					
 					//LEFT
-					arrayGrassMonsterCountId[2][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*3;
-					arrayGrassMonsterCountId[2][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
+					arrayGrassMonsterCountId[2][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*3;
+					arrayGrassMonsterCountId[2][MONSTER_POSY]=iInnerVerticalOffset+iImageFrameWidthDefault*4+iImageFrameHeightDefault/2;
 
 					//TOP					
-					arrayGrassMonsterCountId[3][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*2;
-					arrayGrassMonsterCountId[3][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*5-iImageFrameHeightDefault/2;				
+					arrayGrassMonsterCountId[3][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+					arrayGrassMonsterCountId[3][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameWidthDefault*2-iImageFrameHeightDefault*1;				
 					
 					//SNAKE
-					arraySnakeMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*2-iImageFrameWidthDefault;
-					arraySnakeMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
+					arraySnakeMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;	
+					arraySnakeMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameWidthDefault*2-iImageFrameHeightDefault*1;
 					
-					arraySnakeMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*2+iImageFrameWidthDefault;
-					arraySnakeMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
+					arraySnakeMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*2;	
+					arraySnakeMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameWidthDefault*2-iImageFrameHeightDefault*1;			
 					
 					arraySnakeMonsterCountId[1][MONSTER_STEPX]=1;
 					arraySnakeMonsterCountId[1][MONSTER_STEPY]=1;					
 										
-					//alert("DITO");
-
+					isBatMonsterTileActive=true;
+					batMonsterImageTile.style.visibility="visible";
+					
+					//TilePosX; width; square based on iStageMaxHeight
+					batMonsterImageTilePosX=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;
+					batMonsterImageTilePosY=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameHeightDefault/2;
+					
+					for (iCount=0; iCount<iSlimeMonsterCountMax; iCount++) {
+						//arraySlimeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
+						arraySlimeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=false;
+						arraySlimeMonsterCountId[0][MONSTER_OBJECT].style.visibility="hidden";
+						
+						arraySlimeMonsterCountId[iCount][MONSTER_STEPX]=1;
+						arraySlimeMonsterCountId[iCount][MONSTER_STEPY]=1;
+						
+						arraySlimeMonsterCountId[iCount][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*1; //3
+					
+						arraySlimeMonsterCountId[iCount][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
+					}
+					
+					//the rest of the children slimes appear after slashing the head slime
+					arraySlimeMonsterCountId[0][MONSTER_IS_ACTIVE]=true;
+					arraySlimeMonsterCountId[0][MONSTER_OBJECT].style.visibility="visible";
+					
 					hasInitMapLocation=true;
 				}
 			
 				//if has not yet obtained KEY item in this room
-				if (!bHasObtainedKeyAtRoom11) {
+				if (!bHasObtainedKeyAtRoom1) {
 					//if (!arrayGrassMonsterCountId[3][MONSTER_IS_ACTIVE]) {
 					//if both snakes are now inactive
 					if ((!arraySnakeMonsterCountId[0][MONSTER_IS_ACTIVE]) && (!arraySnakeMonsterCountId[1][MONSTER_IS_ACTIVE])) {
@@ -6638,6 +7042,30 @@ alert("iInputY: "+iInputY);
 					}
 				}			
 				
+				if (isBatMonsterTileActive) {
+					batMonsterImageTile.style.visibility="visible";
+					batMonsterImageTile.style.top = 0+batMonsterImageTilePosY+"px"; //iInnerVerticalOffset
+					batMonsterImageTile.style.left = 0+batMonsterImageTilePosX+"px"; //iInnerHorizontalOffset
+			
+					executeBatMonsterWalkingAnimation();
+					verifyHeroCollideWithBatMonsters();					
+					verifyHeroFireballCollideWithBatMonsters();
+				}
+
+				for (iCount=0; iCount<iSlimeMonsterCountMax; iCount++) {
+					if (arraySlimeMonsterCountId[iCount][MONSTER_IS_ACTIVE]) {
+						arraySlimeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						
+						//alert(iCount);
+
+						arraySlimeMonsterCountId[iCount][MONSTER_OBJECT].style.top = 0+arraySlimeMonsterCountId[iCount][MONSTER_POSY]+"px"; //iInnerVerticalOffset
+						arraySlimeMonsterCountId[iCount][MONSTER_OBJECT].style.left = 0+arraySlimeMonsterCountId[iCount][MONSTER_POSX]+"px"; //iInnerHorizontalOffset
+				
+						executeSlimeMonsterAnimation(arraySlimeMonsterCountId[iCount]);
+						verifyHeroCollideWithSlimeMonsters(iCount, arraySlimeMonsterCountId[iCount]);
+						verifyHeroFireballCollideWithSlimeMonsters(iCount, arraySlimeMonsterCountId[iCount]);
+					}
+				}				
 				
 				//WALL
 				//square rooms; hence, iStageMaxHeight				
@@ -6660,7 +7088,7 @@ alert("iInputY: "+iInputY);
 						resetProjectile();			
 												
 						//DOOR
-						iCurrMapLocation=21;
+						iCurrMapLocation=11;
 						hasInitMapLocation=false;
 						dustEffectImage.style.visibility="hidden";
 						mainImageTileFireballProjectile.style.visibility="hidden";
@@ -7351,6 +7779,23 @@ alert(Date.now()-iMouseClickStartTime);
 
 				mainImageTileFireballProjectileStepDestinationX=iXPos;
 				mainImageTileFireballProjectileStepDestinationY=iYPos;
+				
+				setInitFireballEffectPosition(mainImageTilePosX,mainImageTilePosY);
+				//AI; movement due to river
+/*				
+				if (bIsHeroInRiver) {
+					//IF has reached bottom
+					if (!bHasObtainedAmuletAtRoom32) {
+						setInitFireballEffectPosition(mainImageTilePosX,mainImageTilePosY+mainImageTileStepY*5);
+					}
+					else {
+						setInitFireballEffectPosition(mainImageTilePosX,mainImageTilePosY);
+					}
+				}
+				else {
+					setInitFireballEffectPosition(mainImageTilePosX,mainImageTilePosY);
+				}
+*/				
 			}
 /*			
 		}
@@ -7473,7 +7918,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			bHasObtainedPearlAtRoom43=false;			
 			bHasObtainedPearlAtRoom22=false;			
 			//bHasObtainedPearlAtRoom11=false; //KEY
-			bHasObtainedKeyAtRoom11=false;
+			bHasObtainedKeyAtRoom1=false;
 			bHasUsedKeyAtRoom11=false;
 			bHasObtainedAmuletAtRoom32=false;
 			bHasObtainedPearlAtRoom12=false;
@@ -8162,6 +8607,8 @@ opting to put assets folder in "html_application" folder instead
     <img id="explosionEffectToCityImageId" class="ImageExplosionToCity" src="assets/images/effects.png">
 
 	<img id="dustEffectImageId" class="ImageDust" src="assets/images/effectsSmall.png">
+
+	<img id="initFireballEffectImageId" class="ImageInitFireball" src="assets/images/effectsSmall.png">
 
 	<img id="heroAttackEffectImageId" class="ImageHeroAttack" src="assets/images/heroEffectsSmall.png?lastmod=20241120T1526">
 
