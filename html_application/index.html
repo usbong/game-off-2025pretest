@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241126; from 20241125
+' @date updated: 20241127; from 20241126
 ' @website: www.usbong.ph
 '
 ' References: GitHub itch.io Game Off 2021, 2022, 2023
@@ -239,7 +239,7 @@
 			z-index: 2;
 		}
 
-	 .ImageBossBattleBgPart2 {
+	 .ImageBossBattleBgPart2, .ImageBossBattleBgPart3 {
 			position: absolute;
 			visibility: hidden;
 			
@@ -705,11 +705,11 @@
 
 				/*opacity: 50%;*/
 
-				font-size: 28px; /*16px;*/
+				font-size: 24px; /*28; 16px;*/
 				font-weight: bold;
 
 				padding: 20px;
-				padding-top: 10px;
+				padding-top: 20px;
 
 				visibility: hidden;
 
@@ -936,9 +936,12 @@ var iInputDelayAtGameOverCount=iInputDelayAtGameOverCountMax;
 var bIsHeroInRiver=false;
 var bHasHeroReachedBottomOfRoomRiver=false;
 var bHasHeroReachedTopOfRoomRiver=false;
+var bHasPlayedSolvedTune=false;
 
-//added by Mike, 20231124
 var bIsMissionDone=false;
+var bIsMissionStarted=false;
+var bHasViewedMissionIntro=false;
+
 var bIsHeroInTank=false;
 var bIsHeroAttacked=false;
 
@@ -996,7 +999,10 @@ const sAudioBGM="assets/audio/usbongGameOff2023BGM.mp3";
 */
 
 const sAudioEffectActionCannonFire ="assets/audio/usbongGameOff2023AudioEffectsCannon.mp3";
-const sAudioBGM="assets/audio/usbongNatureAmbience.mp3";
+const sAudioBGM="assets/audio/usbongGameOff2024CaveBGMV12.mp3";
+
+const sAudioEffectSolved ="assets/audio/UsbongGameOff2024TuneSolved.mp3";
+
 
 /*
 var iAnimationCount=-1;//0; start at -1
@@ -1805,10 +1811,15 @@ var bIsHeroFacingLeft=false;
 	}	
 	
 	function drawMonsterDeathStatus(myCanvasContext, iXPos, iYPos) {		
+		var deathCountImageTile = document.getElementById("deathCountImageId");	
 		var textMonsterDeathStatusDiv = document.getElementById("textMonsterDeathStatusDivId");
+
+		deathCountImageTile.style.visibility="visible";
+		deathCountImageTile.style.left=0+iXPos+iImageFrameWidthDefault+"px";
+		deathCountImageTile.style.top=0+iYPos+iImageFrameHeightDefault*1+"px";
+
 		textMonsterDeathStatusDiv.style.visibility="visible";
-		textMonsterDeathStatusDiv.style.left=0+iXPos+iImageFrameWidthDefault+"px";
-		//note: pearl position centered within image file vertically
+		textMonsterDeathStatusDiv.style.left=parseInt(deathCountImageTile.style.left)+iImageFrameWidthDefault+"px"
 		textMonsterDeathStatusDiv.style.top=0+iYPos+iImageFrameHeightDefault*0.9+"px";
 				
 		if (iCurrMonsterDeathCount>999) {
@@ -1913,9 +1924,13 @@ var bIsHeroFacingLeft=false;
   		bHasViewedHowToPlayGuide=false;
 		bHasViewedTitle=false;
 		bIsMissionDone=false;
+		bIsMissionStarted=false;	
+		bHasViewedMissionIntro=false;
 		bIsHeroInTank=false;
 		bIsHeroDash=false;
 		bHasHeroShotFireball=false;
+		
+		bHasPlayedSolvedTune=false;
 		
 		iBatMonsterAnimationCount=-1;//0; start at -1
 		iBatMonsterAnimationCountMax=5;
@@ -1988,7 +2003,11 @@ var bIsHeroFacingLeft=false;
 		var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
 		var howToPlayGuideImageFrame2 = document.getElementById("howToPlayGuideImageFrame2Id");
 		var bossBattleBgImage = document.getElementById("bossBattleBgImageId");			
+		var bossBattleBgImageBeach = document.getElementById("bossBattleBgImageBeachId");			
+		
 		var bossBattleBgImagePart2 = document.getElementById("bossBattleBgImagePart2Id");		
+		var bossBattleBgImagePart3 = document.getElementById("bossBattleBgImagePart3Id");		
+
 		var textStatusDiv = document.getElementById("textStatusDivId");
 		var textStatusBackgroundDiv = document.getElementById("textStatusBackgroundDivId");
 		var myCanvasTwo = document.getElementById("myCanvasTwoId");
@@ -2031,6 +2050,8 @@ var bIsHeroFacingLeft=false;
 		var heroLifeBarStatusImageTile = document.getElementById("heroLifeBarStatusImageTileId"); 
 
 		var myFavicon = document.getElementById("faviconImageId");
+		var deathCountImageTile = document.getElementById("deathCountImageId");
+
 		var textTimeDiv = document.getElementById("textTimeDivId");
 		var textPearlStatusDiv = document.getElementById("textPearlStatusDivId");
 		var textLifeBarDiv = document.getElementById("textLifeBarDivId");
@@ -2049,7 +2070,10 @@ var bIsHeroFacingLeft=false;
 		howToPlayGuideImage.style.visibility="hidden";
 		howToPlayGuideImageFrame2.style.visibility="hidden";		
 		bossBattleBgImage.style.visibility="hidden";
+		bossBattleBgImageBeach.style.visibility="hidden";
+
 		bossBattleBgImagePart2.style.visibility="hidden";
+		bossBattleBgImagePart3.style.visibility="hidden";
 		textStatusDiv.style.visibility="hidden";
 		textStatusBackgroundDiv.style.visibility="hidden";
 		myCanvasTwo.style.visibility="hidden";
@@ -2085,6 +2109,8 @@ var bIsHeroFacingLeft=false;
 		amuletStatusImageTile.style.visibility="hidden";		
 		
 		myFavicon.style.visibility="hidden";
+		deathCountImageTile.style.visibility="hidden";
+
 		textTimeDiv.style.visibility="hidden";
 		textPearlStatusDiv.style.visibility="hidden";
 		textLifeBarDiv.style.visibility="hidden";
@@ -4338,6 +4364,20 @@ alert("iInputY: "+iInputY);
 
 				pearlImageTileWithId.style.visibility="hidden";
 				//TODO: -set is_active to false
+
+/*				
+				//==========================================
+				var myAudioEffectSolved = document.getElementById("myAudioEffectSolvedId");
+
+				myAudioEffectSolved.setAttribute("src", sAudioEffectSolved);
+
+				//fMyAudioEffectVolume=0.2;
+				myAudioEffectSolvedVolume=1.0;
+				myAudioEffectSolved.volume=myAudioEffectSolvedVolume;
+				myAudioEffectSolved.loop=false;
+				myAudioEffectSolved.play();
+				//==========================================
+*/
 				
 				iCurrPearlCount++;
 				
@@ -4378,6 +4418,20 @@ alert("iInputY: "+iInputY);
 
 			specialItemImageTileWithId.style.visibility="hidden";
 			//TODO: -set is_active to false
+
+/*			
+			//==========================================
+			var myAudioEffectSolved = document.getElementById("myAudioEffectSolvedId");
+
+			myAudioEffectSolved.setAttribute("src", sAudioEffectSolved);
+
+			//fMyAudioEffectVolume=0.2;
+			myAudioEffectSolvedVolume=1.0;
+			myAudioEffectSolved.volume=myAudioEffectSolvedVolume;
+			myAudioEffectSolved.loop=false;
+			myAudioEffectSolved.play();
+			//==========================================
+*/
 			
 			//iCurrKeyCount++;
 			
@@ -4397,6 +4451,8 @@ alert("iInputY: "+iInputY);
 		iHorizontalOffset=(640-iStageMaxHeight)/2;
 
 		var myFavicon = document.getElementById("faviconImageId");
+		var deathCountImageTile = document.getElementById("deathCountImageId");
+		
 		var textNewGameDiv = document.getElementById("textNewGameDivId");
 		var textContinueGameDiv = document.getElementById("textContinueGameDivId");
 
@@ -4412,10 +4468,11 @@ alert("iInputY: "+iInputY);
 
 		var mainImageTileFireballProjectile = document.getElementById("mainImageTileFireballProjectileImageId");
 		
-		//added by Mike, 20231128
 		var bossBattleBgImage = document.getElementById("bossBattleBgImageId");
+		var bossBattleBgImageBeach = document.getElementById("bossBattleBgImageBeachId");
 
 		var bossBattleBgImagePart2 = document.getElementById("bossBattleBgImagePart2Id");		
+		var bossBattleBgImagePart3 = document.getElementById("bossBattleBgImagePart3Id");		
 
 		//var grassBgImage = document.getElementById("grassBgImageId");	
 
@@ -4541,10 +4598,11 @@ alert("iInputY: "+iInputY);
 */	
 	}
 	
-	//added by Mike, 20231128
 	bossBattleBgImage.style.left=0+iHorizontalOffset+"px";
-	//bossBattleBgImage.style.top=0+iVerticalOffsetInnerScreen+iStageMaxHeight*0.2+"px";	
 	bossBattleBgImage.style.top=0+iVerticalOffsetInnerScreen+"px";	
+
+	bossBattleBgImageBeach.style.left=0+iHorizontalOffset+"px";
+	bossBattleBgImageBeach.style.top=0+iVerticalOffsetInnerScreen+"px";	
 	
 
 	if (bIsExecutingShake) {
@@ -4628,12 +4686,17 @@ alert("iInputY: "+iInputY);
 				//----------------------------------
 				myCanvasTwo.style.visibility="visible";
 
-				bossBattleBgImage.style.visibility = "visible";
+				bossBattleBgImage.style.visibility = "visible"; //default
+				bossBattleBgImageBeach.style.visibility = "hidden";
 				
-				bossBattleBgImagePart2.style.visibility = "visible";
-				bossBattleBgImagePart2.style.visibility = "hidden";				
+				bossBattleBgImagePart2.style.visibility = "hidden";
 				bossBattleBgImagePart2.style.left = 0+"px"; 			
 				bossBattleBgImagePart2.style.top = 0+iStageMaxHeight-bossBattleBgImagePart2.clientHeight+"px";
+				
+				//cave; default
+				bossBattleBgImagePart3.style.visibility = "visible";				
+				bossBattleBgImagePart3.style.left = 0+"px"; 			
+				bossBattleBgImagePart3.style.top = 0+iStageMaxHeight-bossBattleBgImagePart3.clientHeight+"px";
 
 				howToPlayGuideImage.style.visibility = "hidden";
 				howToPlayGuideImageFrame2.style.visibility = "hidden";
@@ -4653,14 +4716,97 @@ alert("iInputY: "+iInputY);
 		//executeTransitionEffect();
 
 	  //debug
-	  //bIsMissionDone=true;
+//	  bIsMissionDone=true;
+	  bIsMissionStarted=true;
 
 	  if (iCurrPearlCount>=iCurrPearlCountMax) {
 		bIsMissionDone=true;
 	  }
 
-      //added by Mike, 20231124
-      if (bIsMissionDone) {
+      if (bIsMissionStarted) {
+		if (!bHasViewedMissionIntro) {
+		
+			var sText = "The river underground<br/>hides 6 precious pearls.<br/><br/>But only those who can<br/>find its amulet would be<br/>granted the river's power.";
+
+			//var sCurrText="";
+			
+			iCurrTextCharacterCountMax=sText.length;
+			
+			//include last character
+//			if (iCurrTextCharacterCount<iCurrTextCharacterCountMax) {
+			if (iCurrTextCharacterCount<=iCurrTextCharacterCountMax) {
+				sCurrText=sText.substring(0,iCurrTextCharacterCount);
+			}
+			iCurrTextCharacterCount++;
+
+  			textStatusDiv.innerHTML = sCurrText;//sText;
+
+  			//alert(sText.length);
+  			var iTextStatusDivWidth = (textStatusDiv.clientWidth);
+  			var iTextStatusDivHeight = (textStatusDiv.clientHeight);
+			
+			//added by Mike, 20231128
+			var mainImageTileProjectile = document.getElementById("mainImageTileProjectileImageId");
+
+
+  			//TODO: -update: this
+  			//iOffsetWidth
+  			//textStatusDiv.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTextStatusDivWidth/2 +"px";
+			textStatusDiv.style.left=0+iStageMaxWidth/2-textStatusBackgroundDiv.clientWidth/2;
+
+  				//textStatusDiv.style.left = 0+iHorizontalOffset+iOffsetWidth+"px";
+
+  			//iOffsetHeight
+  			//textStatusDiv.style.top = 0+iStageMaxHeight-iTextStatusDivHeight*1.5+"px";
+  			//textStatusDiv.style.top = 0+"px";
+			textStatusDiv.style.top = 0+(iStageMaxHeight*0.10)+"px";
+  			
+  			textStatusDiv.style.visibility="visible";
+			mainImageTileProjectile.style.visibility="hidden";
+			textStatusBackgroundDiv.style.top=textStatusDiv.style.top;
+		
+			textStatusBackgroundDiv.style.left=0+iStageMaxWidth/2-textStatusBackgroundDiv.clientWidth/2;//textStatusDiv.style.left;//0;
+
+			textStatusBackgroundDiv.style.visibility="visible";
+
+			//textStatusBackgroundDiv.style.width=iStageMaxWidth*0.65;
+			textStatusBackgroundDiv.style.width=iStageMaxWidth*0.5;
+
+			textStatusBackgroundDiv.style.height=iStageMaxHeight*0.5;	
+			
+			executeTimeDisplay();
+
+			drawMiniMap(myCanvasTwoContext,iStageMaxHeight-iInnerHorizontalOffset*0.85, 0+iStageMaxHeight/10);
+	
+			heroLifeBarStatusImageTile.style.visibility="visible";
+	
+			//iCurrHeroLife=iCurrHeroLifeMax;
+			drawHeroLifeBar(myCanvasTwoContext,parseInt(heroLifeBarStatusImageTile.style.left), 0+iStageMaxHeight/60); 
+
+			//iCurrHeroMana=iCurrHeroManaMax;		
+			drawHeroManaBar(myCanvasTwoContext,parseInt(heroLifeBarStatusImageTile.style.left), 0+parseInt(textLifeBarDiv.style.bottom)+5); 			
+	
+			drawPearlStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60); 
+
+			if (bHasObtainedKeyAtRoom1) {
+				drawKeyStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60+iImageFrameHeightDefault); 
+			}
+
+			if (bHasObtainedAmuletAtRoom32) {
+				drawAmuletStatus(myCanvasTwoContext,iInnerHorizontalOffset/6+iImageFrameWidthDefault, 0+iStageMaxHeight/60+iImageFrameHeightDefault); 
+			}
+
+			//drawMonsterDeathStatus(myCanvasTwoContext,iInnerHorizontalOffset/6, 0+iStageMaxHeight/60+iImageFrameHeightDefault*2); 
+			
+			//note: using "textTimeDiv.style.top", instead of "bottom"
+			drawMonsterDeathStatus(myCanvasTwoContext,0+parseInt(textTimeDiv.style.left), 0+parseInt(textTimeDiv.style.top)); 					
+		}
+		else {
+			textStatusBackgroundDiv.style.visibility="hidden";
+			textStatusDiv.style.visibility="hidden";
+		}
+		
+		if (bIsMissionDone) {
 
   			//removed by Mike, 20231111
   			//alert("CONGRATULATIONS!");
@@ -4681,6 +4827,12 @@ alert("iInputY: "+iInputY);
 			//var sText = "The <font color='#4a50d9'>PEST</font> was destroyed.<br/>But not without heavy<br/> damage to the city...<br/>There is still a lot to learn<br/>and do. Thank you, and<br/> great work! Peace.";
 
 			var sText = "<br/>Welcome Home, <br/>Commander! <br/><br/>And...<br/>Thank you for playing!";
+
+			//var sText = "The river underground<br/>keeps 6 precious pearls.<br/><br/>But the most precious of<br/> all is an amulet that can<br/>grant its possessor<br/>the river's power...";
+
+			//var sText = "The river underground<br/>hides 6 precious <font color='#99d9ea'>pearls</font>.<br/><br/>Rumor has it<br/>that an amulet can<br/>grant its possessor<br/>the river's power...";
+
+			//var sText = "The river underground<br/>hides 6 precious pearls.<br/><br/>But only those who can<br/>find its amulet would be<br/>granted the river's power.";
 
 			//var sCurrText="";
 			
@@ -4772,6 +4924,8 @@ alert("iInputY: "+iInputY);
 		if (iCurrHeroLife<=0) {
 			
 			bIsGameOver=true;
+			
+			executeTimeDisplay();
 		
 			myFavicon.style.left=mainImageTile.style.left;
 			myFavicon.style.top=mainImageTile.style.top;
@@ -4839,6 +4993,7 @@ alert("iInputY: "+iInputY);
 	executeDustEffect();
 	executeHeroAttackEffect();
 	executeInitFireballEffect();
+	
 
 	//alert("mainImageTileProjectileVelocityY: "+mainImageTileProjectileVelocityY);
 
@@ -4938,9 +5093,13 @@ alert("iInputY: "+iInputY);
 	}
 
 //--------------------
+/*
 	if (!bIsGameOver) {
 		executeTimeDisplay();
 	}
+*/	
+	executeTimeDisplay();
+
 
 	drawMiniMap(myCanvasTwoContext,iStageMaxHeight-iInnerHorizontalOffset*0.85, 0+iStageMaxHeight/10);
 	
@@ -5116,8 +5275,15 @@ alert("iInputY: "+iInputY);
 				//top-most					
 				doorImageTop.style.visibility="visible";
 				
+				bossBattleBgImage.style.visibility = "hidden"; //default
+				bossBattleBgImageBeach.style.visibility = "visible";
+				
+				bossBattleBgImagePart2.style.visibility = "visible";
+				bossBattleBgImagePart3.style.visibility = "hidden";		
+				
 				hasInitMapLocation=true;
 
+/*
 				executeRiverAnimation();
 				verifyHeroCollideWithRiver();
 				
@@ -5136,6 +5302,7 @@ alert("iInputY: "+iInputY);
 					mainImageTileFireballProjectilePosY=0;
 					mainImageTileFireballProjectilePosX=0;
 				}
+*/				
 						
 				//if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault/2) {					
 				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {					
@@ -5197,6 +5364,7 @@ alert("iInputY: "+iInputY);
 																
 				if (!hasInitMapLocation) {
 					iPearlInvincibileCount=0;
+					bHasPlayedSolvedTune=false;
 					
 					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*4;					
 					
@@ -5217,6 +5385,13 @@ alert("iInputY: "+iInputY);
 				verifyHeroCollideWithRiver();	
 
 				if (bHasHeroReachedBottomOfRoomRiver) {
+/*				
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*3-iImageFrameHeightDefault;	
+					
+					resetProjectile();	
+*/
+					
+/*					
 					//RIVER as DOOR
 					//OK; wraps around
 					mainImageTilePosY=0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2;						
@@ -5232,6 +5407,7 @@ alert("iInputY: "+iInputY);
 					mainImageTileFireballProjectile.style.visibility="hidden";
 					mainImageTileFireballProjectilePosY=0;
 					mainImageTileFireballProjectilePosX=0;					
+*/					
 				}
 				
 				if (bHasHeroReachedTopOfRoomRiver) {
@@ -5266,13 +5442,16 @@ alert("iInputY: "+iInputY);
 					verifyHeroFireballCollideWithBatMonsters();
 				}
 				
-				//at center of field of grass
 				//if has not yet obtained pearl item in this room
 				if (!bHasObtainedPearlAtRoom43) {
 					if (!isBatMonsterTileActive) {
 
+						if (!bHasPlayedSolvedTune) {
+							playSolvedTune();		
+						}
+
 						pearlImageTile.style.visibility="visible";
-						
+												
 						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
 							verifyHeroCollideWithPearl(pearlImageTile);
 						}
@@ -5379,9 +5558,9 @@ alert("iInputY: "+iInputY);
 				//doorImageTop.style.visibility="visible";
 				doorImageBottom.style.visibility="visible";
 				
-				if (!hasInitMapLocation) {
-				
+				if (!hasInitMapLocation) {				
 					iPearlInvincibileCount=0;
+					bHasPlayedSolvedTune=false;
 					
 					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*0;			
 					pearlImageTile.style.top=iInnerVerticalOffset+iStageMaxHeight/4-iImageFrameHeightDefault/2;
@@ -5447,6 +5626,10 @@ alert("iInputY: "+iInputY);
 					//if both snakes are now inactive
 					if ((!arraySnakeMonsterCountId[0][MONSTER_IS_ACTIVE]) && (!arraySnakeMonsterCountId[1][MONSTER_IS_ACTIVE])) {
 
+						if (!bHasPlayedSolvedTune) {
+							playSolvedTune();		
+						}
+						
 						pearlImageTile.style.visibility="visible";
 						
 						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
@@ -5789,6 +5972,7 @@ alert("iInputY: "+iInputY);
 				
 				if (!hasInitMapLocation) {
 					iPearlInvincibileCount=0;
+					bHasPlayedSolvedTune=false;
 					
 					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth/2+"px";
 					pearlImageTile.style.top=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameHeight/2+"px";
@@ -5799,6 +5983,11 @@ alert("iInputY: "+iInputY);
 				//if has not yet obtained pearl item in this room
 				if (!bHasObtainedPearlAtRoom12) {
 //					if ((!arraySnakeMonsterCountId[0][MONSTER_IS_ACTIVE]) && (!arraySnakeMonsterCountId[1][MONSTER_IS_ACTIVE])) {
+
+						if (!bHasPlayedSolvedTune) {
+							playSolvedTune();		
+						}
+
 						pearlImageTile.style.visibility="visible";
 						
 						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
@@ -5876,9 +6065,8 @@ alert("iInputY: "+iInputY);
 				//pearlImageTile.style.visibility="visible";
 
 				if (!hasInitMapLocation) {
-					//pearlImageTile.style.visibility="hidden";
-					
 					iPearlInvincibileCount=0;
+					bHasPlayedSolvedTune=false;
 					
 					//at BOTTOM-RIGHT
 					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*3;					
@@ -5942,6 +6130,11 @@ alert("iInputY: "+iInputY);
 				//if has not yet obtained pearl item in this room
 				if (!bHasObtainedPearlAtRoom42) {
 					if (!arrayGrassMonsterCountId[3][MONSTER_IS_ACTIVE]) {
+						
+						if (!bHasPlayedSolvedTune) {
+							playSolvedTune();		
+						}
+						
 						pearlImageTile.style.visibility="visible";
 						
 						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
@@ -6058,10 +6251,9 @@ alert("iInputY: "+iInputY);
 				doorImageRight.style.visibility="visible";
 				
 				if (!hasInitMapLocation) {
-					//pearlImageTile.style.visibility="hidden";
-					
 					iPearlInvincibileCount=0;
-					
+					bHasPlayedSolvedTune=false;					
+
 					//at BOTTOM-RIGHT
 					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;					
 					
@@ -6117,6 +6309,11 @@ alert("iInputY: "+iInputY);
 					//if (!arrayGrassMonsterCountId[3][MONSTER_IS_ACTIVE]) {
 					//if both snakes are now inactive
 					if ((!arraySnakeMonsterCountId[0][MONSTER_IS_ACTIVE]) && (!arraySnakeMonsterCountId[1][MONSTER_IS_ACTIVE])) {
+						
+						if (!bHasPlayedSolvedTune) {
+							playSolvedTune();		
+						}
+						
 						pearlImageTile.style.visibility="visible";
 						
 						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
@@ -6344,8 +6541,9 @@ alert("iInputY: "+iInputY);
 				//bossMonsterImageTile.style.visibility = "visible";
 			
 				if (!hasInitMapLocation) {
-
 					iAmuletInvincibileCount=0;
+					bHasPlayedSolvedTune=false;					
+					
 					//amuletImageTile.style.visibility="visible";
 					amuletImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidth/2+"px";
 					amuletImageTile.style.top=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameHeight/2+"px";
@@ -6422,6 +6620,11 @@ alert("iInputY: "+iInputY);
 				if (!bHasObtainedAmuletAtRoom32) {
 				
 					if (!isBossMonsterTileActive) {
+					
+						if (!bHasPlayedSolvedTune) {
+							playSolvedTune();							
+						}
+						
 						amuletImageTile.style.visibility="visible";
 						
 						if (iAmuletInvincibileCount>=iAmuletInvincibileCountMax) {
@@ -6652,9 +6855,8 @@ alert("iInputY: "+iInputY);
 				doorImageLeft.style.visibility="visible";
 			
 				if (!hasInitMapLocation) {
-					//pearlImageTile.style.visibility="hidden";
-					
 					iPearlInvincibileCount=0;
+					bHasPlayedSolvedTune=false;
 					
 					//at center of field of grass
 					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2+iImageFrameWidthDefault*2;					
@@ -6711,6 +6913,10 @@ alert("iInputY: "+iInputY);
 					//if (!arrayGrassMonsterCountId[3][MONSTER_IS_ACTIVE]) {
 					//if both snakes are now inactive
 					if ((!arraySnakeMonsterCountId[0][MONSTER_IS_ACTIVE]) && (!arraySnakeMonsterCountId[1][MONSTER_IS_ACTIVE])) {
+						if (!bHasPlayedSolvedTune) {
+							playSolvedTune();							
+						}
+						
 						pearlImageTile.style.visibility="visible";
 						
 						if (iPearlInvincibileCount>=iPearlInvincibileCountMax) {
@@ -6921,12 +7127,9 @@ alert("iInputY: "+iInputY);
 			case 1:
 				doorImageBottom.style.visibility="visible";
 				
-				if (!hasInitMapLocation) {
-					//pearlImageTile.style.visibility="hidden";
-					
-					//alert("DITO");
-					
+				if (!hasInitMapLocation) {					
 					iKeyInvincibileCount=0;
+					bHasPlayedSolvedTune=false;
 					
 					//at center of field of grass
 					keyImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2;					
@@ -7003,6 +7206,11 @@ alert("iInputY: "+iInputY);
 					//if (!arrayGrassMonsterCountId[3][MONSTER_IS_ACTIVE]) {
 					//if both snakes are now inactive
 					if ((!arraySnakeMonsterCountId[0][MONSTER_IS_ACTIVE]) && (!arraySnakeMonsterCountId[1][MONSTER_IS_ACTIVE])) {
+						
+						if (!bHasPlayedSolvedTune) {
+							playSolvedTune();							
+						}
+					
 						keyImageTile.style.visibility="visible";
 						
 						if (iKeyInvincibileCount>=iKeyInvincibileCountMax) {
@@ -7414,10 +7622,10 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 			}
 
 		  }	 
-		  
+		  		  
 // if (bIsMissionDone==false)
 		}
-		
+	  } //if bIsMissionStarted;	
 	}
 
   function processResultFromInput(iXPos, iYPos) {
@@ -7474,8 +7682,8 @@ mainImageTileProjectilePosY=parseInt(mainImageTileProjectilePosY)+newMainImageTi
 		myAudioEffectCannonFire.volume=fMyAudioEffectCannonFireVolume;
 		myAudioEffectCannonFire.loop=false;
 		myAudioEffectCannonFire.play();
-*/		
-    }
+*/	
+	}
   }
 
 
@@ -7858,6 +8066,20 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
     }
 */
   }
+  
+	function playSolvedTune() {
+		var myAudioEffectSolved = document.getElementById("myAudioEffectSolvedId");
+
+		myAudioEffectSolved.setAttribute("src", sAudioEffectSolved);
+
+		//fMyAudioEffectVolume=0.2;
+		myAudioEffectSolvedVolume=1.0;
+		myAudioEffectSolved.volume=myAudioEffectSolvedVolume;
+		myAudioEffectSolved.loop=false;
+		myAudioEffectSolved.play();
+		
+		bHasPlayedSolvedTune=true;
+	}
 
 	function executeHeroContinue(bIsContinue) {
 		//CONTINUE
@@ -7934,6 +8156,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			bHasHeroReachedBottomOfRoomRiver=false;
 			bHasHeroReachedTopOfRoomRiver=false;
 			bIsActionKeyPressed=false;
+			bHasPlayedSolvedTune=false;			
 
 			for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {				
 				for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
@@ -8187,6 +8410,12 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 						  if (!bHasViewedHowToPlayGuide) {
 							bHasViewedHowToPlayGuide=true;
 							return;
+						  }
+						  else {
+							  if (!bHasViewedMissionIntro) {
+								bHasViewedMissionIntro=true;
+								return;
+							  }
 						  }
 						}
 						else {
@@ -8533,6 +8762,7 @@ opting to put assets folder in "html_application" folder instead
 -->
 
 	<img id="faviconImageId" class="ImageTileFrame1" src="assets/images/favicon.png">
+	<img id="deathCountImageId" class="ImageTileFrame1" src="assets/images/favicon.png">
 
 	<img id="doorImageRightId" class="Image64x64Tile" src="assets/images/tile.png">
 	<img id="doorImageLeftId" class="Image64x64Tile" src="assets/images/tile.png">
@@ -8635,9 +8865,13 @@ opting to put assets folder in "html_application" folder instead
 	
 	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">
 
-	<img id="bossBattleBgImageId" class="ImageBossBattleBg" src="assets/images/bgImageCave.png?lastmod=20241119">
+	<img id="bossBattleBgImageId" class="ImageBossBattleBg" src="assets/images/bgImageCave.png?lastmod=20241127">
+
+	<img id="bossBattleBgImageBeachId" class="ImageBossBattleBg" src="assets/images/bgImageCaveStart.png?lastmod=20241127">
 	
 	<img id="bossBattleBgImagePart2Id" class="ImageBossBattleBgPart2" src="assets/images/bossBattleBgPart2.png">	
+
+	<img id="bossBattleBgImagePart3Id" class="ImageBossBattleBgPart3" src="assets/images/bossBattleBgPart3.png">	
 	
 	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
 	<div id="textStatusBackgroundDivId" class="DivTextStatusBackground"></div>
@@ -8668,7 +8902,7 @@ opting to put assets folder in "html_application" folder instead
 	//usbongGameOff2023AudioEffectsCannon
 -->
 
-  <audio id="myAudioId" class="myAudio" src="assets/audio/usbongNatureAmbience.mp3" type="audio/x-m4a" controls loop>
+  <audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2024CaveBGMV12.mp3" type="audio/x-m4a" controls loop>
 	  Your browser does not support the audio tag.
 	</audio><br/>
 
@@ -8683,7 +8917,11 @@ opting to put assets folder in "html_application" folder instead
 	  Your browser does not support the audio tag.
 	</audio><br/>
 
-	<audio id="myAudioEffectCannonFireId" class="myAudio" src="assets/audio/usbongGameOff2023AudioEffectsCannon" type="audio/x-m4a">
+	<audio id="myAudioEffectCannonFireId" class="myAudio" src="assets/audio/usbongGameOff2023AudioEffectsCannon.mp3" type="audio/x-m4a">
+	  Your browser does not support the audio tag.
+	</audio><br/>
+	
+	<audio id="myAudioEffectSolvedId" class="myAudio" src="assets/audio/UsbongGameOff2024TuneSolved.mp3" type="audio/x-m4a">
 	  Your browser does not support the audio tag.
 	</audio><br/>
 
