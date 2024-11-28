@@ -8702,6 +8702,10 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			bHasHeroReachedTopOfRoomRiver=false;
 			bIsActionKeyPressed=false;
 			bHasPlayedSolvedTune=false;			
+			
+			myAudio.play();
+			myAudioPart2.pause();
+			myAudioPart3.pause();
 
 			for (iRowCount=0; iRowCount<iRowCountMax; iRowCount++) {				
 				for (iColumnCount=0; iColumnCount<iColumnCountMax; iColumnCount++) {
@@ -8726,7 +8730,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 */
 			bIsActionKeyPressed=true;
 
-			if (!bIsGameOver) {
+			if ((!bIsGameOver) && (bHasPressedStart)) {
 				executeHeroFireballProjectileHoldAnimation();
 			}
 /*
