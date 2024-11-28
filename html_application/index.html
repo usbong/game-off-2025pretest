@@ -1027,10 +1027,20 @@ const sAudioBGM="assets/audio/usbongGameOff2023BGM.mp3";
 const sAudioEffectActionCannonFire ="assets/audio/usbongGameOff2023AudioEffectsCannon.mp3";
 const sAudioEffectGrassCut ="assets/audio/usbongGameOff2023TapLoudEdited.mp3";
 
-const sAudioBGM="assets/audio/usbongGameOff2024CaveBGMV12.mp3";
+const sAudioBGM="assets/audio/usbongGameOff2024CaveBGMV18.mp3";
+
+const sAudioBGMPart2="assets/audio/usbongGameOff2024CaveBadBGMV10.mp3";
+
+const sAudioBGMPart3="assets/audio/usbongGameOff2024CaveFantasyBGM.mp3";
 
 const sAudioEffectSolved ="assets/audio/UsbongGameOff2024TuneSolved.mp3";
 
+const sAudioEffectBossScreech ="assets/audio/usbongGameOff2024Screech.mp3";
+
+var myAudio;
+var myAudioPart2;
+var myAudioPart3;
+var myAudioBossScreech;
 
 /*
 var iAnimationCount=-1;//0; start at -1
@@ -1953,7 +1963,7 @@ var bIsHeroFacingLeft=false;
 		
 		//------------
 		//note: not played during onLoad(), unless in ITCH.IO...
-		var myAudio = document.getElementById("myAudioId");
+		myAudio = document.getElementById("myAudioId");
 		
         myAudio.setAttribute("src", sAudioBGM);
 
@@ -1961,8 +1971,7 @@ var bIsHeroFacingLeft=false;
         myAudio.volume=fMyAudioVolume;
         myAudio.loop=true;		
         myAudio.play();
-		//-----------	
-		
+		//-----------			
 	}
 
 	function init() {	
@@ -2230,7 +2239,7 @@ var bIsHeroFacingLeft=false;
 
 		//------------
 		//note: not played during onLoad(), unless in ITCH.IO...
-		var myAudio = document.getElementById("myAudioId");
+		myAudio = document.getElementById("myAudioId");
 		
         myAudio.setAttribute("src", sAudioBGM);
 
@@ -2240,7 +2249,36 @@ var bIsHeroFacingLeft=false;
         myAudio.play();
 
 		//alert("DITO");	
-		//-----------			
+		//-----------		
+
+		myAudioPart2 = document.getElementById("myAudioPart2Id");		
+		myAudioPart2.setAttribute("src", sAudioBGMPart2);
+
+		var fMyAudioPart2Volume=1.0;//0.4;
+		myAudioPart2.volume=fMyAudioPart2Volume;
+		myAudioPart2.loop=true;		
+		//myAudioPart2.play();
+
+		//-----------		
+
+		myAudioPart3 = document.getElementById("myAudioPart3Id");		
+		myAudioPart3.setAttribute("src", sAudioBGMPart3);
+
+		var fMyAudioPart3Volume=0.5;//0.4;
+		myAudioPart3.volume=fMyAudioPart3Volume;
+		myAudioPart3.loop=true;		
+		//myAudioPart3.play();
+
+		//-----------		
+			
+		myAudioBossScreech = document.getElementById("myAudioBossScreechId");		
+		myAudioBossScreech.setAttribute("src", sAudioEffectBossScreech);
+
+		var fMyAudioBossScreechVolume=1.0;//0.4;
+		myAudioBossScreech.volume=fMyAudioBossScreechVolume;
+		myAudioBossScreech.loop=false;		
+		//myAudioBossScreech.play();		
+		//-----------		
 		
 		//note: set this here;
 		keyImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*0 + "px -" + iImageFrameHeight*3 + "px";
@@ -3011,7 +3049,12 @@ alert("iInputY: "+iInputY);
 				bossMonsterImageTile.style.left = bossMonsterImageTilePosX+"px";
 				bossMonsterImageTile.style.top = bossMonsterImageTilePosY+"px";			
 
-				iBossMonsterMovementDelayCount=0;			
+				iBossMonsterMovementDelayCount=0;		
+				
+				//if (myAudioBossScreech.currentTime==0) {
+				if (iBossMonsterHitAnimationCount%iBossMonsterHitAnimationCountMax==0) {
+					myAudioBossScreech.play();
+				}
 			}
 			else {
 				iBossMonsterMovementDelayCount++;
@@ -5153,11 +5196,11 @@ alert("iInputY: "+iInputY);
 	  if (iCurrPearlCount>=iCurrPearlCountMax) {
 		bIsMissionDone=true;
 	  }
-	  
-/*	  //debug	  
+/*	  
+	  //debug	  
 	  bHasViewedMissionIntro=true;
 	  bIsMissionDone=true;
-	  iCurrMonsterDeathCount=16;//999;//14;//16;
+	  iCurrMonsterDeathCount=10;//999;//14;//16;
 */
 
       if (bIsMissionStarted) {
@@ -5254,21 +5297,13 @@ alert("iInputY: "+iInputY);
 		
 			var sText = "<br/>Congratulations!<br/><br/>But the portal opens only<br/>to those with less than<br/>15 monsters vanquished.";
 
-			if (iCurrMonsterDeathCount<15) {
-				var sText = "<br/>Micah!...";
+			if (iCurrMonsterDeathCount<15) { //best is 9 at most
+				sText = "<br/>Micah!<br/><br/><br/><br/><br/>To be continued...";
 			}
 
 			if (iCurrMonsterDeathCount>=999) {
 				sText = "<br/>Welcome Home, <br/>Commander! <br/><br/>And...<br/>Thank you for playing!";
 			}
-
-			//var sText = "The river underground<br/>keeps 6 precious pearls.<br/><br/>But the most precious of<br/> all is an amulet that can<br/>grant its possessor<br/>the river's power...";
-
-			//var sText = "The river underground<br/>hides 6 precious <font color='#99d9ea'>pearls</font>.<br/><br/>Rumor has it<br/>that an amulet can<br/>grant its possessor<br/>the river's power...";
-
-			//var sText = "The river underground<br/>hides 6 precious pearls.<br/><br/>But only those who can<br/>find its amulet would be<br/>granted the river's power.";
-
-			//var sCurrText="";
 			
 			iCurrTextCharacterCountMax=sText.length;
 			
@@ -5703,6 +5738,20 @@ alert("iInputY: "+iInputY);
 		switch(iCurrMapLocation) {
 			//OK; TOP DOOR; REST of the sides WALLS
 			case 53:
+/*			
+		//debug
+		//------------
+		//note: not played during onLoad(), unless in ITCH.IO...
+		myAudio = document.getElementById("myAudioId");
+		
+        myAudio.setAttribute("src", sAudioBGM);
+
+        var fMyAudioVolume=1.0;//0.4;
+        myAudio.volume=fMyAudioVolume;
+        myAudio.loop=true;		
+        myAudio.play();
+		//-----------			
+*/
 				//DOOR
 				//top-most					
 				doorImageTop.style.visibility="visible";
@@ -6001,6 +6050,7 @@ alert("iInputY: "+iInputY);
 					for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
 						arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
 						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						arraySnakeMonsterCountId[iCount][MONSTER_IS_IN_RIVER]=false;
 					}
 			
 					arraySnakeMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;
@@ -6705,6 +6755,7 @@ alert("iInputY: "+iInputY);
 					for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
 						arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
 						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
+						arraySnakeMonsterCountId[iCount][MONSTER_IS_IN_RIVER]=false;
 					}
 			
 					//BOTTOM					
@@ -6889,6 +6940,27 @@ alert("iInputY: "+iInputY);
 					doorLockedImageRight.style.visibility="visible";
 				}
 */				
+				//------------
+				if (!bHasObtainedAmuletAtRoom32) {
+					myAudio.pause();
+					myAudioPart3.pause();
+									
+					//alert(myAudioPart2.currentTime);
+					
+					if (myAudioPart2.currentTime==0) {
+						myAudioPart2.play();
+					}
+				}
+				else {
+					myAudio.pause();
+					myAudioPart2.pause();
+
+					if (myAudioPart3.currentTime==0) {
+						myAudioPart3.play();
+					}
+				}
+				//-----------		
+
 				doorLockedImageRight.style.visibility="visible";
 				
 				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {					
@@ -7012,56 +7084,10 @@ alert("iInputY: "+iInputY);
 						bossMonsterImageTilePosY=iInnerVerticalOffset+iStageMaxHeight/2-iImageFrameHeightLarge/2;
 					}
 					
-					
-/*				
-					//pearlImageTile.style.visibility="hidden";
-					
-					iPearlInvincibileCount=0;
-					
-					//at BOTTOM-RIGHT
-					pearlImageTile.style.left=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;					
-					
-					pearlImageTile.style.top=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
-									
-					for (iCount=0; iCount<iGrassMonsterCountMax; iCount++) {
-						arrayGrassMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
-						arrayGrassMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
-						
-						arrayGrassMonsterCountId[iCount][MONSTER_STEPX]=0;
-						arrayGrassMonsterCountId[iCount][MONSTER_STEPY]=0;
-					}
-			
-					for (iCount=0; iCount<iSnakeMonsterCountMax; iCount++) {
-						arraySnakeMonsterCountId[iCount][MONSTER_IS_ACTIVE]=true;
-						arraySnakeMonsterCountId[iCount][MONSTER_OBJECT].style.visibility="visible";
-					}
-			
-					//BOTTOM					
-					arrayGrassMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;
-					arrayGrassMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
-
-					//RIGHT
-					arrayGrassMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*1;
-					arrayGrassMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
-					
-					//LEFT
-					arrayGrassMonsterCountId[2][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*3;
-					arrayGrassMonsterCountId[2][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*4-iImageFrameHeightDefault/2;
-
-					//TOP					
-					arrayGrassMonsterCountId[3][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2;
-					arrayGrassMonsterCountId[3][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*5-iImageFrameHeightDefault/2;				
-					
-					//SNAKE
-					arraySnakeMonsterCountId[0][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2-iImageFrameWidthDefault;
-					arraySnakeMonsterCountId[0][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
-					
-					arraySnakeMonsterCountId[1][MONSTER_POSX]=iInnerHorizontalOffset+iStageMaxHeight/2-iImageFrameWidthDefault/2-iImageFrameWidthDefault*2+iImageFrameWidthDefault;
-					arraySnakeMonsterCountId[1][MONSTER_POSY]=iInnerVerticalOffset+iStageMaxHeight-iImageFrameHeightDefault*3-iImageFrameHeightDefault/2;
-					
-					arraySnakeMonsterCountId[1][MONSTER_STEPX]=1;
-					arraySnakeMonsterCountId[1][MONSTER_STEPY]=1;		
-*/					
+					//------------
+					//myAudioBossScreechId = document.getElementById("myAudioBossScreechId");
+					myAudioBossScreech.play();
+					//-----------						
 										
 					//alert("DITO");
 
@@ -7076,7 +7102,19 @@ alert("iInputY: "+iInputY);
 						if (!bHasPlayedSolvedTune) {
 							playSolvedTune();							
 						}
+/*						
+						//------------
+						//TODO: -verify: this
+						myAudio.pause();
+						myAudioPart2.pause();
+										
+						//alert(myAudioPart2.currentTime);
 						
+						if (myAudioPart3.currentTime==0) {
+							myAudioPart3.play();
+						}
+						//-----------	
+*/						
 						amuletImageTile.style.visibility="visible";
 						
 						if (iAmuletInvincibileCount>=iAmuletInvincibileCountMax) {
@@ -9442,7 +9480,19 @@ opting to put assets folder in "html_application" folder instead
 	//usbongGameOff2023AudioEffectsCannon
 -->
 
-  <audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2024CaveBGMV12.mp3" type="audio/x-m4a" controls loop>
+  <audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2024CaveBGMV18.mp3" type="audio/x-m4a" controls loop>
+	  Your browser does not support the audio tag.
+	</audio><br/>
+
+  <audio id="myAudioPart2Id" class="myAudio" src="assets/audio/usbongGameOff2024CaveBadBGMV10.mp3" type="audio/x-m4a" controls loop>
+	  Your browser does not support the audio tag.
+	</audio><br/>
+
+  <audio id="myAudioPart3Id" class="myAudio" src="assets/audio/usbongGameOff2024TitleV5.mp3" type="audio/x-m4a" controls loop>
+	  Your browser does not support the audio tag.
+	</audio><br/>
+	
+  <audio id="myAudioBossScreechId" class="myAudio" src="assets/audio/usbongGameOff2024Screech.mp3" type="audio/x-m4a" controls loop>
 	  Your browser does not support the audio tag.
 	</audio><br/>
 
