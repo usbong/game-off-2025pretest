@@ -5334,7 +5334,7 @@ alert("iInputY: "+iInputY);
 			var sTextEnd = "<br/>Congratulations!<br/><br/>But the portal opens only<br/>to those with less than<br/>15 monsters vanquished.";
 
 			if (iCurrMonsterDeathCount<15) { //best is 9 at most
-				sTextEnd = "<br/>Micah!<br/><br/><br/><br/><br/>To be continued...";
+				sTextEnd = "\"Micah!\"<br/><br/>Meanwhile, written on<br/>a mysterious note:<br/> \"The best is 9 at most.\"<br/><br/>To be continued...";
 			}
 
 			if (iCurrMonsterDeathCount>=999) {
@@ -9052,6 +9052,79 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 					  bHasSetMaxWidthHeight=true;
 					}
 */
+					//TODO: -verify: this
+					//note: ZOOM function causes position ERROR via screenX
+					var iXPos = event.clientX;//screenX;
+
+					//note: screenY includes BROWSER address bar, et cetera;
+					var iYPos = event.pageY; //screenY;
+
+					//alert(event.which);
+					
+					if (event.which===3) { //right-click
+						break;						
+					}
+					else { //if 1; left-click
+/*
+        //edited by Mike, 20230423
+        alert("iXPos: "+iXPos);
+        alert("iYPos: "+iYPos);
+*/
+						if (bIsGameOver) {
+							var textNewGameDiv = document.getElementById("textNewGameDivId");
+							var textContinueGameDiv = document.getElementById("textContinueGameDivId");
+
+							textNewGameDiv.style.visibility="visible";
+							textContinueGameDiv.style.visibility="visible";
+						
+							//init(); //note: error; iCurrMapLocation could not be set;
+							//restarts where hero died;						
+							//current working solution
+							//executeHeroContinue();
+							//return;
+							
+							//alert("iXPos"+iXPos);
+													
+							if (isPointsOfRectIntersectingPointsOfRectDoor(iXPos,iYPos, parseInt(textNewGameDiv.style.left),parseInt(textNewGameDiv.style.top),textNewGameDiv.clientWidth,textNewGameDiv.clientHeight)) {
+							
+								executeHeroContinue(false);
+							
+								return;
+							}
+							else if (isPointsOfRectIntersectingPointsOfRectDoor(iXPos,iYPos, parseInt(textContinueGameDiv.style.left),parseInt(textContinueGameDiv.style.top),textContinueGameDiv.clientWidth,textContinueGameDiv.clientHeight)) {
+							
+								executeHeroContinue(true);
+							
+								return;
+							}
+
+							return;
+						}
+
+						//added by Mike, 20231122
+						if (bHasPressedStart) {
+						  //alert(">");
+						  if (!bHasViewedHowToPlayGuide) {
+							bHasViewedHowToPlayGuide=true;
+							return;
+						  }
+						  else {
+							  if (!bHasViewedMissionIntro) {
+								bHasViewedMissionIntro=true;
+								return;
+							  }
+						  }
+						}
+						else {
+						  bHasPressedStart=true;
+						  return;
+						}
+
+						//added by Mike, 20231107
+						processResultFromInput(iXPos, iYPos);
+					
+						//alert(">>>>>: "+iCurrMapLocation);
+					}
 					break;
 			}
 		});
