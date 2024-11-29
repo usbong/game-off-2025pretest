@@ -5234,7 +5234,10 @@ alert("iInputY: "+iInputY);
 	  //bIsMissionDone=true;
 	  bIsMissionStarted=true;
 
-	  if (iCurrPearlCount>=iCurrPearlCountMax) {
+	  if (iCurrPearlCount>=iCurrPearlCountMax) {		
+		if (!bIsMissionDone) {
+			iCurrTextCharacterCount=0;
+		}
 		bIsMissionDone=true;
 	  }
 /*	  
