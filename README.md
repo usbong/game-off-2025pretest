@@ -2,13 +2,16 @@
 
 https://itch.io/jam/game-off-2024
 
+# Blue Sapphire Galaxy
+
+
 <img src="https://github.com/masarapmabuhay/game-off-2024/blob/main/notes/art/catLunge.png" width="10%">   
 
 ***
 
 This is a work of fiction created for Game Off 2024 with the theme SECRETS.
 
-## PLAY on BROWSER
+## PLAY in BROWSER
 
 ### ITCH.IO: PROTOTYPES
 
