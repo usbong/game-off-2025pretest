@@ -959,7 +959,7 @@ var arrayHasVisitedRoom = [[],[],[],[],[],[]];
 
 var bIsGameOver=false;
 const iInputDelayAtGameOverCountMax=100;
-var iInputDelayAtGameOverCount=iInputDelayAtGameOverCountMax;
+var iInputDelayAtGameOverCount=0;
 
 var bIsHeroInRiver=false;
 var bHasHeroReachedBottomOfRoomRiver=false;
@@ -5331,27 +5331,22 @@ alert("iInputY: "+iInputY);
 		}
 				
 		if (bIsMissionDone) {
-/*			//TODO: -add: this
-			if (iCurrMonsterDeathCount>13) {
-			}
-*/			
-		
-			sText = "<br/>Congratulations!<br/><br/>But the portal opens only<br/>to those with less than<br/>15 monsters vanquished.";
+			var sTextEnd = "<br/>Congratulations!<br/><br/>But the portal opens only<br/>to those with less than<br/>15 monsters vanquished.";
 
 			if (iCurrMonsterDeathCount<15) { //best is 9 at most
-				sText = "<br/>Micah!<br/><br/><br/><br/><br/>To be continued...";
+				sTextEnd = "<br/>Micah!<br/><br/><br/><br/><br/>To be continued...";
 			}
 
 			if (iCurrMonsterDeathCount>=999) {
-				sText = "<br/>Welcome Home, <br/>Commander! <br/><br/>And...<br/>Thank you for playing!";
+				sTextEnd = "<br/>Welcome Home, <br/>Commander! <br/><br/>And...<br/>Thank you for playing!";
 			}
 			
-			iCurrTextCharacterCountMax=sText.length;
+			iCurrTextCharacterCountMax=sTextEnd.length;
 			
 			//include last character
 //			if (iCurrTextCharacterCount<iCurrTextCharacterCountMax) {
 			if (iCurrTextCharacterCount<=iCurrTextCharacterCountMax) {
-				sCurrText=sText.substring(0,iCurrTextCharacterCount);
+				sCurrText=sTextEnd.substring(0,iCurrTextCharacterCount);
 			}
 			iCurrTextCharacterCount++;
 
@@ -8672,6 +8667,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 		iCurrHeroLife=iCurrHeroLifeMax;
 		iCurrHeroMana=iCurrHeroManaMax;
 		bIsGameOver=false;
+		iInputDelayAtGameOverCount=0;
 		
 		iCurrHeroDeathCount++;
 
@@ -8690,6 +8686,9 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 		var mainImageTileHeroBody = document.getElementById("mainImageTileImageHeroBodyId");
 		
 		explosionEffectImage = document.getElementById("explosionEffectImageId");
+		
+		var keyStatusImageTile = document.getElementById("keyStatusImageTileId");
+		var amuletStatusImageTile = document.getElementById("amuletStatusImageTileId"); 
 		
 		myFavicon.style.visibility="hidden";	
 		textStatusDiv.style.visibility="hidden";
@@ -8719,7 +8718,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 
 			iCurrMapLocation=53;		
 			iStartTimeInMilliseconds=Date.now();	
-			//TODO: -update: this
+
 			bHasObtainedPearlAtRoom42=false;
 			bHasObtainedPearlAtRoom41=false;
 			bHasObtainedPearlAtRoom33=false;
@@ -8730,6 +8729,9 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 			bHasUsedKeyAtRoom11=false;
 			bHasObtainedAmuletAtRoom32=false;
 			bHasObtainedPearlAtRoom12=false;
+						
+			keyStatusImageTile.style.visibility="hidden";
+			amuletStatusImageTile.style.visibility="hidden";
 			
 			iInputDelayAtGameOverCount=0;
 			bHasFired=false;
