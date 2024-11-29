@@ -822,7 +822,10 @@
 			div.DivTextClickStart
 			{
 				position: absolute;
+				/*
 				background-color: #4d4d4d;
+*/
+				
 				color: #ffffff; /*#ffffff;*/
 
 				/*opacity: 50%;*/
@@ -835,12 +838,12 @@
 				padding-right: 40px;
 				padding-left: 40px;
 
-    			border: 3px solid #4d4d4d;
+    			border: 3px solid #ffffff;
     			border-radius: 3px;
 
 				visibility: hidden;
 				
-				z-index: 1;				
+				z-index: 99;				
 			}
 
 			div.DivTextClickContinue
@@ -1027,7 +1030,7 @@ const sAudioBGM="assets/audio/usbongGameOff2023BGM.mp3";
 const sAudioEffectActionCannonFire ="assets/audio/usbongGameOff2023AudioEffectsCannon.mp3";
 const sAudioEffectGrassCut ="assets/audio/usbongGameOff2023TapLoudEdited.mp3";
 
-const sAudioBGM="assets/audio/usbongGameOff2024CaveBGMV18.mp3";
+const sAudioBGM="assets/audio/usbongGameOff2024CaveBGMV22.mp3";
 
 const sAudioBGMPart2="assets/audio/usbongGameOff2024CaveBadBGMV10.mp3";
 
@@ -1037,10 +1040,13 @@ const sAudioEffectSolved ="assets/audio/UsbongGameOff2024TuneSolved.mp3";
 
 const sAudioEffectBossScreech ="assets/audio/usbongGameOff2024Screech.mp3";
 
+const sAudioEffectWater ="assets/audio/usbongGameOff2024WaterOKV2.mp3";
+
 var myAudio;
 var myAudioPart2;
 var myAudioPart3;
 var myAudioBossScreech;
+var myAudioWater;
 
 /*
 var iAnimationCount=-1;//0; start at -1
@@ -1539,7 +1545,6 @@ var bIsHeroFacingLeft=false;
 			}
 
 			mainImageTileHeroBody.style.visibility="visible";
-
 			mainImageTileHeroBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
 		}
 	}
@@ -1717,7 +1722,8 @@ var bIsHeroFacingLeft=false;
 			
 		//var iCurrHeroLife=10;
 
-		//myCanvasContext.fillStyle = "#00c7ff"; //00d9ff; //"#ff0000";
+		myCanvasContext.fillStyle = "#2d2622"; //"#736157"; //#ffffff; //"#ff0000";	
+		myCanvasContext.fillRect(0+iXPos, 0+iYPos, iHeroLifeBarWidth*iCurrHeroLifeMax, iHeroLifeBarHeight);
 
 		if (iCurrHeroLife>=5) {
 			myCanvasContext.fillStyle = "#00c7ff"; //sky blue
@@ -1791,6 +1797,11 @@ var bIsHeroFacingLeft=false;
 		var iCurrHeroManaMax=10; //recharge
 		var iCurrHeroMana=iCurrHeroManaMax; 
 */		
+
+		myCanvasContext.fillStyle = "#2d2622"; //"#736157"; //#ffffff; //"#ff0000";	
+		myCanvasContext.fillRect(0+iXPos, 0+iYPos, iHeroManaBarWidth*iCurrHeroManaMax, iHeroManaBarHeight);
+
+
 //		if ((bHasFireballReachedDestinationX) && (bHasFireballReachedDestinationY)){
 			//iCurrHeroMana=iCurrHeroManaMax;
 		if (mainImageTileFireballProjectile.style.visibility=="hidden") {
@@ -2279,6 +2290,15 @@ var bIsHeroFacingLeft=false;
 		myAudioBossScreech.loop=false;		
 		//myAudioBossScreech.play();		
 		//-----------		
+
+		myAudioWater = document.getElementById("myAudioWaterId");		
+		myAudioWater.setAttribute("src", sAudioEffectWater);
+
+		var fMyAudioWaterVolume=1.0;//0.4;
+		myAudioWater.volume=fMyAudioWaterVolume;
+		myAudioWater.loop=false;		
+		//myAudioBossScreech.play();		
+		//-----------		
 		
 		//note: set this here;
 		keyImageTile.style.objectPosition = "-" + iImageFrameWidthDefault*0 + "px -" + iImageFrameHeight*3 + "px";
@@ -2403,9 +2423,19 @@ var bIsHeroFacingLeft=false;
 
 		var iTitleImageWidth = (titleImage.clientWidth);
 		var iTitleImageHeight = (titleImage.clientHeight);
-
+/*
 		titleImage.style.top = (iVerticalOffsetInnerScreen+0+iStageMaxHeight/3 -iTitleImageHeight/2)+"px";
 		titleImage.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTitleImageWidth/2 +"px";
+*/
+/*
+		titleImage.style.top = (iVerticalOffsetInnerScreen)+"px";
+		titleImage.style.left = 0+iHorizontalOffset +"px";
+*/		
+		
+		titleImage.style.top = (iVerticalOffsetInnerScreen+0+iStageMaxHeight/2 -iTitleImageHeight/2)+"px";
+
+		titleImage.style.left = 0+iHorizontalOffset+iStageMaxWidth/2 -iTitleImageWidth/2 +"px";
+
 		
 		//---------------		
 
@@ -2812,6 +2842,8 @@ alert("iInputY: "+iInputY);
 		}
 
 		var iFrameY=0;
+		var iFrameXOffset=0;
+		
 		
 		if (bIsHeroInRiver){
 			if (bIsHeroFacingLeft) {
@@ -2820,6 +2852,8 @@ alert("iInputY: "+iInputY);
 			else {
 				iFrameY=iImageFrameHeight*1;
 			}
+			
+			iFrameXOffset=iImageFrameWidth;
 		}
 		else {
 			if (bIsHeroFacingLeft) {
@@ -2831,13 +2865,13 @@ alert("iInputY: "+iInputY);
 		}			
 
 		if (iHeroAnimationCount==0) { 
-			mainImageTileHeroBody.style.objectPosition = "-" + 0 + "px -" + iFrameY + "px";
+			mainImageTileHeroBody.style.objectPosition = "-" + 0-iFrameXOffset + "px -" + iFrameY + "px";
 		}
 		else if (iHeroAnimationCount==1) { 
-			mainImageTileHeroBody.style.objectPosition = "-" + iImageFrameWidth + "px -" + iFrameY + "px";
+			mainImageTileHeroBody.style.objectPosition = "-" + iFrameXOffset-iImageFrameWidth + "px -" + iFrameY + "px";
 		}
 		else {
-			mainImageTileHeroBody.style.objectPosition = "-" + iImageFrameWidth*2 + "px -" + iFrameY + "px";
+			mainImageTileHeroBody.style.objectPosition = "-" + iFrameXOffset-iImageFrameWidth*2 + "px -" + iFrameY + "px";
 		}
 	}
 	
@@ -4228,8 +4262,12 @@ alert("iInputY: "+iInputY);
 
 			//heroHitByMonster(mainImageTilePosX,mainImageTilePosY, batMonsterImageTilePosX,batMonsterImageTilePosY);
 			
-			bIsHeroInRiver=true;			
+			if (!bIsHeroInRiver) {
+				myAudioWater.play();
+			}
 			
+			bIsHeroInRiver=true;		
+
 			//alert("Dito");
 		}
 		else {
@@ -4260,7 +4298,10 @@ alert("iInputY: "+iInputY);
 			
 			if (isPointsOfRectIntersectingPointsOfRectMonster(inputArraySnakeMonsterWithIdCount[MONSTER_POSX],inputArraySnakeMonsterWithIdCount[MONSTER_POSY], iRiverImagePosX+iRiverImagePosXOffset, iRiverImagePosY+iRiverImagePosYOffset,iImageFrameWidth, iImageFrameHeight, iRiverImageFrameWidth, iRiverImageFrameHeight)) {	
 				
-				inputArraySnakeMonsterWithIdCount[MONSTER_IS_IN_RIVER]=true;			
+				if (!inputArraySnakeMonsterWithIdCount[MONSTER_IS_IN_RIVER]) {
+					myAudioWater.play();
+				}
+				inputArraySnakeMonsterWithIdCount[MONSTER_IS_IN_RIVER]=true;	
 			}
 			else {
 				inputArraySnakeMonsterWithIdCount[MONSTER_IS_IN_RIVER]=false;			
@@ -9438,12 +9479,12 @@ opting to put assets folder in "html_application" folder instead
 	<div id="divTransitionEffectId" class="myDivTransitionEffect"></div>
 
 		
-	<img id="howToPlayGuideImageId" class="ImageHowToPlayGuide" src="assets/images/gameOff2023HowToPlay.png">
+	<img id="howToPlayGuideImageId" class="ImageHowToPlayGuide" src="assets/images/gameOff2024HowToPlay.png">
 		
-	<img id="howToPlayGuideImageFrame2Id" class="ImageHowToPlayGuide" src="assets/images/gameOff2023HowToPlayFrame2.png">
+	<img id="howToPlayGuideImageFrame2Id" class="ImageHowToPlayGuide" src="assets/images/gameOff2024HowToPlayFrame2.png">
 	
-	
-	<img id="titleImageId" class="ImageTitle" src="assets/images/gameOff2023Title.png">
+	<!-- ImageTitle-->
+	<img id="titleImageId" class="ImageHowToPlayGuide" src="assets/images/gameOff2024TitleBG.png">
 
 	<img id="bossBattleBgImageId" class="ImageBossBattleBg" src="assets/images/bgImageCave.png?lastmod=20241127">
 
@@ -9485,7 +9526,7 @@ opting to put assets folder in "html_application" folder instead
 	//usbongGameOff2023AudioEffectsCannon
 -->
 
-  <audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2024CaveBGMV18.mp3" type="audio/x-m4a" controls loop>
+  <audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2024CaveBGMV22.mp3" type="audio/x-m4a" controls loop>
 	  Your browser does not support the audio tag.
 	</audio><br/>
 
@@ -9500,6 +9541,10 @@ opting to put assets folder in "html_application" folder instead
   <audio id="myAudioBossScreechId" class="myAudio" src="assets/audio/usbongGameOff2024Screech.mp3" type="audio/x-m4a" controls loop>
 	  Your browser does not support the audio tag.
 	</audio><br/>
+	
+  <audio id="myAudioWaterId" class="myAudio" src="assets/audio/usbongGameOff2024WaterOKV2.mp3" type="audio/x-m4a" controls loop>
+	  Your browser does not support the audio tag.
+	</audio><br/>	
 
 <!--
 	<audio id="myAudioId" class="myAudio" src="assets/audio/usbongGameOff2023BGM.mp3" type="audio/x-m4a">
