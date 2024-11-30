@@ -979,7 +979,7 @@ var bIsMiniBossMonsterHit=false;
 
 var bIsActionKeyPressed=false;
 
-var iInputDelayCountMax=3;
+var iInputDelayCountMax=100;//1000;//3;
 var iInputDelayCount=iInputDelayCountMax;
 
 var bHasViewedHowToPlayGuide=false;
@@ -5222,6 +5222,9 @@ alert("iInputY: "+iInputY);
 
 		if (bHasPressedStart) {
 			
+			//add delay to solve inadvertent double tap
+			iInputDelayCount++;
+			
 			titleImage.style.visibility="hidden";
 			titleImageFrame2.style.visibility="hidden";
 
@@ -9032,13 +9035,6 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 		//last accessed: 20221110
 		//answer by:  Jacob, 20220124T0110
 		document.body.addEventListener('pointerdown', (event) => {
-
-			//added by Mike, 20231114
-			if (iInputDelayCount<iInputDelayCountMax) {
-				iInputDelayCount++;
-				return;
-			}
-			
 			if (bIsGameOver) {
 				if (iInputDelayAtGameOverCount<iInputDelayAtGameOverCountMax) {
 					return;
@@ -9099,10 +9095,18 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 
 						//added by Mike, 20231122
 						if (bHasPressedStart) {
+						
+						if (iInputDelayCount<iInputDelayCountMax) {
+							//iInputDelayCount++;
+							return;
+						}
+			
 						  //alert(">");
 						  if (!bHasViewedHowToPlayGuide) {
 							bHasViewedHowToPlayGuide=true;
 							playSolvedTune();
+							
+							iInputDelayCount=0;
 							return;
 						  }
 						  else {
@@ -9115,6 +9119,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 						else {
 						  bHasPressedStart=true;
 						  playSolvedTune();
+						  iInputDelayCount=0;
 						  return;
 						}
 
@@ -9141,7 +9146,6 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 					  bHasSetMaxWidthHeight=true;
 					}
 */
-					//TODO: -verify: this
 //note: ZOOM function causes position ERROR via screenX
 					var iXPos = event.clientX;//screenX;
 
@@ -9192,10 +9196,18 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 
 						//added by Mike, 20231122
 						if (bHasPressedStart) {
+						
+						if (iInputDelayCount<iInputDelayCountMax) {
+							//iInputDelayCount++;
+							return;
+						}
+			
 						  //alert(">");
 						  if (!bHasViewedHowToPlayGuide) {
 							bHasViewedHowToPlayGuide=true;
 							playSolvedTune();
+							
+							iInputDelayCount=0;
 							return;
 						  }
 						  else {
@@ -9208,6 +9220,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 						else {
 						  bHasPressedStart=true;
 						  playSolvedTune();
+						  iInputDelayCount=0;
 						  return;
 						}
 
@@ -9215,8 +9228,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 						processResultFromInput(iXPos, iYPos);
 					
 						//alert(">>>>>: "+iCurrMapLocation);
-					}
-					break;					
+					}								
 					break;
 			}
 		});
