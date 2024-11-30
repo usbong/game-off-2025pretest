@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241129; from 20241128
+' @date updated: 20241130; from 20241129
 ' @website: www.usbong.ph
 '
 ' References: GitHub itch.io Game Off 2021, 2022, 2023
@@ -1311,9 +1311,12 @@ var sText="";
 var iTitlePressStartEffectDelayCount=0;
 var iTitlePressStartEffectDelayCountMax=5;
 
-//added by Mike, 20231129
 var iHowToPlayGuideImageFrame2DelayCount=0;
 var iHowToPlayGuideImageFrame2DelayCountMax=8;
+
+var iTitleImageFrame2DelayCount=0;
+const iTitleImageFrame2DelayCountMax=40;
+
 
 //added by Mike, 20231119; from 20221121
 var iDelayAnimationCountEnter=0;
@@ -2076,6 +2079,8 @@ var bIsHeroFacingLeft=false;
 
 		var mouseInputImage = document.getElementById("mouseInputImageId");
 		var titleImage = document.getElementById("titleImageId");
+		var titleImageFrame2 = document.getElementById("titleImageFrame2Id");
+
 		var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
 		var howToPlayGuideImageFrame2 = document.getElementById("howToPlayGuideImageFrame2Id");
 		var bossBattleBgImage = document.getElementById("bossBattleBgImageId");			
@@ -2145,6 +2150,8 @@ var bIsHeroFacingLeft=false;
 		//--------------------
 		mouseInputImage.style.visibility="hidden";
 		titleImage.style.visibility="visible";
+		titleImageFrame2.style.visibility="hidden";
+		
 		howToPlayGuideImage.style.visibility="hidden";
 		howToPlayGuideImageFrame2.style.visibility="hidden";		
 		bossBattleBgImage.style.visibility="hidden";
@@ -4117,6 +4124,33 @@ alert("iInputY: "+iInputY);
 			heroAttackEffectImage.style.visibility="hidden";
 		}		
 	}		
+
+	function isElapsedTimeUnderThreeMins() {	
+		return true;
+	
+		dElapsedTimeInSeconds=(Date.now()-iStartTimeInMilliseconds)/1000;
+
+		dCurrTimeSeconds=(dElapsedTimeInSeconds)%60;
+		dCurrTimeMinutes=((dElapsedTimeInSeconds)/60)%60;
+		dCurrTimeHours=(dElapsedTimeInSeconds)/60/60;
+
+		//max reached
+		if (dCurrTimeHours>=60) {
+			dCurrTimeMinutes=99;
+			dCurrTimeSeconds=99;
+			dCurrTimeHours=99;
+		}		
+		
+		if (dCurrTimeHours>0) {
+			return false;
+		}
+
+		if (dCurrTimeMinutes<60) {
+			return true;
+		}		
+		
+		return false;
+	}
 		
 	function executeTimeDisplay() {
 		var textTimeDiv = document.getElementById("textTimeDivId");
@@ -4266,14 +4300,15 @@ alert("iInputY: "+iInputY);
 				myAudioWater.play();
 			}
 			
-			bIsHeroInRiver=true;		
+			bIsHeroInRiver=true;	
+			bIsHeroDash=false;
 
 			//alert("Dito");
 		}
 		else {
 			bIsHeroInRiver=false;
 		}
-	}	
+	}
 	
 	function verifySnakeCollideWithRiver(inputArraySnakeMonsterWithIdCount) {
 		var riverImageTile = document.getElementById("riverImageRightId");
@@ -5019,6 +5054,8 @@ alert("iInputY: "+iInputY);
 		//added by Mike, 20231121
 		var titleImage = document.getElementById("titleImageId");
 		//titleImage.style.visibility="hidden";
+		var titleImageFrame2 = document.getElementById("titleImageFrame2Id");
+		//titleImage.style.visibility="hidden";
 
 		//added by Mike, 20231122
 		var howToPlayGuideImage = document.getElementById("howToPlayGuideImageId");
@@ -5148,9 +5185,36 @@ alert("iInputY: "+iInputY);
     myCanvasTwo.style.top = myCanvas.style.top;
     myCanvasTwo.style.left = myCanvas.style.left;
 
-		//added by Mike, 20231121
 		if (!bHasViewedTitle) {
 			titleImage.style.visibility="visible";
+
+/*			
+			if (iTitleImageFrame2DelayCount<iTitleImageFrame2DelayCountMax) {
+					iTitleImageFrame2DelayCount++;
+			}
+			else {
+				iTitleImageFrame2DelayCount=0;
+
+				if (titleImageFrame2.style.visibility == "visible") {
+					titleImageFrame2.style.visibility = "hidden";
+				}
+				else {
+					titleImageFrame2.style.visibility = "visible";
+				}
+			}
+*/			
+			//Game Off 2021; TUGON
+			if (iTitleImageFrame2DelayCount<20) {//5) {
+				titleImageFrame2.style.visibility = "visible";
+			}
+			else {
+				if (iTitleImageFrame2DelayCount>40) {//10) {
+					iTitleImageFrame2DelayCount=0;
+				}
+				titleImageFrame2.style.visibility = "hidden";
+			}			
+			iTitleImageFrame2DelayCount++;			
+
 
 			executeEnterClickAnimation();
 			////executeMouseClickAnimation();	
@@ -5159,6 +5223,8 @@ alert("iInputY: "+iInputY);
 		if (bHasPressedStart) {
 			
 			titleImage.style.visibility="hidden";
+			titleImageFrame2.style.visibility="hidden";
+
 			bHasViewedTitle=true;
 
 			textEnterDiv.style.visibility="hidden";
@@ -5240,13 +5306,13 @@ alert("iInputY: "+iInputY);
 		}
 		bIsMissionDone=true;
 	  }
-/*	  
+/*
 	  //debug	  
 	  bHasViewedMissionIntro=true;
 	  bIsMissionDone=true;
-	  iCurrMonsterDeathCount=10;//999;//14;//16;
-*/
-
+	  iCurrMonsterDeathCount=9;//10;//999;//14;//16;					
+	  iCurrHeroDeathCount=0;//1
+*/					
       if (bIsMissionStarted) {
 		if (!bHasViewedMissionIntro) {
 		
@@ -5338,6 +5404,18 @@ alert("iInputY: "+iInputY);
 
 			if (iCurrMonsterDeathCount<15) { //best is 9 at most
 				sTextEnd = "\"Micah!\"<br/><br/>Meanwhile, written on<br/>a mysterious note:<br/> \"The best is 9 at most.\"<br/><br/>To be continued...";
+
+				if (iCurrMonsterDeathCount<=9) {
+					sTextEnd = "\"Micah, let's give this fella<br/> a life of its own too!<br/><br/>Double tap to dash!<br/>Keyboard press + attack!\"<br/><br/>To be continued...";
+					
+					if (iCurrHeroDeathCount==0) {
+						sTextEnd = "\"Micah!<br/><br/>There's not a minute <br/>to lose! Let's finish this<br/>in under 3 mins!\"<br/><br/>To be continued...";
+						
+						if (isElapsedTimeUnderThreeMins()) {
+							sTextEnd = "\"Micah, great work!<br/><br/>The portal's ready.<br/><br/>Time for us to be off to<br/> Space Galaxy 999!\"<br/>";
+						}
+					}
+				}
 			}
 
 			if (iCurrMonsterDeathCount>=999) {
@@ -5513,6 +5591,7 @@ alert("iInputY: "+iInputY);
 		if (!bHasObtainedAmuletAtRoom32) {
 			if (mainImageTilePosY+iImageFrameHeightDefault>iStageMaxHeight-iImageFrameHeightDefault) {
 				mainImageTileProjectilePosY=mainImageTilePosY;
+				//newMainImageTileProjectilePosY=mainImageTileProjectilePosY;
 
 				//bHasHeroReachedTopOfRoomRiver=false;
 				bHasHeroReachedBottomOfRoomRiver=true;
@@ -5524,16 +5603,19 @@ alert("iInputY: "+iInputY);
 */
 				if (mainImageTileFireballProjectile.style.visibility=="visible") {
 					mainImageTileProjectilePosY=mainImageTilePosY;
+					//newMainImageTileProjectilePosY=mainImageTileProjectilePosY;
 				}
 				else {
 					mainImageTilePosY+=mainImageTileStepY;						
 					mainImageTileProjectilePosY=mainImageTilePosY;
+					//newMainImageTileProjectilePosY=mainImageTileProjectilePosY;
 				}
 			}
 		}
 		else {
 			if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset-iImageFrameHeightDefault/2) {
 				mainImageTileProjectilePosY=mainImageTilePosY;
+				//newMainImageTileProjectilePosY=mainImageTileProjectilePosY;
 
 				//bHasHeroReachedTopOfRoomRiver=false;
 				bHasHeroReachedBottomOfRoomRiver=true;
@@ -5557,10 +5639,11 @@ alert("iInputY: "+iInputY);
 		//IF has reached top
 		if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {		
 			mainImageTileProjectilePosY=mainImageTilePosY;
+			//newMainImageTileProjectilePosY=mainImageTileProjectilePosY;
 			
 			bHasHeroReachedTopOfRoomRiver=true;
 			//bHasHeroReachedBottomOfRoomRiver=false;
-		}
+		}		
 	}
 
 	if (mainImageTileProjectileStepY<mainImageTileProjectileStepYMax) {
@@ -9018,6 +9101,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 						  //alert(">");
 						  if (!bHasViewedHowToPlayGuide) {
 							bHasViewedHowToPlayGuide=true;
+							playSolvedTune();
 							return;
 						  }
 						  else {
@@ -9029,6 +9113,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 						}
 						else {
 						  bHasPressedStart=true;
+						  playSolvedTune();
 						  return;
 						}
 
@@ -9056,7 +9141,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 					}
 */
 					//TODO: -verify: this
-					//note: ZOOM function causes position ERROR via screenX
+//note: ZOOM function causes position ERROR via screenX
 					var iXPos = event.clientX;//screenX;
 
 					//note: screenY includes BROWSER address bar, et cetera;
@@ -9109,6 +9194,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 						  //alert(">");
 						  if (!bHasViewedHowToPlayGuide) {
 							bHasViewedHowToPlayGuide=true;
+							playSolvedTune();
 							return;
 						  }
 						  else {
@@ -9120,6 +9206,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 						}
 						else {
 						  bHasPressedStart=true;
+						  playSolvedTune();
 						  return;
 						}
 
@@ -9128,6 +9215,7 @@ setHeroAttackEffectPosition(mainImageTileProjectileStepDestinationX-iImageFrameW
 					
 						//alert(">>>>>: "+iCurrMapLocation);
 					}
+					break;					
 					break;
 			}
 		});
@@ -9512,19 +9600,17 @@ opting to put assets folder in "html_application" folder instead
 		<!-- added by Mike, 20231104;
 		  note: .html; not .php -->
 
-	<img id="pearlImageTileId" class="ImagePearlSmall" src="assets/images/items.png">
-	<img id="pearlStatusImageTileId" class="ImagePearlSmall" src="assets/images/items.png">
+	<img id="pearlImageTileId" class="ImagePearlSmall" src="assets/images/items.png?lastmod=20241130T1432">
+	<img id="pearlStatusImageTileId" class="ImagePearlSmall" src="assets/images/items.png?lastmod=20241130T1432">
 
-	<img id="keyImageTileId" class="ImageKeySmall" src="assets/images/items.png">
-	<img id="keyStatusImageTileId" class="ImageKeySmall" src="assets/images/items.png">
+	<img id="keyImageTileId" class="ImageKeySmall" src="assets/images/items.png?lastmod=20241130T1432">
+	<img id="keyStatusImageTileId" class="ImageKeySmall" src="assets/images/items.png?lastmod=20241130T1432">
 
-	<img id="amuletImageTileId" class="ImageKeySmall" src="assets/images/items.png">
-	<img id="amuletStatusImageTileId" class="ImageKeySmall" src="assets/images/items.png">
+	<img id="amuletImageTileId" class="ImageKeySmall" src="assets/images/items.png?lastmod=20241130T1432">
+	<img id="amuletStatusImageTileId" class="ImageKeySmall" src="assets/images/items.png?lastmod=20241130T1432">
 	
 	<img id="heroLifeBarStatusImageTileId" class="ImageKeySmall" src="assets/images/profile.png">
 	
-
-
 	<img id="grassCutEffectImageId" class="ImageGrassCutEffectSmall" src="assets/images/bgTile.png">
 
 	<img id="explosionEffectImageId" class="ImageExplosionEffectResizedToSmall" src="assets/images/effectsSmall.png">
@@ -9563,6 +9649,8 @@ opting to put assets folder in "html_application" folder instead
 	
 	<!-- ImageTitle-->
 	<img id="titleImageId" class="ImageHowToPlayGuide" src="assets/images/gameOff2024TitleBG.png">
+
+	<img id="titleImageFrame2Id" class="ImageHowToPlayGuide" src="assets/images/gameOff2024TitleBGFrame2.png">
 
 	<img id="bossBattleBgImageId" class="ImageBossBattleBg" src="assets/images/bgImageCave.png?lastmod=20241127">
 
