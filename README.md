@@ -1,13 +1,14 @@
-# [ITCH.IO](https://itch.io/jam/game-off-2024) 
-# Game Off 2024: Blue Sapphire Galaxy
+# GitHub x ITCH.IO 
+# [Game Off 2024: Blue Sapphire Galaxy](https://masarapmabuhay.itch.io/blue-sapphire-galaxy)
 
-<img src="https://github.com/usbong/game-off-2024/blob/main/notes/art/gameOff2024TitleBG.gif" width="60%">   
+[<img src="https://github.com/usbong/game-off-2024/blob/main/notes/art/usbongYouTubeGameOff2024TitleBG.png" width="60%">
+](https://masarapmabuhay.itch.io/blue-sapphire-galaxy)
 
 This is a work of fiction created for Game Off 2024 with the theme SECRETS.
 
 ## PLAY in BROWSER (Mobile Friendly)
 
-## <img src="https://github.com/masarapmabuhay/game-off-2024/blob/main/notes/art/catLunge.png" width="10%">   
+## [<img src="https://github.com/masarapmabuhay/game-off-2024/blob/main/notes/art/catLunge.png" width="10%">](https://masarapmabuhay.itch.io/blue-sapphire-galaxy)   
 
 ### ITCH.IO: PROTOTYPES
 
@@ -48,6 +49,14 @@ This is a work of fiction created for Game Off 2024 with the theme SECRETS.
 1) MS Paint
 
 2) https://www.gimp.org/
+
+3) https://www.gbstudio.dev/
+
+4) https://www.audacityteam.org/
+
+## Related link
+
+1) https://philnits.org/
 
 ## Open Source Software License
 
