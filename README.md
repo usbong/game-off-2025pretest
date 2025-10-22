@@ -1,17 +1,21 @@
 # GitHub x ITCH.IO 
+<!--
 # [Game Off 2024: Blue Sapphire Galaxy](https://masarapmabuhay.itch.io/blue-sapphire-galaxy)
 
 [<img src="https://github.com/usbong/game-off-2024/blob/main/notes/art/usbongYouTubeGameOff2024TitleBG.png" width="60%">
 ](https://masarapmabuhay.itch.io/blue-sapphire-galaxy)
 
 This is a work of fiction created for Game Off 2024 with the theme SECRETS.
+-->
 
 ## PLAY in BROWSER (Mobile Friendly)
 
+<!--
 ## [<img src="https://github.com/masarapmabuhay/game-off-2024/blob/main/notes/art/catLunge.png" width="10%">](https://masarapmabuhay.itch.io/blue-sapphire-galaxy)   
+-->
 
 ### ITCH.IO: PROTOTYPES
-
+<!--
 1) https://masarapmabuhay.itch.io/game-off-2024-prototype0 (updated from [Game Off 2023](https://github.com/usbong/game-off-2023))
 
 2) https://masarapmabuhay.itch.io/game-off-2024-prototype1
@@ -43,6 +47,7 @@ This is a work of fiction created for Game Off 2024 with the theme SECRETS.
 15) https://masarapmabuhay.itch.io/game-off-2024-prototype14
 
 16) https://masarapmabuhay.itch.io/game-off-2024-prototype15
+-->
 
 ## Select Software Development Productivity Tools
 
@@ -60,7 +65,7 @@ This is a work of fiction created for Game Off 2024 with the theme SECRETS.
 
 ## Open Source Software License
 
-Copyright 2024 USBONG
+Copyright 2024-2025 USBONG
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
