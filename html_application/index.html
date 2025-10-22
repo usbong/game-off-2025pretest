@@ -204,7 +204,7 @@
 		.ImageHeroFrame1 {
 			position: absolute;
 
-			clip: rect(0px,32px,32px,0px);
+			clip: rect(0px,64px,64px,0px);
 			
 			visibility: hidden;
 						
@@ -1222,6 +1222,7 @@ var bHasHeroShotFireball=false;
 var iHeroAnimationCount=-1; //0; //due to immediately +1 in execution;
 var iHeroAnimationCountMax=5;
 var iHeroAnimationDelayCount=0;
+
 var iHeroAnimationDelayCountMax=5;//2;//1; //TODO: -add: more dust effect if target walking distance is far
 
 /*
@@ -1286,14 +1287,14 @@ var mainImageTileFireballProjectileStepDestinationX=0;
 var bossMonsterImageTilePosX=500;
 var bossMonsterImageTilePosY=10;
 
-var iImageFrameWidth=32;// 64; //0;
-var iImageFrameHeight=32;// 64;
+var iImageFrameWidth=64;// 32; //0;
+var iImageFrameHeight=64;// 32;
 
 var iImageFrameWidthLarge=64;
 var iImageFrameHeightLarge=64;
 
-var iImageFrameWidthDefault=32;
-var iImageFrameHeightDefault=32;
+var iImageFrameWidthDefault=32;//64//32;
+var iImageFrameHeightDefault=32;//64//32;
 
 //added by Mike, 20231121
 var iMouseInputImageWidth=64;
@@ -1372,6 +1373,7 @@ var iCurrentIntervalId=-1;
 
 var mainImageTilePosX=0;
 var mainImageTilePosY=0;
+//edited by Mike, 20251022
 var mainImageTileStepX=2;//0; //2;
 var mainImageTileStepY=2;//0; //2;
 
@@ -2075,7 +2077,8 @@ var bIsHeroFacingLeft=false;
 		iHeroAnimationCount=-1; //0; //due to immediately +1 in execution;
 		iHeroAnimationCountMax=5;
 		iHeroAnimationDelayCount=0;
-		iHeroAnimationDelayCountMax=5;//2;//1; //TODO: -add: more dust effect if target walking distance is far
+		//edited by Mike, 20251022
+		iHeroAnimationDelayCountMax=10;//5;//2;//1; //TODO: -add: more dust effect if target walking distance is far
 
 		var mouseInputImage = document.getElementById("mouseInputImageId");
 		var titleImage = document.getElementById("titleImageId");
@@ -2840,7 +2843,7 @@ alert("iInputY: "+iInputY);
 		mainImageTileHeroBody.style.visibility="visible";
 
 		if (iHeroAnimationDelayCount==iHeroAnimationDelayCountMax) {
-			iHeroAnimationCount=(iHeroAnimationCount+1)%3; //last hidden
+			iHeroAnimationCount=(iHeroAnimationCount+1)%4;//3; //last hidden
 
 			iHeroAnimationDelayCount=0;
 		}
@@ -2850,6 +2853,10 @@ alert("iInputY: "+iInputY);
 
 		var iFrameY=0;
 		var iFrameXOffset=0;
+		
+		//added by Mike, 20251022
+		iImageFrameWidth=64;
+		iImageFrameHeight=64;
 		
 		
 		if (bIsHeroInRiver){
@@ -2870,7 +2877,7 @@ alert("iInputY: "+iInputY);
 				iFrameY=iImageFrameHeight*3;//64*3; 192;
 			}
 		}			
-
+/*
 		if (iHeroAnimationCount==0) { 
 			mainImageTileHeroBody.style.objectPosition = "-" + 0-iFrameXOffset + "px -" + iFrameY + "px";
 		}
@@ -2880,6 +2887,8 @@ alert("iInputY: "+iInputY);
 		else {
 			mainImageTileHeroBody.style.objectPosition = "-" + iFrameXOffset-iImageFrameWidth*2 + "px -" + iFrameY + "px";
 		}
+*/		
+		mainImageTileHeroBody.style.objectPosition = "-" + iFrameXOffset-iImageFrameWidth*iHeroAnimationCount + "px -" + iFrameY + "px";
 	}
 	
 	function executeTankWalkingAnimation() {
@@ -8613,8 +8622,6 @@ alert(Date.now()-iMouseClickStartTime);
 
     mainImageTile.style.transform = "rotate("+ (iMainImageTileStepAngle % 360) +"deg)";
 
-
-	
 		newMainImageTileProjectilePosY=mainImageTileProjectileStepY*Math.cos(fMainImageTileStepAngleRad).toFixed(3);
 
 		newMainImageTileProjectilePosY*=-1;
@@ -9558,7 +9565,7 @@ opting to put assets folder in "html_application" folder instead
 	
 		<img id="mainImageTileImageTankBodyId" class="ImageTankFrame1" src="assets/images/inputImageLarge.png?lastmod=20241110">
 		
-		<img id="mainImageTileImageHeroBodyId" class="ImageHeroFrame1" src="assets/images/inputImage.png?lastmod=20241110">		
+		<img id="mainImageTileImageHeroBodyId" class="ImageHeroFrame1" src="assets/images/inputImageLarge2025.png?lastmod=20251022">		
 
 		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
 
