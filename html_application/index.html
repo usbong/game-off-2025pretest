@@ -1,6 +1,6 @@
 <!--
 /*
-' Copyright 2022~2024 USBONG
+' Copyright 2022~2025 USBONG
 '
 ' Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You ' may obtain a copy of the License at
 '
@@ -11,7 +11,7 @@
 ' @company: USBONG
 ' @author: SYSON, MICHAEL B.
 ' @date created: 20221214
-' @date updated: 20241130; from 20241129
+' @date updated: 20251023; from 20241130
 ' @website: www.usbong.ph
 '
 ' References: GitHub itch.io Game Off 2021, 2022, 2023
@@ -1393,6 +1393,10 @@ var iPrevMouseXPos=-1;
 var iPrevMouseYPos=-1;
 	
 var bIsHeroFacingLeft=false;
+
+//added by Mike, 20251023
+var bIsHeroFacingDown=false;
+var bIsHeroFacingDownOrUp=false;
 		
 	//added by Mike, 20241111
 	var batMonsterImageTilePosX=0;
@@ -1534,18 +1538,18 @@ var bIsHeroFacingLeft=false;
 		else {
 			if (bIsHeroInRiver) {
 				if (bIsHeroFacingLeft) {
-					iFrameY=iImageFrameHeight*0;//64*2; 128;
+					iFrameY=iImageFrameHeight*1;//64*2; 128;
 				}
 				else {
-					iFrameY=iImageFrameHeight*1;//64*3; 192;
+					iFrameY=iImageFrameHeight*0;//64*3; 192;
 				}
 			}
 			else {
 				if (bIsHeroFacingLeft) {
-					iFrameY=iImageFrameHeight*2;//64*2; 128;
+					iFrameY=iImageFrameHeight*2;//1//64*2; 128;
 				}
 				else {
-					iFrameY=iImageFrameHeight*3;//64*3; 192;
+					iFrameY=iImageFrameHeight*3;//0//64*3; 192;
 				}
 			}
 
@@ -2870,11 +2874,32 @@ alert("iInputY: "+iInputY);
 			iFrameXOffset=iImageFrameWidth;
 		}
 		else {
+		
 			if (bIsHeroFacingLeft) {
-				iFrameY=iImageFrameHeight*2;//64*2; 128;
+				iFrameY=iImageFrameHeight*1;//2;//64*2; 128;
+				
+				//added by Mike, 20251023
+				if (bIsHeroFacingDownOrUp) {
+					if (bIsHeroFacingDown) {
+						iFrameY=iImageFrameHeight*2;
+					}
+					else {
+						iFrameY=iImageFrameHeight*4;
+					}
+				}
 			}
 			else {
-				iFrameY=iImageFrameHeight*3;//64*3; 192;
+				iFrameY=iImageFrameHeight*0;//3;//64*3; 192;
+
+				//added by Mike, 20251023
+				if (bIsHeroFacingDownOrUp) {
+					if (bIsHeroFacingDown) {
+						iFrameY=iImageFrameHeight*3;
+					}
+					else {
+						iFrameY=iImageFrameHeight*5;
+					}
+				}
 			}
 		}			
 /*
@@ -5695,8 +5720,10 @@ alert("iInputY: "+iInputY);
 */	
 	executeTimeDisplay();
 
-
+	//removed by Mike, 20251023
+	/*
 	drawMiniMap(myCanvasTwoContext,iStageMaxHeight-iInnerHorizontalOffset*0.85, 0+iStageMaxHeight/10);
+	*/
 	
 	heroLifeBarStatusImageTile.style.visibility="visible";
 	//heroLifeBarStatusImageTile.style.visibility="hidden";
@@ -5889,13 +5916,19 @@ alert("iInputY: "+iInputY);
 */
 				//DOOR
 				//top-most					
+/*
 				doorImageTop.style.visibility="visible";
+*/
 				
 				bossBattleBgImage.style.visibility = "hidden"; //default
+				
 				bossBattleBgImageBeach.style.visibility = "visible";
+/*
 				bossBattleBgImageBeachPart2.style.visibility = "visible";
+*/				
 				
 				bossBattleBgImagePart2.style.visibility = "visible";
+
 				bossBattleBgImagePart3.style.visibility = "hidden";		
 				
 				hasInitMapLocation=true;
@@ -5920,7 +5953,15 @@ alert("iInputY: "+iInputY);
 					mainImageTileFireballProjectilePosX=0;
 				}
 */				
-						
+				//WALL
+				//square rooms; hence, iStageMaxHeight				
+				//top wall
+				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {		
+					//OK
+					mainImageTilePosY=0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2;
+					resetProjectile();
+				}								
+				/*
 				//if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault/2) {					
 				if (mainImageTilePosY<0+iInnerVerticalOffset+iImageFrameHeightDefault+iImageFrameHeightDefault/2) {					
 
@@ -5947,10 +5988,17 @@ alert("iInputY: "+iInputY);
 						resetProjectile();						
 					}					
 				}
+*/				
 				//bottom wall
-				else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset-iImageFrameHeightDefault/2) {
+				//edited by Mike, 20251023
+				//else if (mainImageTilePosY+iImageFrameHeightDefault>0+iStageMaxHeight-iInnerVerticalOffset-iImageFrameHeightDefault/2) {
+				else if (mainImageTilePosY+iImageFrameHeightDefault*2>0+iStageMaxHeight-iInnerVerticalOffset) {
+
 					//OK;
-					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*3-iImageFrameHeightDefault;
+					//edited by Mike, 20251023
+					//mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset*3-iImageFrameHeightDefault;
+					mainImageTilePosY=0+iStageMaxHeight-iInnerVerticalOffset-iImageFrameHeightDefault*2;
+
 					
 					//alert("mainImageTilePosX: "+mainImageTilePosX);				
 					resetProjectile();
@@ -5959,15 +6007,23 @@ alert("iInputY: "+iInputY);
 				//WALL
 				//right-most
 				//square rooms; hence, iStageMaxHeight
-				if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
+				//if (mainImageTilePosX+iImageFrameWidthDefault>(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight) {
+				if (mainImageTilePosX+iImageFrameWidthDefault*2>(iInnerHorizontalOffset-iImageFrameWidthDefault/2)+iStageMaxHeight) {
+
+
 					//OK;
-					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
+					//mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault)+iStageMaxHeight-iImageFrameWidthDefault;
 					resetProjectile();			
+					mainImageTilePosX=(iInnerHorizontalOffset-iImageFrameWidthDefault/2)+iStageMaxHeight-iImageFrameWidthDefault*2;
+					resetProjectile();			
+
 				}
 				//left-most
-				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
+				//else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault)) {
+				else if (mainImageTilePosX<0+(iInnerHorizontalOffset+iImageFrameWidthDefault/2)) {
 					//OK;
-					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+					//mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault);
+					mainImageTilePosX=0+(iInnerHorizontalOffset+iImageFrameWidthDefault/2);
 					resetProjectile();
 				}					
 				break;		
@@ -8720,6 +8776,12 @@ alert(Date.now()-iMouseClickStartTime);
 			//keep current facing direction
 		}
 */		
+
+		//added by Mike, 20251023
+		bIsHeroFacingLeft=false;
+		bIsHeroFacingDown=false;
+		bIsHeroFacingDownOrUp=false;
+
 		if (iDeltaX<0) {
 			bIsHeroFacingLeft=true;
 		}
@@ -8728,8 +8790,25 @@ alert(Date.now()-iMouseClickStartTime);
 		}
 		else {
 			//bIsHeroFacingLeft=false;
-		}					
-				
+		}
+
+		//added by Mike, 20251023
+		//if still inside the range
+		if ((iDeltaY>-iImageFrameHeight/2) && (iDeltaY<iImageFrameHeight/2)) {
+			bIsHeroFacingDownOrUp=false;
+		}
+		//otherwise
+		else {
+			bIsHeroFacingDownOrUp=true;
+		
+			if (iDeltaY<0-iImageFrameHeight/2) {
+				bIsHeroFacingDown=true;
+			}
+			else if (iDeltaY>0+iImageFrameHeight/2) {
+				bIsHeroFacingDown=false;
+			}
+		}
+		
 		//added by Mike, 20241105
 		setDustEffectPosition(mainImageTilePosX,mainImageTilePosY);
 		
@@ -9565,7 +9644,7 @@ opting to put assets folder in "html_application" folder instead
 	
 		<img id="mainImageTileImageTankBodyId" class="ImageTankFrame1" src="assets/images/inputImageLarge.png?lastmod=20241110">
 		
-		<img id="mainImageTileImageHeroBodyId" class="ImageHeroFrame1" src="assets/images/inputImageLarge2025.png?lastmod=20251022">		
+		<img id="mainImageTileImageHeroBodyId" class="ImageHeroFrame1" src="assets/images/inputImageLarge2025.png?lastmod=20251023T1434">		
 
 		<img id="mainImageTileImageId" class="ImageTileFrame1" src="assets/images/inputImage.png?lastmod=20241107">
 
@@ -9681,7 +9760,7 @@ opting to put assets folder in "html_application" folder instead
 	
 	<img id="bossBattleBgImagePart2Id" class="ImageBossBattleBgPart2" src="assets/images/bossBattleBgPart2.png">	
 
-	<img id="bossBattleBgImagePart3Id" class="ImageBossBattleBgPart3" src="assets/images/bossBattleBgPart3.png">	
+	<img id="bossBattleBgImagePart3Id" class="ImageBossBattleBgPart3" src="assets/images/bossBattleBgPart3.png?lastmod=20251023T1536">	
 	
 	<div id="textStatusDivId" class="DivTextStatus">CONGRATULATIONS!</div>
 	<div id="textStatusBackgroundDivId" class="DivTextStatusBackground"></div>
